@@ -7,7 +7,7 @@
 
 <title>Isekai Adventure Life Intimacy Calculator</title>
 
-<link rel="icon" href="images/song1.png">
+<link rel="icon" href="images/profile_figure.png">
 
 <style>
 
@@ -149,7 +149,7 @@ padding:6px;
 .result{
 background:white;
 border-radius:16px;
-padding:50px;
+padding:40px;
 text-align:center;
 box-shadow:0 6px 20px rgba(0,0,0,0.08);
 display:flex;
@@ -176,7 +176,6 @@ font-size:14px;
 font-weight:600;
 min-width:90px;
 text-align:center;
-box-shadow:0 2px 8px rgba(0,0,0,0.08);
 }
 
 body.dark .resultBox{
@@ -208,7 +207,7 @@ justify-content:center;
 
 .actionBtn{
 border:none;
-padding:10px 20px;
+padding:10px 18px;
 font-size:14px;
 font-weight:600;
 border-radius:10px;
@@ -217,7 +216,6 @@ color:white;
 display:inline-flex;
 align-items:center;
 justify-content:center;
-white-space:nowrap;
 }
 
 .copyBtn{
@@ -232,12 +230,8 @@ background:#ff6b6b;
 background:#444;
 }
 
-@media(max-width:600px){
-
-.grid{
-grid-template-columns:repeat(2,1fr);
-}
-
+.shareBtn{
+background:#5865F2;
 }
 
 </style>
@@ -248,7 +242,7 @@ grid-template-columns:repeat(2,1fr);
 <div class="container">
 
 <h1>Isekai Adventure Life Intimacy Calculator</h1>
-<div class="subtitle">by @Thinking.j17 | cozyneko guild S12</div>
+<div class="subtitle">v2.0 • by @Thinking.j17 | cozyneko guild S12</div>
 
 <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
 <button class="actionBtn darkBtn" onclick="toggleDark()">🌙 Dark Mode</button>
@@ -285,7 +279,9 @@ Family
 
 <div class="section">
 
-<h2>Custom Value</h2>
+<h2 style="cursor:pointer" onclick="toggleCustom()">▶ Custom Value</h2>
+
+<div id="customBox">
 
 <div class="familyBox">
 
@@ -297,7 +293,9 @@ Family
 
 </div>
 
-<div class="result">
+</div>
+
+<div class="result" id="resultBox">
 
 <div class="resultRow">
 
@@ -325,6 +323,10 @@ Items used: <span id="itemsUsed">0</span>
 <div class="buttonRow">
 
 <button class="actionBtn copyBtn" onclick="copyResult()">Copy Result</button>
+
+<button class="actionBtn shareBtn" onclick="shareBuild()">Share Build</button>
+
+<button class="actionBtn copyBtn" onclick="copyImage()">Copy Screenshot</button>
 
 <button class="actionBtn resetBtn" onclick="resetAll()">Reset</button>
 
@@ -375,11 +377,16 @@ const bonusItems=[
 ]
 
 function makeGrid(list,id){
+
 let html=""
+
 list.forEach((i,index)=>{
+
+let tip = i.min ? `${i.min}-${i.max} intimacy` : `${i.value} intimacy`
+
 html+=`
 <div class="card">
-<img src="images/${i.img}">
+<img src="images/${i.img}" title="${tip}">
 <div class="name">${i.name}</div>
 <div class="controls">
 <button onclick="change('${id}${index}',-1)">-</button>
@@ -387,8 +394,11 @@ html+=`
 <button onclick="change('${id}${index}',1)">+</button>
 </div>
 </div>`
+
 })
+
 document.getElementById(id).innerHTML=html
+
 }
 
 makeGrid(fixedItems,"fixedItems")
@@ -424,12 +434,11 @@ max+=c*i.value
 items+=c
 })
 
-let family=parseInt(document.getElementById("family").value||1)
+let fam=parseInt(family.value||1)
 
 bonusItems.forEach((i,index)=>{
 let c=parseInt(document.getElementById("bonusItems"+index)?.value||0)
-let val=i.value
-if(i.family) val*=family
+let val=i.family ? i.value*fam : i.value
 min+=c*val
 max+=c*val
 items+=c
@@ -446,6 +455,75 @@ minEl.innerText=min
 maxEl.innerText=max
 avgEl.innerText=avg
 itemsUsed.innerText=items
+
+}
+
+function shareBuild(){
+
+let data=[]
+
+document.querySelectorAll("input").forEach(i=>{
+data.push(i.value)
+})
+
+let url = location.origin + location.pathname + "?build=" + data.join(",")
+
+navigator.clipboard.writeText(url)
+
+alert("Build link copied!")
+
+}
+
+function loadBuild(){
+
+let params=new URLSearchParams(location.search)
+
+if(!params.get("build")) return
+
+let values=params.get("build").split(",")
+
+document.querySelectorAll("input").forEach((el,i)=>{
+if(values[i]) el.value=values[i]
+})
+
+}
+
+function copyImage(){
+
+let canvas=document.createElement("canvas")
+canvas.width=600
+canvas.height=300
+
+let ctx=canvas.getContext("2d")
+
+ctx.fillStyle="#1c1f2b"
+ctx.fillRect(0,0,600,300)
+
+ctx.fillStyle="#ffffff"
+ctx.font="28px Segoe UI"
+ctx.fillText("Isekai Adventure Life",40,60)
+
+ctx.font="20px Segoe UI"
+ctx.fillText("Family: "+family.value,40,120)
+
+ctx.fillText("Min: "+minEl.innerText,40,170)
+ctx.fillText("Avg: "+avgEl.innerText,40,210)
+ctx.fillText("Max: "+maxEl.innerText,40,250)
+
+canvas.toBlob(async blob=>{
+await navigator.clipboard.write([
+new ClipboardItem({'image/png': blob})
+])
+alert("Image copied!")
+})
+
+}
+
+function toggleCustom(){
+
+let box=document.getElementById("customBox")
+
+box.style.display = box.style.display==="none" ? "block" : "none"
 
 }
 
@@ -512,11 +590,12 @@ if(localStorage.getItem("darkmode")=="true"){
 document.body.classList.add("dark")
 }
 
+loadBuild()
 loadData()
 calc()
-  
-console.log("Calculator Loaded")
-  
+
+console.log("Calculator Loaded v2.0")
+
 </script>
 
 </body>
