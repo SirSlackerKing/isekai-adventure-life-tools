@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Isekai Intimacy Calculator</title>
+<title>Intimacy Calculator</title>
 
 <style>
 
@@ -42,12 +42,10 @@ gap:12px;
 }
 
 .card{
-
 background:#f6f8ff;
 border-radius:12px;
 padding:10px;
 text-align:center;
-
 }
 
 .card img{
@@ -68,7 +66,6 @@ gap:6px;
 }
 
 button{
-
 background:#6c8cff;
 border:none;
 color:white;
@@ -76,7 +73,6 @@ width:26px;
 height:26px;
 border-radius:6px;
 cursor:pointer;
-
 }
 
 input{
@@ -89,30 +85,24 @@ padding:4px;
 }
 
 .familyBox{
-
 display:flex;
 justify-content:center;
 align-items:center;
 gap:10px;
-
 }
 
 .result{
-
-background:#ffffff;
+background:white;
 border-radius:16px;
 padding:20px;
 text-align:center;
 box-shadow:0 6px 20px rgba(0,0,0,0.08);
-
 }
 
 .result span{
-
 display:block;
 font-size:18px;
 margin:6px;
-
 }
 
 .min{color:#4caf50}
@@ -120,20 +110,25 @@ margin:6px;
 .max{color:#ff9800}
 
 .copy{
+margin-top:16px;
+background:linear-gradient(135deg,#5dbb63,#3fa34d);
+color:white;
+border:none;
+padding:12px 22px;
+font-size:16px;
+border-radius:10px;
+cursor:pointer;
+box-shadow:0 4px 12px rgba(0,0,0,0.15);
+}
 
-margin-top:12px;
-background:#4caf50;
-padding:8px 14px;
-border-radius:8px;
-
+.copy:hover{
+transform:scale(1.05);
 }
 
 @media(max-width:600px){
-
 .grid{
 grid-template-columns:repeat(3,1fr);
 }
-
 }
 
 </style>
@@ -219,11 +214,12 @@ const fixedItems=[
 
 const bonusItems=[
 
-{name:"Family 2★ Skin",value:150},
-{name:"Family 3★ Skin Unlock",value:300},
-{name:"Family 3★ Skin Upgrade",value:500},
-{name:"Family 4★ Skin Unlock",value:500},
-{name:"Family 4★ Skin Upgrade",value:1000},
+{name:"Family 2★ Skin Unlock",img:"family_2star_skin.png",value:150},
+{name:"Family 3★ Skin Unlock",img:"family_3star_skin.png",value:300},
+{name:"Family 3★ Skin Upgrade",img:"family_3star_skin.png",value:500},
+{name:"Family 4★ Skin Unlock",img:"family_4star_skin.png",value:500},
+{name:"Family 4★ Skin Upgrade",img:"family_4star_skin.png",value:1000},
+
 {name:"Fishing Antique",value:20,family:true},
 {name:"Inn Gift",value:2,family:true},
 {name:"Museum Antique",value:1,family:true},
@@ -342,9 +338,7 @@ function save(){
 let data={}
 
 document.querySelectorAll("input").forEach(i=>{
-
 data[i.id]=i.value
-
 })
 
 localStorage.setItem("calc",JSON.stringify(data))
