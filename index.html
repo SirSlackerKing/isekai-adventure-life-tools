@@ -336,6 +336,12 @@ Items used: <span id="itemsUsed">0</span>
 
 <script>
 
+const minEl = document.getElementById("min")
+const maxEl = document.getElementById("max")
+const avgEl = document.getElementById("avg")
+const itemsUsed = document.getElementById("itemsUsed")
+const family = document.getElementById("family")
+
 const fixedItems=[
 {name:"Gold Ring",img:"gold_ring.png",value:1},
 {name:"Gem Ring",img:"gem_ring.png",value:2},
@@ -508,7 +514,9 @@ document.body.classList.add("dark")
 
 loadData()
 calc()
-
+  
+console.log("Calculator Loaded")
+  
 </script>
 
 </body>
