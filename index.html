@@ -9,106 +9,131 @@
 <style>
 
 body{
-background:#0f1221;
-font-family:Segoe UI,Arial;
-color:white;
 margin:0;
+font-family:Segoe UI;
+background:linear-gradient(180deg,#eef3ff,#dce7ff);
 display:flex;
 justify-content:center;
 }
 
 .container{
-width:900px;
+width:1000px;
 max-width:95%;
 padding:20px;
 }
 
 h1{
 text-align:center;
-margin-bottom:30px;
+color:#3b4ba8;
 }
 
 .section{
-background:#1a1e35;
-padding:20px;
+background:white;
+border-radius:16px;
+padding:18px;
+margin-bottom:18px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+gap:12px;
+}
+
+.card{
+
+background:#f6f8ff;
 border-radius:12px;
-margin-bottom:20px;
+padding:10px;
+text-align:center;
+
 }
 
-.section h2{
-margin-top:0;
+.card img{
+width:46px;
+margin-bottom:6px;
 }
 
-.item{
-display:flex;
-align-items:center;
-justify-content:space-between;
-margin:8px 0;
-background:#252a4a;
-padding:8px 12px;
-border-radius:8px;
-}
-
-.left{
-display:flex;
-align-items:center;
-gap:10px;
-}
-
-.item img{
-width:36px;
+.name{
+font-size:13px;
+min-height:32px;
 }
 
 .controls{
 display:flex;
+justify-content:center;
 align-items:center;
-gap:8px;
+gap:6px;
 }
 
 button{
-background:#3c6cff;
+
+background:#6c8cff;
 border:none;
 color:white;
-font-size:16px;
-width:28px;
-height:28px;
+width:26px;
+height:26px;
 border-radius:6px;
 cursor:pointer;
+
 }
 
 input{
-width:50px;
+width:40px;
 text-align:center;
-background:#11142a;
 border:none;
-color:white;
+background:white;
+border-radius:6px;
 padding:4px;
-border-radius:4px;
+}
+
+.familyBox{
+
+display:flex;
+justify-content:center;
+align-items:center;
+gap:10px;
+
 }
 
 .result{
-background:#1f2442;
+
+background:#ffffff;
+border-radius:16px;
 padding:20px;
-border-radius:12px;
 text-align:center;
-font-size:20px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+
 }
 
 .result span{
+
 display:block;
-margin:6px 0;
+font-size:18px;
+margin:6px;
+
 }
 
-.min{color:#7ed957;}
-.avg{color:#6ec6ff;}
-.max{color:#ffb86b;}
+.min{color:#4caf50}
+.avg{color:#2196f3}
+.max{color:#ff9800}
 
-.familyBox{
-display:flex;
-justify-content:center;
-margin-bottom:15px;
-gap:10px;
-align-items:center;
+.copy{
+
+margin-top:12px;
+background:#4caf50;
+padding:8px 14px;
+border-radius:8px;
+
+}
+
+@media(max-width:600px){
+
+.grid{
+grid-template-columns:repeat(3,1fr);
+}
+
 }
 
 </style>
@@ -124,7 +149,7 @@ align-items:center;
 
 <div class="familyBox">
 
-Family Count
+Family
 
 <button onclick="change('family',-1)">-</button>
 <input id="family" value="1">
@@ -137,24 +162,21 @@ Family Count
 <div class="section">
 
 <h2>Random Items</h2>
-
-<div id="randomItems"></div>
+<div class="grid" id="randomItems"></div>
 
 </div>
 
 <div class="section">
 
 <h2>Fixed Items</h2>
-
-<div id="fixedItems"></div>
+<div class="grid" id="fixedItems"></div>
 
 </div>
 
 <div class="section">
 
 <h2>Bonus</h2>
-
-<div id="bonusItems"></div>
+<div class="grid" id="bonusItems"></div>
 
 </div>
 
@@ -164,6 +186,8 @@ Family Count
 <span class="avg">Avg : <span id="avg">0</span></span>
 <span class="max">Max : <span id="max">0</span></span>
 
+<button class="copy" onclick="copyResult()">Copy Result</button>
+
 </div>
 
 </div>
@@ -172,8 +196,8 @@ Family Count
 
 const randomItems=[
 
-{name:"Song Book Green Heart",img:"song_green_heart.png",min:1,max:3},
-{name:"Song Book Green Castle",img:"song_green_castle.png",min:2,max:3},
+{name:"Song Book Green Heart",img:"song1.png",min:1,max:3},
+{name:"Song Book Green Castle",img:"song2.png",min:2,max:3},
 {name:"Song Book Blue Princess",img:"song_blue_princess.png",min:3,max:6},
 {name:"Song Book Blue Prince",img:"song_blue_prince.png",min:4,max:10},
 {name:"Song Book Purple Mushroom",img:"song_purple_mushroom.png",min:5,max:16},
@@ -207,7 +231,7 @@ const bonusItems=[
 
 ]
 
-function createItems(list,id){
+function makeGrid(list,id){
 
 let html=""
 
@@ -215,22 +239,16 @@ list.forEach((i,index)=>{
 
 html+=`
 
-<div class="item">
-
-<div class="left">
+<div class="card">
 
 ${i.img?`<img src="images/${i.img}">`:""}
 
-${i.name}
-
-</div>
+<div class="name">${i.name}</div>
 
 <div class="controls">
 
 <button onclick="change('${id}${index}',-1)">-</button>
-
 <input id="${id}${index}" value="0">
-
 <button onclick="change('${id}${index}',1)">+</button>
 
 </div>
@@ -245,25 +263,23 @@ document.getElementById(id).innerHTML=html
 
 }
 
-createItems(randomItems,"randomItems")
-createItems(fixedItems,"fixedItems")
-createItems(bonusItems,"bonusItems")
+makeGrid(randomItems,"randomItems")
+makeGrid(fixedItems,"fixedItems")
+makeGrid(bonusItems,"bonusItems")
 
-function change(id,amount){
+function change(id,a){
 
 let el=document.getElementById(id)
-
-let v=parseInt(el.value||0)+amount
-
+let v=parseInt(el.value||0)+a
 if(v<0)v=0
-
 el.value=v
 
+save()
 calc()
 
 }
 
-document.querySelectorAll("input").forEach(i=>i.oninput=calc)
+document.querySelectorAll("input").forEach(i=>i.oninput=()=>{save();calc()})
 
 function calc(){
 
@@ -311,6 +327,45 @@ document.getElementById("avg").innerText=avg
 
 }
 
+function copyResult(){
+
+let text=`Min ${min.innerText} | Avg ${avg.innerText} | Max ${max.innerText}`
+
+navigator.clipboard.writeText(text)
+
+alert("Copied!")
+
+}
+
+function save(){
+
+let data={}
+
+document.querySelectorAll("input").forEach(i=>{
+
+data[i.id]=i.value
+
+})
+
+localStorage.setItem("calc",JSON.stringify(data))
+
+}
+
+function load(){
+
+let data=JSON.parse(localStorage.getItem("calc")||"{}")
+
+for(let k in data){
+
+let el=document.getElementById(k)
+
+if(el) el.value=data[k]
+
+}
+
+}
+
+load()
 calc()
 
 </script>
