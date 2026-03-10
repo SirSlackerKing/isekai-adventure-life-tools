@@ -2,11 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Isekai Adventure Life Intimacy Calculator</title>
 
 <style>
+
+*{
+box-sizing:border-box;
+}
 
 body{
 margin:0;
@@ -25,6 +29,7 @@ padding:20px;
 h1{
 text-align:center;
 color:#3b4ba8;
+font-size:28px;
 }
 
 .section{
@@ -37,25 +42,25 @@ box-shadow:0 6px 20px rgba(0,0,0,0.08);
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
 gap:12px;
 }
 
 .card{
 background:#f6f8ff;
 border-radius:12px;
-padding:10px;
+padding:12px;
 text-align:center;
 }
 
 .card img{
-width:46px;
+width:60px;
 margin-bottom:6px;
 }
 
 .name{
 font-size:13px;
-min-height:32px;
+min-height:36px;
 }
 
 .controls{
@@ -69,8 +74,8 @@ button{
 background:#6c8cff;
 border:none;
 color:white;
-width:26px;
-height:26px;
+width:28px;
+height:28px;
 border-radius:6px;
 cursor:pointer;
 }
@@ -126,9 +131,15 @@ transform:scale(1.05);
 }
 
 @media(max-width:600px){
+
 .grid{
 grid-template-columns:repeat(3,1fr);
 }
+
+.container{
+padding:10px;
+}
+
 }
 
 </style>
@@ -138,7 +149,7 @@ grid-template-columns:repeat(3,1fr);
 
 <div class="container">
 
-<h1>Intimacy Calculator</h1>
+<h1>Isekai Adventure Life Intimacy Calculator</h1>
 
 <div class="section">
 
@@ -155,24 +166,18 @@ Family
 </div>
 
 <div class="section">
-
-<h2>Random Items</h2>
-<div class="grid" id="randomItems"></div>
-
-</div>
-
-<div class="section">
-
 <h2>Fixed Items</h2>
 <div class="grid" id="fixedItems"></div>
-
 </div>
 
 <div class="section">
+<h2>Random Items</h2>
+<div class="grid" id="randomItems"></div>
+</div>
 
+<div class="section">
 <h2>Bonus</h2>
 <div class="grid" id="bonusItems"></div>
-
 </div>
 
 <div class="result">
@@ -189,6 +194,15 @@ Family
 
 <script>
 
+const fixedItems=[
+
+{name:"Diamond Ring",img:"diamond_ring.png",value:5},
+{name:"Gem Ring",img:"gem_ring.png",value:2},
+{name:"Gold Ring",img:"gold_ring.png",value:1},
+{name:"Amber of Fish",img:"amber_fish.png",value:5}
+
+]
+
 const randomItems=[
 
 {name:"Song Book Green Heart",img:"song1.png",min:1,max:3},
@@ -203,27 +217,21 @@ const randomItems=[
 
 ]
 
-const fixedItems=[
-
-{name:"Diamond Ring",img:"diamond_ring.png",value:5},
-{name:"Gem Ring",img:"gem_ring.png",value:2},
-{name:"Gold Ring",img:"gold_ring.png",value:1},
-{name:"Amber of Fish",img:"amber_fish.png",value:5}
-
-]
-
 const bonusItems=[
 
 {name:"Family 2★ Skin Unlock",img:"family_2star_skin.png",value:150},
+{name:"Family 2★ Skin Upgrade",img:"family_2star_skin.png",value:200},
+
 {name:"Family 3★ Skin Unlock",img:"family_3star_skin.png",value:300},
 {name:"Family 3★ Skin Upgrade",img:"family_3star_skin.png",value:500},
+
 {name:"Family 4★ Skin Unlock",img:"family_4star_skin.png",value:500},
 {name:"Family 4★ Skin Upgrade",img:"family_4star_skin.png",value:1000},
 
-{name:"Fishing Antique",value:20,family:true},
-{name:"Inn Gift",value:2,family:true},
-{name:"Museum Antique",value:1,family:true},
-{name:"Profile Figure",value:20,family:true}
+{name:"Fishing Antique",img:"fishing_antique.png",value:20,family:true},
+{name:"Inn Gift",img:"inn_gift.png",value:2,family:true},
+{name:"Museum Antique",img:"museum_antique.png",value:1,family:true},
+{name:"Profile Figure",img:"profile_figure.png",value:20,family:true}
 
 ]
 
@@ -259,8 +267,8 @@ document.getElementById(id).innerHTML=html
 
 }
 
-makeGrid(randomItems,"randomItems")
 makeGrid(fixedItems,"fixedItems")
+makeGrid(randomItems,"randomItems")
 makeGrid(bonusItems,"bonusItems")
 
 function change(id,a){
