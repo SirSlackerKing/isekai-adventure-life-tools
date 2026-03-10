@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Isekai Adventure Life Intimacy Calculator</title>
+<h1>Isekai Adventure Life Intimacy Calculator</h1>
+<div class="subtitle">by @Thinking.j17</div>
 
 <style>
 
@@ -54,8 +55,13 @@ text-align:center;
 }
 
 .card img{
-width:60px;
-margin-bottom:6px;
+width:72px;
+height:72px;
+object-fit:contain;
+border-radius:10px;
+background:#ffffff;
+padding:4px;
+box-shadow:0 2px 6px rgba(0,0,0,0.15);
 }
 
 .name{
@@ -93,15 +99,28 @@ padding:4px;
 display:flex;
 justify-content:center;
 align-items:center;
-gap:10px;
+gap:14px;
+font-size:22px;
+font-weight:600;
+padding:10px;
+}
+
+.familyBox input{
+width:60px;
+font-size:20px;
+font-weight:600;
+padding:6px;
 }
 
 .result{
 background:white;
 border-radius:16px;
-padding:20px;
+padding:24px;
 text-align:center;
 box-shadow:0 6px 20px rgba(0,0,0,0.08);
+display:flex;
+flex-direction:column;
+align-items:center;
 }
 
 .result span{
@@ -115,15 +134,16 @@ margin:6px;
 .max{color:#ff9800}
 
 .copy{
-margin-top:16px;
+margin-top:18px;
 background:linear-gradient(135deg,#5dbb63,#3fa34d);
 color:white;
 border:none;
-padding:12px 22px;
+padding:12px 26px;
 font-size:16px;
 border-radius:10px;
 cursor:pointer;
 box-shadow:0 4px 12px rgba(0,0,0,0.15);
+white-space:nowrap;
 }
 
 .copy:hover{
@@ -133,11 +153,12 @@ transform:scale(1.05);
 @media(max-width:600px){
 
 .grid{
-grid-template-columns:repeat(3,1fr);
+grid-template-columns:repeat(2,1fr);
 }
 
-.container{
-padding:10px;
+.card img{
+width:64px;
+height:64px;
 }
 
 }
