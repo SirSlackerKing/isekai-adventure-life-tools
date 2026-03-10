@@ -7,11 +7,13 @@
 
 <title>Isekai Adventure Life Intimacy Calculator</title>
 
+<link rel="icon" href="images/song1.png">
+
 <style>
 
 *{
 box-sizing:border-box;
-transition:0.25s;
+transition:0.2s;
 }
 
 body{
@@ -85,10 +87,10 @@ background:#353a4c;
 }
 
 .card img{
-width:72px;
-height:72px;
+width:76px;
+height:76px;
 object-fit:contain;
-border-radius:10px;
+border-radius:12px;
 background:white;
 padding:4px;
 box-shadow:0 2px 6px rgba(0,0,0,0.15);
@@ -107,7 +109,6 @@ align-items:center;
 gap:6px;
 }
 
-/* ปุ่ม + - */
 .controls button,
 .familyBox button{
 background:#6c8cff;
@@ -117,21 +118,6 @@ width:28px;
 height:28px;
 border-radius:6px;
 cursor:pointer;
-}
-
-/* ปุ่มใหญ่ */
-.actionBtn{
-border:none;
-padding:10px 20px;
-font-size:14px;
-font-weight:600;
-border-radius:10px;
-cursor:pointer;
-color:white;
-display:inline-flex;
-align-items:center;
-justify-content:center;
-white-space:nowrap;
 }
 
 input{
@@ -163,7 +149,7 @@ padding:6px;
 .result{
 background:white;
 border-radius:16px;
-padding:60px;
+padding:50px;
 text-align:center;
 box-shadow:0 6px 20px rgba(0,0,0,0.08);
 display:flex;
@@ -206,6 +192,12 @@ margin-top:4px;
 .resultBox.avg{color:#3b82f6}
 .resultBox.max{color:#ff8c42}
 
+.itemsUsed{
+margin-top:14px;
+font-size:14px;
+opacity:0.8;
+}
+
 .buttonRow{
 margin-top:20px;
 display:flex;
@@ -222,14 +214,18 @@ font-weight:600;
 border-radius:10px;
 cursor:pointer;
 color:white;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+white-space:nowrap;
 }
 
 .copyBtn{
 background:linear-gradient(135deg,#5dbb63,#3fa34d);
 }
 
-.discordBtn{
-background:#5865F2;
+.resetBtn{
+background:#ff6b6b;
 }
 
 .darkBtn{
@@ -242,11 +238,6 @@ background:#444;
 grid-template-columns:repeat(2,1fr);
 }
 
-.card img{
-width:64px;
-height:64px;
-}
-
 }
 
 </style>
@@ -257,7 +248,7 @@ height:64px;
 <div class="container">
 
 <h1>Isekai Adventure Life Intimacy Calculator</h1>
-<div class="subtitle">by @Thinking.j17 | cozyneko guild</div>
+<div class="subtitle">by @Thinking.j17 | cozyneko guild S12</div>
 
 <div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
 <button class="actionBtn darkBtn" onclick="toggleDark()">🌙 Dark Mode</button>
@@ -327,9 +318,15 @@ Max
 
 </div>
 
+<div class="itemsUsed">
+Items used: <span id="itemsUsed">0</span>
+</div>
+
 <div class="buttonRow">
 
 <button class="actionBtn copyBtn" onclick="copyResult()">Copy Result</button>
+
+<button class="actionBtn resetBtn" onclick="resetAll()">Reset</button>
 
 </div>
 
@@ -340,16 +337,13 @@ Max
 <script>
 
 const fixedItems=[
-
 {name:"Gold Ring",img:"gold_ring.png",value:1},
 {name:"Gem Ring",img:"gem_ring.png",value:2},
 {name:"Diamond Ring",img:"diamond_ring.png",value:5},
 {name:"Amber of Fish",img:"amber_fish.png",value:5}
-
 ]
 
 const randomItems=[
-
 {name:"Song Book Green Heart",img:"song1.png",min:1,max:3},
 {name:"Song Book Green Castle",img:"song2.png",min:2,max:3},
 {name:"Song Book Blue Princess",img:"song_blue_princess.png",min:3,max:6},
@@ -359,57 +353,36 @@ const randomItems=[
 {name:"Song Book Black Book",img:"song_black_book.png",min:10,max:32},
 {name:"Song Book Red Book",img:"song_red_book.png",min:14,max:49},
 {name:"Intimacy Gachapon",img:"intimacy_gachapon.png",min:10,max:30}
-
 ]
 
 const bonusItems=[
-
 {name:"Family 2★ Skin Unlock",img:"family_2star_skin.png",value:150},
 {name:"Family 2★ Skin Upgrade",img:"family_2star_skin.png",value:200},
-
 {name:"Family 3★ Skin Unlock",img:"family_3star_skin.png",value:300},
 {name:"Family 3★ Skin Upgrade",img:"family_3star_skin.png",value:500},
-
 {name:"Family 4★ Skin Unlock",img:"family_4star_skin.png",value:500},
 {name:"Family 4★ Skin Upgrade",img:"family_4star_skin.png",value:1000},
-
 {name:"Fishing Antique",img:"fishing_antique.png",value:20,family:true},
 {name:"Inn Gift",img:"inn_gift.png",value:2,family:true},
 {name:"Museum Antique",img:"museum_antique.png",value:1,family:true},
-{name:"Profile Figure Unlock&Upgrade ",img:"profile_figure.png",value:20,family:true}
-
+{name:"Profile Figure Unlock&Upgrade +20",img:"profile_figure.png",value:20,family:true}
 ]
 
 function makeGrid(list,id){
-
 let html=""
-
 list.forEach((i,index)=>{
-
 html+=`
-
 <div class="card">
-
 <img src="images/${i.img}">
-
 <div class="name">${i.name}</div>
-
 <div class="controls">
-
 <button onclick="change('${id}${index}',-1)">-</button>
 <input id="${id}${index}" value="0">
 <button onclick="change('${id}${index}',1)">+</button>
-
 </div>
-
-</div>
-
-`
-
+</div>`
 })
-
 document.getElementById(id).innerHTML=html
-
 }
 
 makeGrid(fixedItems,"fixedItems")
@@ -417,30 +390,32 @@ makeGrid(randomItems,"randomItems")
 makeGrid(bonusItems,"bonusItems")
 
 function change(id,a){
-
 let el=document.getElementById(id)
 let v=parseInt(el.value||0)+a
 if(v<0)v=0
 el.value=v
 calc()
-
+saveData()
 }
 
 function calc(){
 
 let min=0
 let max=0
+let items=0
 
 randomItems.forEach((i,index)=>{
 let c=parseInt(document.getElementById("randomItems"+index)?.value||0)
 min+=c*i.min
 max+=c*i.max
+items+=c
 })
 
 fixedItems.forEach((i,index)=>{
 let c=parseInt(document.getElementById("fixedItems"+index)?.value||0)
 min+=c*i.value
 max+=c*i.value
+items+=c
 })
 
 let family=parseInt(document.getElementById("family").value||1)
@@ -451,6 +426,7 @@ let val=i.value
 if(i.family) val*=family
 min+=c*val
 max+=c*val
+items+=c
 })
 
 let custom=parseInt(document.getElementById("custom")?.value||0)
@@ -460,15 +436,22 @@ max+=custom
 
 let avg=Math.floor((min+max)/2)
 
-document.getElementById("min").innerText=min
-document.getElementById("max").innerText=max
-document.getElementById("avg").innerText=avg
+minEl.innerText=min
+maxEl.innerText=max
+avgEl.innerText=avg
+itemsUsed.innerText=items
 
 }
 
 function copyResult(){
 
-let text=`Min ${min.innerText} | Avg ${avg.innerText} | Max ${max.innerText}`
+let text=`Isekai Adventure Life Intimacy
+
+Family: ${family.value}
+
+Min: ${minEl.innerText}
+Avg: ${avgEl.innerText}
+Max: ${maxEl.innerText}`
 
 navigator.clipboard.writeText(text)
 
@@ -476,11 +459,46 @@ alert("Copied!")
 
 }
 
+function resetAll(){
+
+document.querySelectorAll("input").forEach(i=>{
+if(i.id!="family") i.value=0
+})
+
+calc()
+saveData()
+
+}
+
 function toggleDark(){
-
 document.body.classList.toggle("dark")
-
 localStorage.setItem("darkmode",document.body.classList.contains("dark"))
+}
+
+function saveData(){
+
+let data={}
+
+document.querySelectorAll("input").forEach(i=>{
+data[i.id]=i.value
+})
+
+localStorage.setItem("calcData",JSON.stringify(data))
+
+}
+
+function loadData(){
+
+let data=localStorage.getItem("calcData")
+
+if(!data)return
+
+data=JSON.parse(data)
+
+for(let k in data){
+let el=document.getElementById(k)
+if(el) el.value=data[k]
+}
 
 }
 
@@ -488,6 +506,7 @@ if(localStorage.getItem("darkmode")=="true"){
 document.body.classList.add("dark")
 }
 
+loadData()
 calc()
 
 </script>
