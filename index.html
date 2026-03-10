@@ -3,7 +3,7 @@
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <title>Isekai Adventure Life Intimacy Calculator</title>
 
@@ -118,6 +118,9 @@ width:28px;
 height:28px;
 border-radius:6px;
 cursor:pointer;
+
+touch-action: manipulation;
+user-select: none;
 }
 
 input{
@@ -337,6 +340,46 @@ Items used: <span id="itemsUsed">0</span>
 </div>
 
 <script>
+
+// HOLD BUTTON SYSTEM
+
+let holdInterval=null
+let holdTimeout=null
+
+function startHold(btn){
+
+let id = btn.getAttribute("onclick").match(/'(.*?)'/)[1]
+let val = btn.innerText=="+" ? 1 : -1
+
+change(id,val)
+
+holdTimeout=setTimeout(()=>{
+
+holdInterval=setInterval(()=>{
+change(id,val)
+},120)
+
+},400)
+
+}
+
+function stopHold(){
+
+clearTimeout(holdTimeout)
+clearInterval(holdInterval)
+
+}
+
+document.querySelectorAll(".controls button, .familyBox button").forEach(btn=>{
+
+btn.addEventListener("touchstart",()=>startHold(btn))
+btn.addEventListener("mousedown",()=>startHold(btn))
+
+btn.addEventListener("touchend",stopHold)
+btn.addEventListener("mouseup",stopHold)
+btn.addEventListener("mouseleave",stopHold)
+
+})
 
 const minEl = document.getElementById("min")
 const maxEl = document.getElementById("max")
