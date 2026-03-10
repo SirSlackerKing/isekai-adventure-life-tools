@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Isekai Adventure Life Intimacy Calculator</title>
-<div class="subtitle">by @Thinking.j17</div>
 
 <style>
 
@@ -31,6 +31,14 @@ h1{
 text-align:center;
 color:#3b4ba8;
 font-size:28px;
+margin-bottom:4px;
+}
+
+.subtitle{
+text-align:center;
+font-size:13px;
+color:#6b7280;
+margin-bottom:20px;
 }
 
 .section{
@@ -59,9 +67,10 @@ width:72px;
 height:72px;
 object-fit:contain;
 border-radius:10px;
-background:#ffffff;
+background:white;
 padding:4px;
 box-shadow:0 2px 6px rgba(0,0,0,0.15);
+margin-bottom:8px;
 }
 
 .name{
@@ -123,31 +132,48 @@ flex-direction:column;
 align-items:center;
 }
 
-.result span{
-display:block;
-font-size:18px;
-margin:6px;
+.resultRow{
+display:flex;
+justify-content:center;
+gap:16px;
+flex-wrap:wrap;
 }
 
-.min{color:#4caf50}
-.avg{color:#2196f3}
-.max{color:#ff9800}
+.resultBox{
+background:#f4f7ff;
+padding:14px 24px;
+border-radius:12px;
+font-size:14px;
+font-weight:600;
+min-width:90px;
+text-align:center;
+box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.resultBox div{
+font-size:20px;
+margin-top:4px;
+}
+
+.resultBox.min{color:#3cb371}
+.resultBox.avg{color:#3b82f6}
+.resultBox.max{color:#ff8c42}
 
 .copy{
-margin-top:18px;
+margin-top:20px;
 background:linear-gradient(135deg,#5dbb63,#3fa34d);
 color:white;
 border:none;
-padding:12px 26px;
-font-size:16px;
+height:42px;
+padding:0 24px;
+font-size:14px;
+font-weight:600;
 border-radius:10px;
 cursor:pointer;
-box-shadow:0 4px 12px rgba(0,0,0,0.15);
+display:inline-flex;
+align-items:center;
+justify-content:center;
 white-space:nowrap;
-}
-
-.copy:hover{
-transform:scale(1.05);
 }
 
 @media(max-width:600px){
@@ -171,6 +197,7 @@ height:64px;
 <div class="container">
 
 <h1>Isekai Adventure Life Intimacy Calculator</h1>
+<div class="subtitle">by @Thinking.j17</div>
 
 <div class="section">
 
@@ -203,9 +230,24 @@ Family
 
 <div class="result">
 
-<span class="min">Min : <span id="min">0</span></span>
-<span class="avg">Avg : <span id="avg">0</span></span>
-<span class="max">Max : <span id="max">0</span></span>
+<div class="resultRow">
+
+<div class="resultBox min">
+Min
+<div id="min">0</div>
+</div>
+
+<div class="resultBox avg">
+Avg
+<div id="avg">0</div>
+</div>
+
+<div class="resultBox max">
+Max
+<div id="max">0</div>
+</div>
+
+</div>
 
 <button class="copy" onclick="copyResult()">Copy Result</button>
 
@@ -217,9 +259,9 @@ Family
 
 const fixedItems=[
 
-{name:"Diamond Ring",img:"diamond_ring.png",value:5},
-{name:"Gem Ring",img:"gem_ring.png",value:2},
 {name:"Gold Ring",img:"gold_ring.png",value:1},
+{name:"Gem Ring",img:"gem_ring.png",value:2},
+{name:"Diamond Ring",img:"diamond_ring.png",value:5},
 {name:"Amber of Fish",img:"amber_fish.png",value:5}
 
 ]
@@ -266,7 +308,7 @@ html+=`
 
 <div class="card">
 
-${i.img?`<img src="images/${i.img}">`:""}
+<img src="images/${i.img}">
 
 <div class="name">${i.name}</div>
 
@@ -296,15 +338,14 @@ function change(id,a){
 
 let el=document.getElementById(id)
 let v=parseInt(el.value||0)+a
+
 if(v<0)v=0
+
 el.value=v
 
-save()
 calc()
 
 }
-
-document.querySelectorAll("input").forEach(i=>i.oninput=()=>{save();calc()})
 
 function calc(){
 
@@ -362,33 +403,6 @@ alert("Copied!")
 
 }
 
-function save(){
-
-let data={}
-
-document.querySelectorAll("input").forEach(i=>{
-data[i.id]=i.value
-})
-
-localStorage.setItem("calc",JSON.stringify(data))
-
-}
-
-function load(){
-
-let data=JSON.parse(localStorage.getItem("calc")||"{}")
-
-for(let k in data){
-
-let el=document.getElementById(k)
-
-if(el) el.value=data[k]
-
-}
-
-}
-
-load()
 calc()
 
 </script>
