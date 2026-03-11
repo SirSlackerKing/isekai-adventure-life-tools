@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Isekai Adventure Life Blessing Calculator</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+h1{
+margin-top:20px;
+}
+
+.section{
+margin-top:40px;
+}
+
+.items{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
+margin-top:20px;
+}
+
+.item{
+background:#222;
+border-radius:10px;
+padding:10px;
+width:120px;
+}
+
+.item img{
+width:80px;
+height:80px;
+object-fit:contain;
+}
+
+.controls{
+margin-top:5px;
+}
+
+button{
+padding:5px 8px;
+margin:2px;
+}
+
+input{
+width:40px;
+text-align:center;
+}
+
+.total{
+margin-top:40px;
+font-size:24px;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Isekai Adventure Life Blessing Calculator</h1>
+
+<div class="section">
+<h2>Fixed Items</h2>
+<div id="fixedItems" class="items"></div>
+</div>
+
+<div class="section">
+<h2>Random Items</h2>
+<div id="randomItems" class="items"></div>
+</div>
+
+<div class="section">
+<h2>Bonus</h2>
+<div id="bonusItems" class="items"></div>
+</div>
+
+<div class="total">
+Total Blessing: <span id="total">0</span>
+</div>
+
+<script>
+
+const fixedItems = [
+
+{name:"Flower Necklace",img:"blessing/flower_necklace.png",value:1},
+{name:"Jewel Necklace",img:"blessing/jewel_necklace.png",value:1},
+{name:"Strange Pearl",img:"blessing/strange_pearl.png",value:5},
+{name:"Hiemspresent Hat",img:"blessing/hiemspresent_hat.png",value:5}
+
+];
+
+const randomItems = [
+
+{name:"Blessing Power Gachapon",img:"blessing/blessing_gachapon.png",min:10,max:30},
+{name:"Omamori",img:"blessing/omamori.png",min:10,max:30},
+{name:"Mandrake",img:"blessing/mandrake.png",min:1,max:3},
+{name:"Muddled Mushroom",img:"blessing/muddled_mushroom.png",min:2,max:5},
+{name:"Grassy Bunny",img:"blessing/grassy_bunny.png",min:3,max:6},
+{name:"Chirping Chick",img:"blessing/chirping_chick.png",min:4,max:10},
+{name:"Gorgeous Horse",img:"blessing/gorgeous_horse.png",min:5,max:16},
+{name:"Blooming Fox",img:"blessing/blooming_fox.png",min:7,max:24},
+{name:"Frozen Dragon",img:"blessing/frozen_dragon.png",min:10,max:32},
+{name:"Flaming Lion",img:"blessing/flaming_lion.png",min:14,max:48}
+
+];
+
+const bonusItems = [
+
+{name:"Family 2★ Skin Unlock",img:"family_2star_skin.png",value:150},
+{name:"Family 2★ Skin Upgrade",img:"family_2star_skin.png",value:200},
+{name:"Family 3★ Skin Unlock",img:"family_3star_skin.png",value:300},
+{name:"Family 3★ Skin Upgrade",img:"family_3star_skin.png",value:500},
+{name:"Family 4★ Skin Unlock",img:"family_4star_skin.png",value:500},
+{name:"Family 4★ Skin Upgrade",img:"family_4star_skin.png",value:1000},
+{name:"Inn Gift",img:"inn_gift.png",value:2},
+{name:"Fishing Antique",img:"fishing_antique.png",value:20},
+{name:"Profile Figure Unlock&Upgrade",img:"profile_figure.png",value:20}
+
+];
+
+function createItems(list,container,isRandom=false){
+
+const div=document.getElementById(container);
+
+list.forEach((item,index)=>{
+
+const el=document.createElement("div");
+el.className="item";
+
+let valueText=isRandom?`${item.min}-${item.max}`:item.value;
+
+el.innerHTML=`
+
+<img src="images/${item.img}">
+
+<div>${item.name}</div>
+
+<div>${valueText}</div>
+
+<div class="controls">
+
+<button onclick="change('${container}',${index},-1)">-</button>
+
+<input id="${container}_${index}" value="0">
+
+<button onclick="change('${container}',${index},1)">+</button>
+
+</div>
+
+`;
+
+div.appendChild(el);
+
+});
+
+}
+
+createItems(fixedItems,"fixedItems");
+createItems(randomItems,"randomItems",true);
+createItems(bonusItems,"bonusItems");
+
+function change(container,index,amount){
+
+let input=document.getElementById(container+"_"+index);
+
+let val=parseInt(input.value)||0;
+
+val+=amount;
+
+if(val<0)val=0;
+
+input.value=val;
+
+calculate();
+
+}
+
+function calculate(){
+
+let total=0;
+
+fixedItems.forEach((item,i)=>{
+
+let count=document.getElementById("fixedItems_"+i).value;
+
+total+=count*item.value;
+
+});
+
+randomItems.forEach((item,i)=>{
+
+let count=document.getElementById("randomItems_"+i).value;
+
+let avg=(item.min+item.max)/2;
+
+total+=count*avg;
+
+});
+
+bonusItems.forEach((item,i)=>{
+
+let count=document.getElementById("bonusItems_"+i).value;
+
+total+=count*item.value;
+
+});
+
+document.getElementById("total").innerText=Math.floor(total);
+
+}
+
+</script>
+
+</body>
+</html>
