@@ -25,6 +25,40 @@ display:flex;
 justify-content:center;
 }
 
+body.dark{
+background:#1b1e2b;
+color:white;
+}
+
+body.dark .section{
+background:#2a2f44;
+}
+
+body.dark .card{
+background:#2f3550;
+}
+
+body.dark input{
+background:#1f2436;
+color:white;
+}
+
+body.dark .result{
+background:#2a2f44;
+}
+
+body.dark .resultBox{
+background:#3a4060;
+}
+
+.darkBtn{
+background:#222;
+}
+
+.homeBtn{
+background:#444;
+}
+
 .container{
 width:1000px;
 max-width:95%;
@@ -184,8 +218,18 @@ color:white;
 <h1>Isekai Adventure Life Blessing Calculator</h1>
 <div class="subtitle">v1.0 • by @Thinking.j17 | cozyneko guild S12</div>
 
-<div style="display:flex;justify-content:flex-end;margin-bottom:10px;">
-<button class="actionBtn homeBtn" onclick="location.href='index.html'">🏠 Home</button>
+<div style="display:flex;justify-content:flex-start;gap:10px;margin-bottom:10px;">
+
+<button class="actionBtn homeBtn"
+onclick="location.href='index.html'">
+🏠 Home
+</button>
+
+<button class="actionBtn darkBtn"
+onclick="toggleDark()">
+🌙 Dark
+</button>
+
 </div>
 
 <div class="section">
