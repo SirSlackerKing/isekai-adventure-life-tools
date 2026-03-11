@@ -5,63 +5,60 @@
 <title>Isekai Adventure Life Blessing Calculator</title>
 
 <style>
-
 body{
-font-family:Arial;
-background:#111;
-color:white;
-text-align:center;
+    background:#0e0e0e;
+    color:white;
+    font-family:Arial;
+    text-align:center;
 }
 
 h1{
-margin-top:20px;
+    margin-top:20px;
 }
 
 .section{
-margin-top:40px;
+    margin-top:30px;
 }
 
-.items{
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
-margin-top:20px;
+.grid{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:20px;
 }
 
-.item{
-background:#222;
-border-radius:10px;
-padding:10px;
-width:120px;
+.card{
+    background:#1a1a1a;
+    padding:10px;
+    border-radius:10px;
+    width:120px;
 }
 
-.item img{
-width:80px;
-height:80px;
-object-fit:contain;
+.card img{
+    width:64px;
+    height:64px;
 }
 
 .controls{
-margin-top:5px;
+    margin-top:5px;
 }
 
 button{
-padding:5px 8px;
-margin:2px;
+    width:25px;
+    height:25px;
 }
 
 input{
-width:40px;
-text-align:center;
+    width:30px;
+    text-align:center;
 }
 
 .total{
-margin-top:40px;
-font-size:24px;
+    font-size:22px;
+    margin-top:40px;
 }
-
 </style>
+
 </head>
 
 <body>
@@ -70,151 +67,305 @@ font-size:24px;
 
 <div class="section">
 <h2>Fixed Items</h2>
-<div id="fixedItems" class="items"></div>
+
+<div class="grid">
+
+<div class="card">
+<img src="images/images/blessing/flower_necklace.png">
+<div>Flower Necklace<br>1</div>
+<div class="controls">
+<button onclick="change('flower',-1)">-</button>
+<input id="flower" value="0">
+<button onclick="change('flower',1)">+</button>
 </div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/jewel_necklace.png">
+<div>Jewel Necklace<br>1</div>
+<div class="controls">
+<button onclick="change('jewel',-1)">-</button>
+<input id="jewel" value="0">
+<button onclick="change('jewel',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/strange_pearl.png">
+<div>Strange Pearl<br>5</div>
+<div class="controls">
+<button onclick="change('pearl',-1)">-</button>
+<input id="pearl" value="0">
+<button onclick="change('pearl',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/hiemspresent_hat.png">
+<div>Hiems Present Hat<br>5</div>
+<div class="controls">
+<button onclick="change('hat',-1)">-</button>
+<input id="hat" value="0">
+<button onclick="change('hat',1)">+</button>
+</div>
+</div>
+
+</div>
+</div>
+
 
 <div class="section">
 <h2>Random Items</h2>
-<div id="randomItems" class="items"></div>
+
+<div class="grid">
+
+<div class="card">
+<img src="images/images/blessing/blessing_power_gachapon.png">
+<div>Blessing Power<br>10-30</div>
+<div class="controls">
+<button onclick="change('gacha',-1)">-</button>
+<input id="gacha" value="0">
+<button onclick="change('gacha',1)">+</button>
 </div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/omamori.png">
+<div>Omamori<br>10-30</div>
+<div class="controls">
+<button onclick="change('omamori',-1)">-</button>
+<input id="omamori" value="0">
+<button onclick="change('omamori',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/mandrake.png">
+<div>Mandrake<br>1-3</div>
+<div class="controls">
+<button onclick="change('mandrake',-1)">-</button>
+<input id="mandrake" value="0">
+<button onclick="change('mandrake',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/muddled_mushroom.png">
+<div>Muddled Mushroom<br>2-5</div>
+<div class="controls">
+<button onclick="change('mushroom',-1)">-</button>
+<input id="mushroom" value="0">
+<button onclick="change('mushroom',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/grassy_bunny.png">
+<div>Grassy Bunny<br>3-6</div>
+<div class="controls">
+<button onclick="change('bunny',-1)">-</button>
+<input id="bunny" value="0">
+<button onclick="change('bunny',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/chirping_chick.png">
+<div>Chirping Chick<br>4-10</div>
+<div class="controls">
+<button onclick="change('chick',-1)">-</button>
+<input id="chick" value="0">
+<button onclick="change('chick',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/gorgeous_horse.png">
+<div>Gorgeous Horse<br>5-16</div>
+<div class="controls">
+<button onclick="change('horse',-1)">-</button>
+<input id="horse" value="0">
+<button onclick="change('horse',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/blooming_fox.png">
+<div>Blooming Fox<br>7-24</div>
+<div class="controls">
+<button onclick="change('fox',-1)">-</button>
+<input id="fox" value="0">
+<button onclick="change('fox',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/frozen_dragon.png">
+<div>Frozen Dragon<br>10-32</div>
+<div class="controls">
+<button onclick="change('dragon',-1)">-</button>
+<input id="dragon" value="0">
+<button onclick="change('dragon',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/flaming_lion.png">
+<div>Flaming Lion<br>14-48</div>
+<div class="controls">
+<button onclick="change('lion',-1)">-</button>
+<input id="lion" value="0">
+<button onclick="change('lion',1)">+</button>
+</div>
+</div>
+
+</div>
+</div>
+
 
 <div class="section">
 <h2>Bonus</h2>
-<div id="bonusItems" class="items"></div>
+
+<div class="grid">
+
+<div class="card">
+<img src="images/images/blessing/family_2star_skin.png">
+<div>Family 2★ Unlock<br>150</div>
+<div class="controls">
+<button onclick="change('f2u',-1)">-</button>
+<input id="f2u" value="0">
+<button onclick="change('f2u',1)">+</button>
 </div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/family_2star_skin.png">
+<div>Family 2★ Upgrade<br>200</div>
+<div class="controls">
+<button onclick="change('f2up',-1)">-</button>
+<input id="f2up" value="0">
+<button onclick="change('f2up',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/family_3star_skin.png">
+<div>Family 3★ Unlock<br>300</div>
+<div class="controls">
+<button onclick="change('f3u',-1)">-</button>
+<input id="f3u" value="0">
+<button onclick="change('f3u',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/family_3star_skin.png">
+<div>Family 3★ Upgrade<br>500</div>
+<div class="controls">
+<button onclick="change('f3up',-1)">-</button>
+<input id="f3up" value="0">
+<button onclick="change('f3up',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/family_4star_skin.png">
+<div>Family 4★ Unlock<br>500</div>
+<div class="controls">
+<button onclick="change('f4u',-1)">-</button>
+<input id="f4u" value="0">
+<button onclick="change('f4u',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/family_4star_skin.png">
+<div>Family 4★ Upgrade<br>1000</div>
+<div class="controls">
+<button onclick="change('f4up',-1)">-</button>
+<input id="f4up" value="0">
+<button onclick="change('f4up',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/inn_gift.png">
+<div>Inn Gift<br>2</div>
+<div class="controls">
+<button onclick="change('inn',-1)">-</button>
+<input id="inn" value="0">
+<button onclick="change('inn',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/fishing_antique.png">
+<div>Fishing Antique<br>20</div>
+<div class="controls">
+<button onclick="change('fish',-1)">-</button>
+<input id="fish" value="0">
+<button onclick="change('fish',1)">+</button>
+</div>
+</div>
+
+<div class="card">
+<img src="images/images/blessing/profile_figure_unlock_upgrade.png">
+<div>Profile Figure<br>20</div>
+<div class="controls">
+<button onclick="change('profile',-1)">-</button>
+<input id="profile" value="0">
+<button onclick="change('profile',1)">+</button>
+</div>
+</div>
+
+</div>
+</div>
+
 
 <div class="total">
 Total Blessing: <span id="total">0</span>
 </div>
 
+
 <script>
 
-const fixedItems = [
+const values = {
+flower:1,
+jewel:1,
+pearl:5,
+hat:5,
 
-{name:"Flower Necklace",img:"blessing/flower_necklace.png",value:1},
-{name:"Jewel Necklace",img:"blessing/jewel_necklace.png",value:1},
-{name:"Strange Pearl",img:"blessing/strange_pearl.png",value:5},
-{name:"Hiemspresent Hat",img:"blessing/hiemspresent_hat.png",value:5}
+f2u:150,
+f2up:200,
+f3u:300,
+f3up:500,
+f4u:500,
+f4up:1000,
 
-];
+inn:2,
+fish:20,
+profile:20
+};
 
-const randomItems = [
-
-{name:"Blessing Power Gachapon",img:"blessing/blessing_gachapon.png",min:10,max:30},
-{name:"Omamori",img:"blessing/omamori.png",min:10,max:30},
-{name:"Mandrake",img:"blessing/mandrake.png",min:1,max:3},
-{name:"Muddled Mushroom",img:"blessing/muddled_mushroom.png",min:2,max:5},
-{name:"Grassy Bunny",img:"blessing/grassy_bunny.png",min:3,max:6},
-{name:"Chirping Chick",img:"blessing/chirping_chick.png",min:4,max:10},
-{name:"Gorgeous Horse",img:"blessing/gorgeous_horse.png",min:5,max:16},
-{name:"Blooming Fox",img:"blessing/blooming_fox.png",min:7,max:24},
-{name:"Frozen Dragon",img:"blessing/frozen_dragon.png",min:10,max:32},
-{name:"Flaming Lion",img:"blessing/flaming_lion.png",min:14,max:48}
-
-];
-
-const bonusItems = [
-
-{name:"Family 2★ Skin Unlock",img:"family_2star_skin.png",value:150},
-{name:"Family 2★ Skin Upgrade",img:"family_2star_skin.png",value:200},
-{name:"Family 3★ Skin Unlock",img:"family_3star_skin.png",value:300},
-{name:"Family 3★ Skin Upgrade",img:"family_3star_skin.png",value:500},
-{name:"Family 4★ Skin Unlock",img:"family_4star_skin.png",value:500},
-{name:"Family 4★ Skin Upgrade",img:"family_4star_skin.png",value:1000},
-{name:"Inn Gift",img:"inn_gift.png",value:2},
-{name:"Fishing Antique",img:"fishing_antique.png",value:20},
-{name:"Profile Figure Unlock&Upgrade",img:"profile_figure.png",value:20}
-
-];
-
-function createItems(list,container,isRandom=false){
-
-const div=document.getElementById(container);
-
-list.forEach((item,index)=>{
-
-const el=document.createElement("div");
-el.className="item";
-
-let valueText=isRandom?`${item.min}-${item.max}`:item.value;
-
-el.innerHTML=`
-
-<img src="images/${item.img}">
-
-<div>${item.name}</div>
-
-<div>${valueText}</div>
-
-<div class="controls">
-
-<button onclick="change('${container}',${index},-1)">-</button>
-
-<input id="${container}_${index}" value="0">
-
-<button onclick="change('${container}',${index},1)">+</button>
-
-</div>
-
-`;
-
-div.appendChild(el);
-
-});
-
-}
-
-createItems(fixedItems,"fixedItems");
-createItems(randomItems,"randomItems",true);
-createItems(bonusItems,"bonusItems");
-
-function change(container,index,amount){
-
-let input=document.getElementById(container+"_"+index);
-
-let val=parseInt(input.value)||0;
-
-val+=amount;
-
-if(val<0)val=0;
-
-input.value=val;
-
+function change(id,amount){
+let input=document.getElementById(id);
+let v=parseInt(input.value)||0;
+v+=amount;
+if(v<0)v=0;
+input.value=v;
 calculate();
-
 }
 
 function calculate(){
 
 let total=0;
 
-fixedItems.forEach((item,i)=>{
+for(let id in values){
+let v=parseInt(document.getElementById(id).value)||0;
+total+=v*values[id];
+}
 
-let count=document.getElementById("fixedItems_"+i).value;
-
-total+=count*item.value;
-
-});
-
-randomItems.forEach((item,i)=>{
-
-let count=document.getElementById("randomItems_"+i).value;
-
-let avg=(item.min+item.max)/2;
-
-total+=count*avg;
-
-});
-
-bonusItems.forEach((item,i)=>{
-
-let count=document.getElementById("bonusItems_"+i).value;
-
-total+=count*item.value;
-
-});
-
-document.getElementById("total").innerText=Math.floor(total);
+document.getElementById("total").innerText=total;
 
 }
 
