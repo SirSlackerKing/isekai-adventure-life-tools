@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Isekai Power Calculator</title>
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+background:#0f172a;
+color:white;
+margin:0;
+padding:20px;
+}
+
+.container{
+max-width:420px;
+margin:auto;
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+box-shadow:0 10px 20px rgba(0,0,0,0.4);
+}
+
+h1{
+text-align:center;
+font-size:22px;
+margin-bottom:20px;
+}
+
+label{
+font-size:14px;
+display:block;
+margin-top:12px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin-top:5px;
+border-radius:8px;
+border:none;
+font-size:16px;
+}
+
+button{
+width:100%;
+margin-top:18px;
+padding:12px;
+font-size:16px;
+background:#22c55e;
+border:none;
+border-radius:10px;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#16a34a;
+}
+
+.result{
+margin-top:20px;
+background:#020617;
+padding:15px;
+border-radius:10px;
+line-height:1.6;
+}
+
+.dev{
+text-align:center;
+margin-top:15px;
+font-size:12px;
+opacity:0.6;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Power Calculator</h1>
+
+<label>Current Level</label>
+<input id="cl" type="number">
+
+<label>Target Level</label>
+<input id="tl" type="number">
+
+<label>Current Aptitude</label>
+<input id="ca" type="number">
+
+<label>Target Aptitude</label>
+<input id="ta" type="number">
+
+<label>Current Multiplier</label>
+<input id="cm" type="number" step="0.01">
+
+<label>Target Multiplier</label>
+<input id="tm" type="number" step="0.01">
+
+<button onclick="calc()">Calculate</button>
+
+<div class="result">
+
+<div>Current Base: <span id="cb">-</span></div>
+<div>Target Base: <span id="tb">-</span></div>
+
+<br>
+
+<div>Current Power: <span id="cp">-</span></div>
+<div>Target Power: <span id="tp">-</span></div>
+
+<br>
+
+<div><b>Gain:</b> <span id="gain">-</span></div>
+
+</div>
+
+<div class="dev">dev by elf</div>
+
+</div>
+
+<script>
+
+function calc(){
+
+let cl = parseFloat(document.getElementById("cl").value)||0
+let tl = parseFloat(document.getElementById("tl").value)||0
+let ca = parseFloat(document.getElementById("ca").value)||0
+let ta = parseFloat(document.getElementById("ta").value)||0
+let cm = parseFloat(document.getElementById("cm").value)||0
+let tm = parseFloat(document.getElementById("tm").value)||0
+
+let currentBase = ca * 0.00136 * Math.exp(0.003245 * cl)
+let targetBase = ta * 0.00136 * Math.exp(0.003245 * tl)
+
+let currentPower = currentBase * cm
+let targetPower = targetBase * tm
+
+let gain = targetPower - currentPower
+
+document.getElementById("cb").innerText = currentBase.toFixed(3)
+document.getElementById("tb").innerText = targetBase.toFixed(3)
+
+document.getElementById("cp").innerText = currentPower.toFixed(3)
+document.getElementById("tp").innerText = targetPower.toFixed(3)
+
+document.getElementById("gain").innerText = gain.toFixed(3)
+
+}
+
+</script>
+
+</body>
+</html>
