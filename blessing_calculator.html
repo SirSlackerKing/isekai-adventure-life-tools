@@ -11,7 +11,34 @@
 <link rel="icon" href="images/images/blessing/profile_figure_unlock_upgrade.png">
 
 <style>
+  
+.familyBox{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:14px;
+font-size:22px;
+font-weight:600;
+padding:10px;
+}
 
+.familyBox input{
+width:60px;
+font-size:20px;
+font-weight:600;
+padding:6px;
+}
+
+.familyBox button{
+background:#6c8cff;
+border:none;
+color:white;
+width:28px;
+height:28px;
+border-radius:6px;
+cursor:pointer;
+}
+  
 *{
 box-sizing:border-box;
 transition:0.2s;
@@ -231,7 +258,20 @@ onclick="toggleDark()">
 </button>
 
 </div>
+<div class="section">
 
+<div class="familyBox">
+
+Family
+
+<button onclick="change('family',-1)">-</button>
+<input id="family" value="1">
+<button onclick="change('family',1)">+</button>
+
+</div>
+
+</div>
+  
 <div class="section">
 <h2>Fixed Items</h2>
 <div class="grid" id="fixedItems"></div>
@@ -286,7 +326,8 @@ Items used: <span id="itemsUsed">0</span>
 </div>
 
 <script>
-
+const family=document.getElementById("family")
+  
 const fixedItems=[
 {name:"Flower Necklace",img:"flower_necklace.png",value:1},
 {name:"Jewel Necklace",img:"jewel_necklace.png",value:1},
@@ -314,9 +355,9 @@ const bonusItems=[
 {name:"Family 3★ Upgrade",img:"family_3star_skin.png",value:500},
 {name:"Family 4★ Unlock",img:"family_4star_skin.png",value:500},
 {name:"Family 4★ Upgrade",img:"family_4star_skin.png",value:1000},
-{name:"Inn Gift",img:"inn_gift.png",value:2},
-{name:"Fishing Antique",img:"fishing_antique.png",value:20},
-{name:"Profile Figure",img:"profile_figure_unlock_upgrade.png",value:20}
+{name:"Fishing Antique",img:"fishing_antique.png",value:20,family:true},
+{name:"Inn Gift",img:"inn_gift.png",value:2,family:true},
+{name:"Profile Figure",img:"profile_figure_unlock_upgrade.png",value:20,family:true}
 ]
 
 function makeGrid(list,id){
@@ -374,10 +415,15 @@ max+=c*i.value
 items+=c
 })
 
+let fam=parseInt(family.value||1)
+
 bonusItems.forEach((i,index)=>{
 let c=parseInt(document.getElementById("bonusItems"+index).value||0)
-min+=c*i.value
-max+=c*i.value
+
+let val = i.family ? i.value*fam : i.value
+
+min+=c*val
+max+=c*val
 items+=c
 })
 
