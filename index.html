@@ -12,63 +12,106 @@
 
 body{
 margin:0;
-font-family:Segoe UI;
-background:linear-gradient(180deg,#eef3ff,#dbe6ff);
-display:flex;
-justify-content:center;
+font-family:Segoe UI,Arial;
+background:linear-gradient(180deg,#eef3ff,#dce7ff);
 }
 
+/* container */
+
 .container{
-width:1000px;
-max-width:95%;
+max-width:900px;
+margin:auto;
+padding:20px;
 text-align:center;
-padding:30px 0 60px 0;
 }
+
+/* banner */
 
 .banner{
 width:100%;
-max-width:900px;
-border-radius:18px;
+border-radius:16px;
 box-shadow:0 10px 30px rgba(0,0,0,0.25);
-margin-bottom:30px;
+margin-bottom:25px;
 }
+
+/* title */
 
 h1{
-color:#4056b3;
-margin-bottom:40px;
+margin:10px 0 6px 0;
+color:#3b4ba8;
+font-size:26px;
 }
+
+.subtitle{
+color:#666;
+margin-bottom:30px;
+font-size:14px;
+}
+
+/* grid */
 
 .grid{
-display:flex;
-justify-content:center;
-gap:40px;
-flex-wrap:wrap;
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
 }
 
+/* card */
+
 .card{
-width:260px;
 background:white;
 border-radius:16px;
-padding:30px;
+padding:28px 20px;
 cursor:pointer;
 box-shadow:0 6px 20px rgba(0,0,0,0.15);
 transition:all .25s;
 }
 
 .card:hover{
-transform:translateY(-6px) scale(1.03);
-box-shadow:0 14px 35px rgba(0,0,0,0.25);
+transform:translateY(-4px);
+box-shadow:0 12px 30px rgba(0,0,0,0.25);
+}
+
+.icon{
+font-size:32px;
+margin-bottom:8px;
 }
 
 .cardTitle{
-font-size:20px;
+font-size:18px;
 font-weight:600;
-margin-bottom:10px;
+margin-bottom:6px;
 }
 
 .cardDesc{
-font-size:14px;
-color:#555;
+font-size:13px;
+color:#666;
+}
+
+/* footer */
+
+.footer{
+margin-top:35px;
+font-size:12px;
+color:#777;
+}
+
+/* mobile */
+
+@media(max-width:600px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.card{
+padding:32px 20px;
+}
+
+h1{
+font-size:24px;
+}
+
 }
 
 </style>
@@ -82,13 +125,19 @@ color:#555;
 
 <h1>Isekai Adventure Life Tools</h1>
 
+<div class="subtitle">
+Community tools for Isekai Adventure Life
+</div>
+
 <div class="grid">
 
 <div class="card"
 onclick="location.href='intimacy_calculator.html'">
 
+<div class="icon">❤️</div>
+
 <div class="cardTitle">
-❤️ Intimacy
+Intimacy Calculator
 </div>
 
 <div class="cardDesc">
@@ -100,8 +149,10 @@ Calculate intimacy points
 <div class="card"
 onclick="location.href='blessing_calculator.html'">
 
+<div class="icon">✨</div>
+
 <div class="cardTitle">
-✨ Blessing
+Blessing Calculator
 </div>
 
 <div class="cardDesc">
@@ -110,6 +161,10 @@ Calculate blessing points
 
 </div>
 
+</div>
+
+<div class="footer">
+Dev by Thinking.j17 • CozyNeko Guild S12
 </div>
 
 </div>
