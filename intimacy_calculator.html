@@ -71,8 +71,14 @@ background:#2a2e3c;
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+grid-template-columns:repeat(2,1fr);
 gap:12px;
+}
+
+@media (min-width:700px){
+.grid{
+grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+}
 }
 
 .card{
@@ -80,6 +86,7 @@ background:#f6f8ff;
 border-radius:12px;
 padding:12px;
 text-align:center;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
 }
 
 body.dark .card{
@@ -241,8 +248,6 @@ background:#5865F2;
 </head>
 
 <body>
-
-<div style="display:flex;justify-content:flex-start;gap:10px;margin-bottom:10px;">
 
 <div class="container">
 
