@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Frantic Forest Calculator</title>
+
+<style>
+
+body{
+font-family:Arial,Helvetica,sans-serif;
+margin:0;
+padding:20px;
+background:#0f1220;
+color:white;
+transition:0.25s;
+}
+
+body.light{
+background:#f2f2f2;
+color:#111;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.topbar{
+display:flex;
+justify-content:flex-end;
+gap:10px;
+margin-bottom:10px;
+}
+
+.topbtn{
+padding:8px 12px;
+border-radius:8px;
+border:none;
+cursor:pointer;
+background:#3b6cff;
+color:white;
+}
+
+body.light .topbtn{
+background:#2d5ae6;
+color:white;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.tab{
+padding:10px 16px;
+background:#1f2540;
+border-radius:8px;
+cursor:pointer;
+}
+
+body.light .tab{
+background:#ddd;
+}
+
+.tab.active{
+background:#3b6cff;
+color:white;
+}
+
+.section{
+display:none;
+background:#1b1f35;
+padding:20px;
+border-radius:10px;
+}
+
+body.light .section{
+background:white;
+}
+
+.section.active{
+display:block;
+}
+
+input,select{
+padding:8px;
+border-radius:6px;
+border:none;
+margin:4px 0;
+}
+
+button{
+padding:10px 16px;
+border:none;
+border-radius:8px;
+background:#3b6cff;
+color:white;
+cursor:pointer;
+margin-top:10px;
+}
+
+.result{
+margin-top:15px;
+background:#11152a;
+padding:12px;
+border-radius:8px;
+}
+
+body.light .result{
+background:#f1f1f1;
+}
+
+.row{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.guild-table{
+width:100%;
+margin-top:10px;
+border-collapse:collapse;
+}
+
+.guild-table td{
+padding:6px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="topbar">
+
+<button class="topbtn" onclick="goHome()">Home</button>
+<button class="topbtn" onclick="toggleTheme()">Dark / Light</button>
+
+</div>
+
+<h1>Frantic Forest Calculator</h1>
+
+<div class="tabs">
+
+<div class="tab active" onclick="switchTab('player',this)">Player</div>
+<div class="tab" onclick="switchTab('optimizer',this)">Bell Optimizer</div>
+<div class="tab" onclick="switchTab('guild',this)">Guild Strategy</div>
+<div class="tab" onclick="switchTab('event',this)">Event Simulator</div>
+
+</div>
+
+<!-- PLAYER -->
+
+<div id="player" class="section active">
+
+<h3>Player Calculator</h3>
+
+<div class="row">
+<input id="playerPower" placeholder="Player Power">
+<select id="playerUnit">
+<option>K</option>
+<option>M</option>
+<option selected>B</option>
+<option>T</option>
+<option>aa</option>
+<option>ab</option>
+<option>ac</option>
+</select>
+</div>
+
+<input id="playerBells" placeholder="Total Bells">
+
+<button onclick="calcPlayer()">Calculate</button>
+
+<div class="result" id="playerResult"></div>
+
+</div>
+
+<!-- OPTIMIZER -->
+
+<div id="optimizer" class="section">
+
+<h3>Bell Optimizer</h3>
+
+<div class="row">
+<input id="optPower" placeholder="Player Power">
+<select id="optUnit">
+<option>K</option>
+<option>M</option>
+<option selected>B</option>
+<option>T</option>
+<option>aa</option>
+<option>ab</option>
+<option>ac</option>
+</select>
+</div>
+
+<input id="optBells" placeholder="Total Bells">
+
+<button onclick="optimize()">Optimize</button>
+
+<div class="result" id="optResult"></div>
+
+</div>
+
+<!-- GUILD -->
+
+<div id="guild" class="section">
+
+<h3>Guild Strategy</h3>
+
+<table class="guild-table" id="guildTable">
+
+<tr>
+<td>Name</td>
+<td>Power (B)</td>
+<td>Bells</td>
+</tr>
+
+<tr>
+<td><input></td>
+<td><input></td>
+<td><input></td>
+</tr>
+
+</table>
+
+<button onclick="addPlayer()">Add Player</button>
+<button onclick="calcGuild()">Calculate</button>
+
+<div class="result" id="guildResult"></div>
+
+</div>
+
+<!-- EVENT -->
+
+<div id="event" class="section">
+
+<h3>Event Simulator</h3>
+
+<div class="row">
+<input id="eventPower" placeholder="Player Power">
+<select id="eventUnit">
+<option>K</option>
+<option>M</option>
+<option selected>B</option>
+<option>T</option>
+<option>aa</option>
+<option>ab</option>
+<option>ac</option>
+</select>
+</div>
+
+<input id="bellsPerDay" placeholder="Bells per day">
+<input id="daysLeft" placeholder="Days remaining">
+
+<button onclick="simulate()">Simulate</button>
+
+<div class="result" id="eventResult"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const stableHP=[3.295,4.985,6.591,9.887,13.18,26.36,49.43]
+
+const scoreBell=[0,0,0,735,1000,2040,3900]
+
+const units={
+K:1e3,
+M:1e6,
+B:1e9,
+T:1e12,
+aa:1e15,
+ab:1e18,
+ac:1e21
+}
+
+function convert(value,unit){
+return value*units[unit]
+}
+
+function switchTab(id,el){
+
+document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"))
+document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"))
+
+el.classList.add("active")
+document.getElementById(id).classList.add("active")
+
+}
+
+function calcPlayer(){
+
+let power=convert(
+parseFloat(playerPower.value),
+playerUnit.value
+)
+
+let bells=parseInt(playerBells.value)
+
+let bestStable=0
+let bestScore=0
+
+for(let i=0;i<7;i++){
+
+let hp=stableHP[i]*1e9
+let hits=Math.ceil(hp/power)
+let kills=Math.floor(bells/hits)
+
+let score=kills*hits*scoreBell[i]
+
+if(score>bestScore){
+bestScore=score
+bestStable=i+1
+}
+
+}
+
+playerResult.innerHTML=
+"Best Stable : "+bestStable+
+"<br>Expected Score : "+bestScore
+
+}
+
+function optimize(){
+
+let power=convert(
+parseFloat(optPower.value),
+optUnit.value
+)
+
+let bells=parseInt(optBells.value)
+
+let bestStable=0
+let bestScore=0
+
+for(let i=0;i<7;i++){
+
+let hp=stableHP[i]*1e9
+let hits=Math.ceil(hp/power)
+let kills=Math.floor(bells/hits)
+
+let score=kills*hits*scoreBell[i]
+
+if(score>bestScore){
+bestScore=score
+bestStable=i+1
+}
+
+}
+
+optResult.innerHTML=
+"Use Bells on Stable "+bestStable+
+"<br>Expected Score : "+bestScore
+
+}
+
+function addPlayer(){
+
+let table=document.getElementById("guildTable")
+let row=table.insertRow()
+
+row.innerHTML=
+"<td><input></td>"+
+"<td><input></td>"+
+"<td><input></td>"
+
+}
+
+function calcGuild(){
+
+let table=document.getElementById("guildTable")
+let total=0
+
+for(let i=1;i<table.rows.length;i++){
+
+let power=parseFloat(table.rows[i].cells[1].children[0].value)*1e9
+let bells=parseInt(table.rows[i].cells[2].children[0].value)
+
+let bestScore=0
+
+for(let s=0;s<7;s++){
+
+let hp=stableHP[s]*1e9
+let hits=Math.ceil(hp/power)
+let kills=Math.floor(bells/hits)
+
+let score=kills*hits*scoreBell[s]
+
+if(score>bestScore){
+bestScore=score
+}
+
+}
+
+total+=bestScore
+
+}
+
+guildResult.innerHTML="Guild Total Score : "+total
+
+}
+
+function simulate(){
+
+let power=convert(
+parseFloat(eventPower.value),
+eventUnit.value
+)
+
+let bells=parseInt(bellsPerDay.value)
+let days=parseInt(daysLeft.value)
+
+let bestScore=0
+
+for(let i=0;i<7;i++){
+
+let hp=stableHP[i]*1e9
+let hits=Math.ceil(hp/power)
+let kills=Math.floor(bells/hits)
+
+let score=kills*hits*scoreBell[i]
+
+if(score>bestScore){
+bestScore=score
+}
+
+}
+
+eventResult.innerHTML=
+"Daily Score : "+bestScore+
+"<br>Event Total : "+(bestScore*days)
+
+}
+
+function goHome(){
+
+window.location.href="index.html"
+
+}
+
+function toggleTheme(){
+
+document.body.classList.toggle("light")
+
+if(document.body.classList.contains("light")){
+localStorage.setItem("theme","light")
+}else{
+localStorage.setItem("theme","dark")
+}
+
+}
+
+if(localStorage.getItem("theme")==="light"){
+document.body.classList.add("light")
+}
+
+</script>
+
+</body>
+</html>
