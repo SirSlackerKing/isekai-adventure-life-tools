@@ -41,8 +41,13 @@ body.dark table{
 background:#2a2f44;
 }
 
+body.dark .best{
+background:#2f5aff;
+color:white;
+}
+
 .container{
-width:900px;
+width:950px;
 max-width:95%;
 padding:20px;
 }
@@ -50,6 +55,7 @@ padding:20px;
 h1{
 text-align:center;
 color:#3b4ba8;
+font-size:28px;
 margin-bottom:4px;
 }
 
@@ -68,19 +74,10 @@ margin-bottom:20px;
 box-shadow:0 6px 20px rgba(0,0,0,0.08);
 }
 
-.row{
+.topButtons{
 display:flex;
-gap:16px;
-flex-wrap:wrap;
-align-items:center;
-}
-
-input,select{
-padding:8px;
-border-radius:8px;
-border:none;
-font-size:15px;
-width:140px;
+gap:10px;
+margin-bottom:12px;
 }
 
 button{
@@ -95,20 +92,65 @@ color:white;
 .homeBtn{background:#555;}
 .darkBtn{background:#222;}
 
-.generateBtn{
-background:#6c8cff;
+.playerRow{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:12px;
+}
+
+.playerRow label{
+width:120px;
+font-weight:600;
+}
+
+input{
+width:120px;
+padding:8px;
+border-radius:8px;
+border:none;
+background:#f1f4ff;
+font-size:15px;
+text-align:center;
+}
+
+select{
+width:60px;
+padding:8px;
+border-radius:8px;
+border:none;
+background:#f1f4ff;
+text-align:center;
 }
 
 table{
 width:100%;
 border-collapse:collapse;
 margin-top:10px;
+border-radius:12px;
+overflow:hidden;
 }
 
-th,td{
-padding:10px;
+th{
+background:#eef2ff;
+padding:12px;
+font-weight:600;
+}
+
+td{
+padding:12px;
 text-align:center;
-border-bottom:1px solid #ddd;
+border-bottom:1px solid #eee;
+}
+
+tr:hover{
+background:#f8f9ff;
+}
+
+.best{
+background:#6c8cff !important;
+color:white;
+font-weight:700;
 }
 
 .result{
@@ -126,32 +168,32 @@ margin-top:20px;
 background:#f4f7ff;
 padding:18px;
 border-radius:12px;
-min-width:120px;
+min-width:130px;
+font-weight:600;
 }
 
 .resultBox div{
-font-size:26px;
+font-size:28px;
 margin-top:6px;
-font-weight:700;
 }
 
 .scoreList{
-margin-top:10px;
+margin-top:14px;
 display:flex;
 flex-direction:column;
 gap:6px;
 font-weight:600;
 }
 
-.copyBtn{background:#3fa34d;}
-.resetBtn{background:#ff6b6b;}
-
 .buttonRow{
-margin-top:18px;
+margin-top:20px;
 display:flex;
 justify-content:center;
 gap:12px;
 }
+
+.copyBtn{background:#3fa34d;}
+.resetBtn{background:#ff6b6b;}
 
 </style>
 </head>
@@ -161,9 +203,9 @@ gap:12px;
 <div class="container">
 
 <h1>Isekai Adventure Life Frantic Forest Calculator</h1>
-<div class="subtitle">dev by cozyneko guild</div>
+<div class="subtitle">v1.1 • dev by cozyneko guild</div>
 
-<div style="display:flex;gap:10px;margin-bottom:10px">
+<div class="topButtons">
 
 <button class="homeBtn" onclick="location.href='index.html'">
 🏠 Home
@@ -175,14 +217,16 @@ gap:12px;
 
 </div>
 
+
 <div class="section">
 
 <h3>Player Setup</h3>
 
-<div class="row">
+<div class="playerRow">
 
 <label>Player Power</label>
-<input id="power" placeholder="Enter power">
+
+<input id="power" placeholder="5">
 
 <select id="powerUnit">
 <option value="1">Normal</option>
@@ -191,8 +235,13 @@ gap:12px;
 <option value="1000000000000">T</option>
 </select>
 
+</div>
+
+<div class="playerRow">
+
 <label>Bells</label>
-<input id="bells" placeholder="Enter bells">
+
+<input id="bells" placeholder="120">
 
 </div>
 
@@ -203,20 +252,47 @@ gap:12px;
 
 <h3>Stable HP</h3>
 
-<table>
+<table id="stableTable">
 
 <tr>
 <th>Stable</th>
 <th>HP (B)</th>
 </tr>
 
-<tr><td>Stable 1</td><td>3.295</td></tr>
-<tr><td>Stable 2</td><td>4.975</td></tr>
-<tr><td>Stable 3</td><td>6.590</td></tr>
-<tr><td>Stable 4</td><td>9.885</td></tr>
-<tr><td>Stable 5</td><td>13.180</td></tr>
-<tr><td>Stable 6</td><td>26.360</td></tr>
-<tr><td>Stable 7</td><td>49.425</td></tr>
+<tr>
+<td>Stable 1</td>
+<td><input id="hp1" value="3.295"></td>
+</tr>
+
+<tr>
+<td>Stable 2</td>
+<td><input id="hp2" value="4.975"></td>
+</tr>
+
+<tr>
+<td>Stable 3</td>
+<td><input id="hp3" value="6.590"></td>
+</tr>
+
+<tr>
+<td>Stable 4</td>
+<td><input id="hp4" value="9.885"></td>
+</tr>
+
+<tr>
+<td>Stable 5</td>
+<td><input id="hp5" value="13.180"></td>
+</tr>
+
+<tr>
+<td>Stable 6</td>
+<td><input id="hp6" value="26.360"></td>
+</tr>
+
+<tr>
+<td>Stable 7</td>
+<td><input id="hp7" value="49.425"></td>
+</tr>
 
 </table>
 
@@ -263,34 +339,38 @@ Score
 
 <script>
 
-const stableHP=[
-3.295,
-4.975,
-6.590,
-9.885,
-13.180,
-26.360,
-49.425
-]
-
 const scoreTable=[0,0,0,735,1000,2040,3900]
 
-document.getElementById("power").addEventListener("input",calc)
-document.getElementById("bells").addEventListener("input",calc)
-document.getElementById("powerUnit").addEventListener("change",calc)
+const inputs=document.querySelectorAll("input,select")
+
+inputs.forEach(i=>{
+i.addEventListener("input",calc)
+})
+
+function getStableHP(){
+
+return[
+parseFloat(hp1.value),
+parseFloat(hp2.value),
+parseFloat(hp3.value),
+parseFloat(hp4.value),
+parseFloat(hp5.value),
+parseFloat(hp6.value),
+parseFloat(hp7.value)
+]
+
+}
 
 function calc(){
 
-let power=document.getElementById("power").value
-let bells=document.getElementById("bells").value
-let unit=document.getElementById("powerUnit").value
+let power=powerInput()
+let bells=parseFloat(document.getElementById("bells").value)
 
 if(!power||!bells)return
 
-power=power*unit
-bells=parseInt(bells)
-
 let damage=power*bells
+
+let stableHP=getStableHP()
 
 let best=0
 
@@ -306,6 +386,29 @@ best=i+1
 
 document.getElementById("bestStable").innerText=best
 document.getElementById("score").innerText=scoreTable[best]
+
+highlight(best)
+
+}
+
+function powerInput(){
+
+let p=document.getElementById("power").value
+let unit=document.getElementById("powerUnit").value
+
+return p*unit
+
+}
+
+function highlight(best){
+
+let rows=document.querySelectorAll("#stableTable tr")
+
+rows.forEach(r=>r.classList.remove("best"))
+
+if(best>0){
+rows[best].classList.add("best")
+}
 
 }
 
@@ -325,10 +428,17 @@ alert("Copied!")
 
 function resetAll(){
 
-document.getElementById("power").value=""
-document.getElementById("bells").value=""
+document.querySelectorAll("input").forEach(i=>{
+if(i.id.includes("hp"))return
+i.value=""
+})
+
 bestStable.innerText=0
 score.innerText=0
+
+document.querySelectorAll("#stableTable tr").forEach(r=>{
+r.classList.remove("best")
+})
 
 }
 
@@ -336,6 +446,15 @@ function toggleDark(){
 
 document.body.classList.toggle("dark")
 
+localStorage.setItem(
+"darkmode",
+document.body.classList.contains("dark")
+)
+
+}
+
+if(localStorage.getItem("darkmode")==="true"){
+document.body.classList.add("dark")
 }
 
 </script>
