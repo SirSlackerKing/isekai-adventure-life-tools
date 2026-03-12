@@ -3,20 +3,16 @@
 
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>Isekai Adventure Life Frantic Forest Calculator</title>
+<title>Frantic Forest Calculator</title>
 
 <style>
 
-*{
-box-sizing:border-box;
-transition:0.2s;
-}
+*{box-sizing:border-box;font-family:Segoe UI}
 
 body{
 margin:0;
-font-family:Segoe UI;
 background:#eef2ff;
 display:flex;
 justify-content:center;
@@ -33,32 +29,34 @@ max-width:95%;
 padding:20px;
 }
 
-h1{
-text-align:center;
-margin-bottom:5px;
-}
-
-.subtitle{
-text-align:center;
-font-size:13px;
-color:#6b7280;
-margin-bottom:20px;
-}
+h1{text-align:center}
 
 .section{
 background:white;
-border-radius:14px;
 padding:20px;
+border-radius:12px;
 margin-bottom:20px;
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
+box-shadow:0 4px 12px rgba(0,0,0,0.1);
 }
 
 body.dark .section{
 background:#2a2f44;
 }
 
+.row{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:10px;
+}
+
+label{
+width:150px;
+font-weight:600;
+}
+
 input,select{
-padding:8px;
+padding:7px;
 border-radius:8px;
 border:none;
 background:#f1f4ff;
@@ -71,22 +69,9 @@ background:#1f2436;
 color:white;
 }
 
-.playerRow{
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:12px;
-}
-
-.playerRow label{
-width:120px;
-font-weight:600;
-}
-
 table{
 width:100%;
 border-collapse:collapse;
-margin-top:10px;
 }
 
 th{
@@ -100,41 +85,37 @@ text-align:center;
 border-bottom:1px solid #eee;
 }
 
-body.dark th{
-background:#343b5e;
-}
+body.dark th{background:#39406a}
 
-.best{
-background:#5a7cff !important;
+.kill{
+background:#4caf50;
 color:white;
 font-weight:700;
 }
 
-.resultBox{
+.best{
+background:#5a7cff;
+color:white;
+font-weight:700;
+}
+
+.resultGrid{
 display:flex;
 gap:20px;
 justify-content:center;
 margin-top:10px;
 }
 
-.result{
+.resultBox{
 background:#f4f7ff;
 padding:15px;
 border-radius:10px;
 text-align:center;
-min-width:140px;
+min-width:150px;
 }
 
-body.dark .result{
+body.dark .resultBox{
 background:#1f2436;
-}
-
-button{
-border:none;
-padding:8px 14px;
-border-radius:8px;
-cursor:pointer;
-font-weight:600;
 }
 
 .topButtons{
@@ -143,8 +124,17 @@ gap:10px;
 margin-bottom:10px;
 }
 
-.home{background:#555;color:white;}
-.darkbtn{background:#111;color:white;}
+button{
+border:none;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+font-weight:600;
+color:white;
+}
+
+.home{background:#555}
+.darkbtn{background:#222}
 
 </style>
 </head>
@@ -154,59 +144,47 @@ margin-bottom:10px;
 <div class="container">
 
 <h1>Frantic Forest Calculator</h1>
-<div class="subtitle">Isekai Adventure Life • v2 • dev by cozyneko</div>
+<div style="text-align:center;font-size:13px;margin-bottom:15px">
+v3 • dev by cozyneko
+</div>
 
 <div class="topButtons">
-<button class="home" onclick="location.href='index.html'">🏠 Home</button>
-<button class="darkbtn" onclick="toggleDark()">🌙 Dark</button>
+<button class="home" onclick="location.href='index.html'">Home</button>
+<button class="darkbtn" onclick="toggleDark()">Dark</button>
 </div>
 
 <div class="section">
 
 <h3>Player Setup</h3>
 
-<div class="playerRow">
+<div class="row">
 <label>Base Power</label>
-<input id="basePower">
+<input id="power">
 <select id="unit">
-<option value="1">Normal</option>
-<option value="1000000">M</option>
-<option value="1000000000" selected>B</option>
-<option value="1000000000000">T</option>
+<option value="1e6">M</option>
+<option value="1e9" selected>B</option>
+<option value="1e12">T</option>
 <option value="1e15">aa</option>
 </select>
 </div>
 
-<div class="playerRow">
+<div class="row">
 <label>Bonus %</label>
 <input id="bonus">
 </div>
 
-<div class="playerRow">
+<div class="row">
 <label>Total Bells</label>
 <input id="bells">
 </div>
 
-<div class="playerRow">
+<div class="row">
 <label>Damage/Bell</label>
-<input id="damagePreview" disabled>
+<input id="damage" disabled>
 </div>
 
 </div>
 
-<div class="section">
-
-<h3>Stable Score</h3>
-
-<div class="playerRow">Stable 1 score <input id="score1"> point</div>
-<div class="playerRow">Stable 2 score <input id="score2"> point</div>
-<div class="playerRow">Stable 3 score <input id="score3"> point</div>
-<div class="playerRow">Stable 4 score <input id="score4" value="735"> point</div>
-<div class="playerRow">Stable 5 score <input id="score5" value="1000"> point</div>
-<div class="playerRow">Stable 6 score <input id="score6" value="2040"> point</div>
-<div class="playerRow">Stable 7 score <input id="score7" value="3900"> point</div>
-
-</div>
 
 <div class="section">
 
@@ -217,35 +195,51 @@ margin-bottom:10px;
 <tr>
 <th>Stable</th>
 <th>HP (B)</th>
-<th>Kill/Bell</th>
-<th>Score/Bell</th>
+<th>Kill</th>
+<th>Score</th>
 </tr>
 
-<tr><td>1</td><td><input id="hp1" value="3.295"></td><td id="k1"></td><td id="sp1"></td></tr>
-<tr><td>2</td><td><input id="hp2" value="4.985"></td><td id="k2"></td><td id="sp2"></td></tr>
-<tr><td>3</td><td><input id="hp3" value="6.591"></td><td id="k3"></td><td id="sp3"></td></tr>
-<tr><td>4</td><td><input id="hp4" value="9.887"></td><td id="k4"></td><td id="sp4"></td></tr>
-<tr><td>5</td><td><input id="hp5" value="13.18"></td><td id="k5"></td><td id="sp5"></td></tr>
-<tr><td>6</td><td><input id="hp6" value="26.36"></td><td id="k6"></td><td id="sp6"></td></tr>
-<tr><td>7</td><td><input id="hp7" value="49.43"></td><td id="k7"></td><td id="sp7"></td></tr>
+<tr><td>1</td><td><input id="hp1" value="3.295"></td><td id="k1"></td><td id="s1"></td></tr>
+<tr><td>2</td><td><input id="hp2" value="4.985"></td><td id="k2"></td><td id="s2"></td></tr>
+<tr><td>3</td><td><input id="hp3" value="6.591"></td><td id="k3"></td><td id="s3"></td></tr>
+<tr><td>4</td><td><input id="hp4" value="9.887"></td><td id="k4"></td><td id="s4"></td></tr>
+<tr><td>5</td><td><input id="hp5" value="13.18"></td><td id="k5"></td><td id="s5"></td></tr>
+<tr><td>6</td><td><input id="hp6" value="26.36"></td><td id="k6"></td><td id="s6"></td></tr>
+<tr><td>7</td><td><input id="hp7" value="49.43"></td><td id="k7"></td><td id="s7"></td></tr>
 
 </table>
 
 </div>
 
+
+<div class="section">
+
+<h3>Stable Score</h3>
+
+<div class="row">Stable1 score <input id="sc1"></div>
+<div class="row">Stable2 score <input id="sc2"></div>
+<div class="row">Stable3 score <input id="sc3"></div>
+<div class="row">Stable4 score <input id="sc4" value="735"></div>
+<div class="row">Stable5 score <input id="sc5" value="1000"></div>
+<div class="row">Stable6 score <input id="sc6" value="2040"></div>
+<div class="row">Stable7 score <input id="sc7" value="3900"></div>
+
+</div>
+
+
 <div class="section">
 
 <h3>Result</h3>
 
-<div class="resultBox">
+<div class="resultGrid">
 
-<div class="result">
-Best Stable
+<div class="resultBox">
+Recommended Stable
 <div id="bestStable">-</div>
 </div>
 
-<div class="result">
-Expected Score
+<div class="resultBox">
+Total Score
 <div id="totalScore">-</div>
 </div>
 
@@ -253,21 +247,22 @@ Expected Score
 
 </div>
 
+
 <div class="section">
 
 <h3>Event Progress Simulator</h3>
 
-<div class="playerRow">
+<div class="row">
 <label>Current Score</label>
-<input id="currentScore">
+<input id="current">
 </div>
 
-<div class="playerRow">
+<div class="row">
 <label>Target Score</label>
-<input id="targetScore">
+<input id="target">
 </div>
 
-<div class="playerRow">
+<div class="row">
 <label>Bells Needed</label>
 <input id="needBell" disabled>
 </div>
@@ -279,45 +274,41 @@ Expected Score
 <script>
 
 const inputs=document.querySelectorAll("input,select")
-
-inputs.forEach(i=>{
-i.addEventListener("input",calc)
-})
+inputs.forEach(i=>i.addEventListener("input",calc))
 
 function calc(){
 
-let base=document.getElementById("basePower").value
+let base=document.getElementById("power").value
 let unit=document.getElementById("unit").value
 let bonus=document.getElementById("bonus").value
 let bells=document.getElementById("bells").value
 
 if(!base||!bells)return
 
-let damage=base*unit*(1+(bonus/100))
+let damage=base*unit*(1+bonus/100)
 
-document.getElementById("damagePreview").value=(damage/1000000000).toFixed(2)+"B"
+document.getElementById("damage").value=(damage/1e9).toFixed(2)+"B"
 
-let bestScore=0
 let bestStable=0
-let scorePerBell=0
+let bestScore=0
 
 for(let i=1;i<=7;i++){
 
-let hp=document.getElementById("hp"+i).value*1000000000
-let score=document.getElementById("score"+i).value
+let hp=document.getElementById("hp"+i).value*1e9
+let score=document.getElementById("sc"+i).value
 
-if(!hp||!score)continue
+let kill=0
 
-let kill=damage/hp
-let sp=kill*score
+if(damage>=hp){
+kill=1
+}
 
-document.getElementById("k"+i).innerText=kill.toFixed(2)
-document.getElementById("sp"+i).innerText=sp.toFixed(0)
+document.getElementById("k"+i).innerText=kill
+document.getElementById("s"+i).innerText=kill?score:0
 
-if(sp>bestScore){
-bestScore=sp
+if(kill && score>bestScore){
+bestScore=score
 bestStable=i
-scorePerBell=sp
 }
 
 }
@@ -325,16 +316,15 @@ scorePerBell=sp
 highlight(bestStable)
 
 document.getElementById("bestStable").innerText="Stable "+bestStable
-document.getElementById("totalScore").innerText=Math.floor(scorePerBell*bells)
+document.getElementById("totalScore").innerText=bestScore*bells
 
-progress(scorePerBell)
+progress(bestScore)
 
 }
 
 function highlight(n){
 
 let rows=document.querySelectorAll("#stableTable tr")
-
 rows.forEach(r=>r.classList.remove("best"))
 
 if(n>0){
@@ -343,25 +333,22 @@ rows[n].classList.add("best")
 
 }
 
-function progress(scorePerBell){
+function progress(score){
 
-let cur=document.getElementById("currentScore").value
-let target=document.getElementById("targetScore").value
+let cur=document.getElementById("current").value
+let target=document.getElementById("target").value
 
-if(!cur||!target)return
+if(!cur||!target||score==0)return
 
 let remain=target-cur
+let need=Math.ceil(remain/score)
 
-let need=remain/scorePerBell
-
-document.getElementById("needBell").value=Math.ceil(need)
+document.getElementById("needBell").value=need
 
 }
 
 function toggleDark(){
-
 document.body.classList.toggle("dark")
-
 }
 
 </script>
