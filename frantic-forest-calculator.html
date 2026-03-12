@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -33,21 +32,17 @@ body.dark .section{
 background:#2a2f44;
 }
 
-body.dark input, body.dark select{
+body.dark input,body.dark select{
 background:#1f2436;
 color:white;
 }
 
-body.dark .result{
+body.dark table{
 background:#2a2f44;
 }
 
-body.dark .resultBox{
-background:#3a4060;
-}
-
 .container{
-width:1000px;
+width:900px;
 max-width:95%;
 padding:20px;
 }
@@ -55,7 +50,6 @@ padding:20px;
 h1{
 text-align:center;
 color:#3b4ba8;
-font-size:28px;
 margin-bottom:4px;
 }
 
@@ -63,118 +57,103 @@ margin-bottom:4px;
 text-align:center;
 font-size:13px;
 color:#6b7280;
-margin-bottom:18px;
+margin-bottom:20px;
 }
 
 .section{
 background:white;
 border-radius:16px;
-padding:18px;
-margin-bottom:18px;
+padding:20px;
+margin-bottom:20px;
 box-shadow:0 6px 20px rgba(0,0,0,0.08);
-}
-
-.tabs{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-bottom:10px;
-}
-
-.tab{
-background:#f4f7ff;
-padding:8px 14px;
-border-radius:10px;
-cursor:pointer;
-font-weight:600;
-}
-
-.tab.active{
-background:#6c8cff;
-color:white;
 }
 
 .row{
 display:flex;
-gap:10px;
+gap:16px;
 flex-wrap:wrap;
 align-items:center;
-margin-bottom:8px;
 }
 
-input{
+input,select{
+padding:8px;
+border-radius:8px;
 border:none;
-border-radius:6px;
-padding:6px;
-width:90px;
+font-size:15px;
+width:140px;
+}
+
+button{
+border:none;
+padding:10px 18px;
+border-radius:10px;
+cursor:pointer;
+font-weight:600;
+color:white;
+}
+
+.homeBtn{background:#555;}
+.darkBtn{background:#222;}
+
+.generateBtn{
+background:#6c8cff;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+}
+
+th,td{
+padding:10px;
 text-align:center;
-}
-
-select{
-border:none;
-border-radius:6px;
-padding:6px;
+border-bottom:1px solid #ddd;
 }
 
 .result{
-background:white;
-border-radius:16px;
-padding:30px;
 text-align:center;
-box-shadow:0 6px 20px rgba(0,0,0,0.08);
-display:flex;
-flex-direction:column;
-align-items:center;
 }
 
 .resultRow{
 display:flex;
 justify-content:center;
-gap:16px;
-flex-wrap:wrap;
+gap:20px;
+margin-top:20px;
 }
 
 .resultBox{
 background:#f4f7ff;
-padding:14px 24px;
+padding:18px;
 border-radius:12px;
-font-size:14px;
-font-weight:600;
 min-width:120px;
-text-align:center;
 }
 
 .resultBox div{
-font-size:20px;
-margin-top:4px;
+font-size:26px;
+margin-top:6px;
+font-weight:700;
 }
+
+.scoreList{
+margin-top:10px;
+display:flex;
+flex-direction:column;
+gap:6px;
+font-weight:600;
+}
+
+.copyBtn{background:#3fa34d;}
+.resetBtn{background:#ff6b6b;}
 
 .buttonRow{
-margin-top:20px;
+margin-top:18px;
 display:flex;
-gap:12px;
-flex-wrap:wrap;
 justify-content:center;
+gap:12px;
 }
-
-.actionBtn{
-border:none;
-padding:10px 18px;
-font-size:14px;
-font-weight:600;
-border-radius:10px;
-cursor:pointer;
-color:white;
-}
-
-.copyBtn{background:linear-gradient(135deg,#5dbb63,#3fa34d);}
-.resetBtn{background:#ff6b6b;}
-shareBtn{background:#5865F2;}
-homeBtn{background:#555;}
-darkBtn{background:#222;}
 
 </style>
-
 </head>
 
 <body>
@@ -184,82 +163,69 @@ darkBtn{background:#222;}
 <h1>Isekai Adventure Life Frantic Forest Calculator</h1>
 <div class="subtitle">dev by cozyneko guild</div>
 
-<div style="display:flex;gap:10px;margin-bottom:10px;">
+<div style="display:flex;gap:10px;margin-bottom:10px">
 
-<button class="actionBtn" style="background:#555"
-onclick="location.href='index.html'">
-🏠 Home </button>
+<button class="homeBtn" onclick="location.href='index.html'">
+🏠 Home
+</button>
 
-<button class="actionBtn" style="background:#222"
-onclick="toggleDark()">
-🌙 Dark Mode </button>
-
-</div>
-
-<div class="section">
-
-<h2>Event Config</h2>
-
-<div class="row">
-
-Stable1 HP
-
-<input id="s1hp" value="3.295">
-
-<select id="hpUnit">
-<option>K</option>
-<option>M</option>
-<option selected>B</option>
-<option>T</option>
-<option>aa</option>
-<option>ab</option>
-<option>ac</option>
-</select>
-
-<button class="actionBtn" style="background:#6c8cff" onclick="generateHP()">Generate</button>
-
-</div>
-
-<div id="hpTable"></div>
-
-<div class="row">
-
-S4 Score <input id="s4" value="735">
-S5 Score <input id="s5" value="1000">
-S6 Score <input id="s6" value="2040">
-S7 Score <input id="s7" value="3900">
-
-</div>
+<button class="darkBtn" onclick="toggleDark()">
+🌙 Dark Mode
+</button>
 
 </div>
 
 <div class="section">
 
+<h3>Player Setup</h3>
+
 <div class="row">
 
-Power
+<label>Player Power</label>
+<input id="power" placeholder="Enter power">
 
-<input id="playerPower">
-
-<select id="playerUnit">
-<option>K</option>
-<option>M</option>
-<option selected>B</option>
-<option>T</option>
-<option>aa</option>
-<option>ab</option>
-<option>ac</option>
+<select id="powerUnit">
+<option value="1">Normal</option>
+<option value="1000000">M</option>
+<option value="1000000000" selected>B</option>
+<option value="1000000000000">T</option>
 </select>
 
-Bells
-
-<input id="playerBells">
-
-</div>
+<label>Bells</label>
+<input id="bells" placeholder="Enter bells">
 
 </div>
 
-<div class="result">
+</div>
+
+
+<div class="section">
+
+<h3>Stable HP</h3>
+
+<table>
+
+<tr>
+<th>Stable</th>
+<th>HP (B)</th>
+</tr>
+
+<tr><td>Stable 1</td><td>3.295</td></tr>
+<tr><td>Stable 2</td><td>4.975</td></tr>
+<tr><td>Stable 3</td><td>6.590</td></tr>
+<tr><td>Stable 4</td><td>9.885</td></tr>
+<tr><td>Stable 5</td><td>13.180</td></tr>
+<tr><td>Stable 6</td><td>26.360</td></tr>
+<tr><td>Stable 7</td><td>49.425</td></tr>
+
+</table>
+
+</div>
+
+
+<div class="section result">
+
+<h3>Result</h3>
 
 <div class="resultRow">
 
@@ -275,9 +241,19 @@ Score
 
 </div>
 
+<div class="scoreList">
+
+<div>S4 : 735 points</div>
+<div>S5 : 1000 points</div>
+<div>S6 : 2040 points</div>
+<div>S7 : 3900 points</div>
+
+</div>
+
 <div class="buttonRow">
 
-<button class="actionBtn copyBtn" onclick="copyResult()">Copy Result</button> <button class="actionBtn resetBtn" onclick="resetAll()">Reset</button>
+<button class="copyBtn" onclick="copyResult()">Copy Result</button>
+<button class="resetBtn" onclick="resetAll()">Reset</button>
 
 </div>
 
@@ -287,114 +263,59 @@ Score
 
 <script>
 
-let stableHP=[3.295,4.985,6.591,9.887,13.18,26.36,49.43]
-
-const units={
-K:1e3,
-M:1e6,
-B:1e9,
-T:1e12,
-aa:1e15,
-ab:1e18,
-ac:1e21
-}
-
-function convert(v,u){
-return v*units[u]
-}
-
-function getScores(){
-return[
-0,
-0,
-0,
-parseInt(s4.value)||0,
-parseInt(s5.value)||0,
-parseInt(s6.value)||0,
-parseInt(s7.value)||0
-]
-}
-
-function generateHP(){
-
-let base=parseFloat(s1hp.value)||0
-
-stableHP=[
-base,
-base*1.51,
-base*2,
-base*3,
-base*4,
-base*8,
-base*15
+const stableHP=[
+3.295,
+4.975,
+6.590,
+9.885,
+13.180,
+26.360,
+49.425
 ]
 
-let html=""
+const scoreTable=[0,0,0,735,1000,2040,3900]
 
-stableHP.forEach((v,i)=>{
-html+=`Stable ${i+1} : ${v.toFixed(3)} ${hpUnit.value}<br>`
-})
+document.getElementById("power").addEventListener("input",calc)
+document.getElementById("bells").addEventListener("input",calc)
+document.getElementById("powerUnit").addEventListener("change",calc)
 
-hpTable.innerHTML=html
+function calc(){
 
-autoCalc()
+let power=document.getElementById("power").value
+let bells=document.getElementById("bells").value
+let unit=document.getElementById("powerUnit").value
+
+if(!power||!bells)return
+
+power=power*unit
+bells=parseInt(bells)
+
+let damage=power*bells
+
+let best=0
+
+for(let i=0;i<stableHP.length;i++){
+
+let hp=stableHP[i]*1000000000
+
+if(damage>=hp){
+best=i+1
+}
 
 }
 
-function calculate(power,bells){
-
-let scores=getScores()
-
-let bestScore=0
-let bestStable=0
-
-stableHP.forEach((hp,i)=>{
-
-let hits=Math.ceil(convert(hp,hpUnit.value)/power)
-
-let kills=Math.floor(bells/hits)
-
-let score=kills*hits*scores[i]
-
-if(score>bestScore){
-bestScore=score
-bestStable=i+1
-}
-
-})
-
-bestStableEl.innerText=bestStable
-scoreEl.innerText=bestScore
-
-}
-
-function autoCalc(){
-
-let power=parseFloat(playerPower.value)
-let bells=parseInt(playerBells.value)
-
-if(!power||!bells) return
-
-power=convert(power,playerUnit.value)
-
-calculate(power,bells)
-
-}
-
-function resetAll(){
-
-document.querySelectorAll("input").forEach(i=>i.value="")
-bestStableEl.innerText=0
-scoreEl.innerText=0
+document.getElementById("bestStable").innerText=best
+document.getElementById("score").innerText=scoreTable[best]
 
 }
 
 function copyResult(){
 
-let text=`Frantic Forest Result
+let text=
+`Frantic Forest Result
 
-Best Stable: ${bestStableEl.innerText}
-Score: ${scoreEl.innerText}`
+Best Stable: ${bestStable.innerText}
+Score: ${score.innerText}`
 
 navigator.clipboard.writeText(text)
 
@@ -402,33 +323,20 @@ alert("Copied!")
 
 }
 
+function resetAll(){
+
+document.getElementById("power").value=""
+document.getElementById("bells").value=""
+bestStable.innerText=0
+score.innerText=0
+
+}
+
 function toggleDark(){
 
 document.body.classList.toggle("dark")
 
-localStorage.setItem(
-"darkmode",
-document.body.classList.contains("dark")
-)
-
 }
-
-if(localStorage.getItem("darkmode")==="true"){
-document.body.classList.add("dark")
-}
-
-const bestStableEl=document.getElementById("bestStable")
-const scoreEl=document.getElementById("score")
-
-generateHP()
-
-document.querySelectorAll("input").forEach(i=>{
-i.addEventListener("input",autoCalc)
-})
-
-document.querySelectorAll("select").forEach(s=>{
-s.addEventListener("change",autoCalc)
-})
 
 </script>
 
