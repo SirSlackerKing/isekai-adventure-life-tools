@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,7 +11,7 @@
 
 *{
 box-sizing:border-box;
-font-family:Segoe UI,Arial;
+font-family:Segoe UI;
 }
 
 body{
@@ -31,18 +30,6 @@ color:white;
 width:1000px;
 max-width:95%;
 padding:20px;
-}
-
-h1{
-text-align:center;
-margin-bottom:4px;
-}
-
-.dev{
-text-align:center;
-font-size:13px;
-opacity:.6;
-margin-bottom:20px;
 }
 
 .section{
@@ -70,13 +57,12 @@ font-weight:600;
 }
 
 input,select{
-padding:10px;
+padding:8px;
 border-radius:8px;
 border:none;
 background:#f1f4ff;
-width:110px;
+width:100px;
 text-align:center;
-font-size:14px;
 }
 
 body.dark input,
@@ -85,35 +71,9 @@ background:#1f2436;
 color:white;
 }
 
-.topButtons{
-display:flex;
-gap:10px;
-margin-bottom:10px;
-}
-
-button{
-border:none;
-padding:9px 14px;
-border-radius:8px;
-cursor:pointer;
-color:white;
-font-weight:600;
-}
-
-.home{background:#555}
-.darkbtn{background:#222}
-.copy{background:#4c6fff}
-
-.damageHero{
-font-size:28px;
-font-weight:700;
-color:#4c6fff;
-}
-
 table{
 width:100%;
 border-collapse:collapse;
-margin-top:10px;
 }
 
 th{
@@ -132,7 +92,9 @@ background:#3a4060;
 }
 
 .killable{
-background:#e8f7ee;
+background:#4caf50;
+color:white;
+font-weight:600;
 }
 
 .best{
@@ -141,73 +103,37 @@ color:white;
 font-weight:700;
 }
 
-.scoreGrid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:10px;
-margin-top:10px;
-}
-
-.scoreItem{
-display:flex;
-align-items:center;
-justify-content:space-between;
-background:#f4f7ff;
-padding:8px 10px;
-border-radius:8px;
-}
-
-body.dark .scoreItem{
-background:#1f2436;
-}
-
 .resultGrid{
 display:flex;
 gap:20px;
 justify-content:center;
-flex-wrap:wrap;
+margin-top:10px;
 }
 
 .resultBox{
 background:#f4f7ff;
-padding:20px;
-border-radius:12px;
+padding:15px;
+border-radius:10px;
 text-align:center;
-min-width:180px;
+min-width:160px;
 }
 
 body.dark .resultBox{
 background:#1f2436;
 }
 
-.resultTitle{
-font-size:14px;
-opacity:.7;
+button{
+border:none;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+color:white;
+font-weight:600;
+margin-right:8px;
 }
 
-.resultValue{
-font-size:34px;
-font-weight:700;
-margin-top:5px;
-}
-
-.copyBtn{
-margin-top:10px;
-background:#4c6fff;
-}
-
-@media(max-width:600px){
-
-.row{
-flex-direction:column;
-align-items:flex-start;
-}
-
-label{
-width:auto;
-}
-
-}
+.home{background:#555}
+.darkbtn{background:#222}
 
 </style>
 </head>
@@ -216,15 +142,11 @@ width:auto;
 
 <div class="container">
 
-<h1>Frantic Forest Calculator</h1>
-<div class="dev">Improved UI Version</div>
+<h2>Frantic Forest Calculator</h2>
 
-<div class="topButtons">
 <button class="home" onclick="location.href='index.html'">Home</button>
-<button class="darkbtn" onclick="toggleDark()">Dark Mode</button>
-</div>
+<button class="darkbtn" onclick="toggleDark()">Dark</button>
 
-<!-- PLAYER -->
 
 <div class="section">
 
@@ -232,54 +154,31 @@ width:auto;
 
 <div class="row">
 <label>Base Power</label>
-<input id="power">
+<input id="power" value="50">
 <select id="unit">
 <option value="1e6">M</option>
 <option value="1e9" selected>B</option>
 <option value="1e12">T</option>
-<option value="1e15">aa</option>
 </select>
 </div>
 
 <div class="row">
 <label>Bonus %</label>
-<input id="bonus">
+<input id="bonus" value="0">
 </div>
 
 <div class="row">
 <label>Total Bells</label>
-<input id="bells">
+<input id="bells" value="100">
 </div>
 
 <div class="row">
 <label>Damage / Bell</label>
-<div class="damageHero" id="damage">-</div>
+<input id="damage" disabled>
 </div>
 
 </div>
 
-<!-- SCORE PER KILL -->
-
-<div class="section">
-
-<h3>Score / Kill</h3>
-
-<div class="scoreGrid">
-
-<div class="scoreItem">S1 <input id="sc1"></div>
-<div class="scoreItem">S2 <input id="sc2"></div>
-<div class="scoreItem">S3 <input id="sc3"></div>
-<div class="scoreItem">S4 <input id="sc4" value="735"></div>
-
-<div class="scoreItem">S5 <input id="sc5" value="1000"></div>
-<div class="scoreItem">S6 <input id="sc6" value="2040"></div>
-<div class="scoreItem">S7 <input id="sc7" value="3900"></div>
-
-</div>
-
-</div>
-
-<!-- STABLE TABLE -->
 
 <div class="section">
 
@@ -292,7 +191,6 @@ width:auto;
 <th>HP (B)</th>
 <th>Kill</th>
 <th>Score</th>
-<th>Power Needed</th>
 </tr>
 
 <tr>
@@ -300,12 +198,208 @@ width:auto;
 <td><input id="hp1" value="3.295"></td>
 <td id="k1"></td>
 <td id="s1"></td>
-<td id="need1"></td>
 </tr>
 
 <tr>
 <td>2</td>
 <td><input id="hp2" value="4.985"></td>
 <td id="k2"></td>
-<td id="s2"></
-```
+<td id="s2"></td>
+</tr>
+
+<tr>
+<td>3</td>
+<td><input id="hp3" value="6.591"></td>
+<td id="k3"></td>
+<td id="s3"></td>
+</tr>
+
+<tr>
+<td>4</td>
+<td><input id="hp4" value="9.887"></td>
+<td id="k4"></td>
+<td id="s4"></td>
+</tr>
+
+<tr>
+<td>5</td>
+<td><input id="hp5" value="13.18"></td>
+<td id="k5"></td>
+<td id="s5"></td>
+</tr>
+
+<tr>
+<td>6</td>
+<td><input id="hp6" value="26.36"></td>
+<td id="k6"></td>
+<td id="s6"></td>
+</tr>
+
+<tr>
+<td>7</td>
+<td><input id="hp7" value="49.43"></td>
+<td id="k7"></td>
+<td id="s7"></td>
+</tr>
+
+</table>
+
+</div>
+
+
+<div class="section">
+
+<h3>Stable Score</h3>
+
+<div class="row">Stable1 score <input id="sc1" value="0"></div>
+<div class="row">Stable2 score <input id="sc2" value="0"></div>
+<div class="row">Stable3 score <input id="sc3" value="0"></div>
+<div class="row">Stable4 score <input id="sc4" value="735"></div>
+<div class="row">Stable5 score <input id="sc5" value="1000"></div>
+<div class="row">Stable6 score <input id="sc6" value="2040"></div>
+<div class="row">Stable7 score <input id="sc7" value="3900"></div>
+
+</div>
+
+
+<div class="section">
+
+<h3>Result</h3>
+
+<div class="resultGrid">
+
+<div class="resultBox">
+Recommended Stable
+<div id="bestStable">-</div>
+</div>
+
+<div class="resultBox">
+Total Score
+<div id="totalScore">0</div>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
+<h3>Event Progress Simulator</h3>
+
+<div class="row">
+<label>Current Score</label>
+<input id="current">
+</div>
+
+<div class="row">
+<label>Target Score</label>
+<input id="target">
+</div>
+
+<div class="row">
+<label>Bells Needed</label>
+<input id="needBell" disabled>
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const inputs=document.querySelectorAll("input,select")
+
+inputs.forEach(i=>i.addEventListener("input",calc))
+
+function calc(){
+
+let base=parseFloat(document.getElementById("power").value)
+let unit=parseFloat(document.getElementById("unit").value)
+let bonus=parseFloat(document.getElementById("bonus").value)||0
+let bells=parseFloat(document.getElementById("bells").value)||0
+
+let damage=base*unit*(1+bonus/100)
+
+document.getElementById("damage").value=(damage/1e9).toFixed(2)+" B"
+
+let bestStable=0
+let bestScore=0
+
+for(let i=1;i<=7;i++){
+
+let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
+let score=parseFloat(document.getElementById("sc"+i).value)||0
+
+let kill=damage>=hp?1:0
+
+document.getElementById("k"+i).innerText=kill
+document.getElementById("s"+i).innerText=kill?score:0
+
+let row=document.querySelectorAll("#stableTable tr")[i]
+
+row.classList.remove("killable")
+
+if(kill){
+row.classList.add("killable")
+}
+
+if(kill && score>bestScore){
+bestScore=score
+bestStable=i
+}
+
+}
+
+highlight(bestStable)
+
+document.getElementById("bestStable").innerText=
+bestStable?"Stable "+bestStable:"-"
+
+document.getElementById("totalScore").innerText=bestScore*bells
+
+progress(bestScore)
+
+}
+
+function highlight(n){
+
+let rows=document.querySelectorAll("#stableTable tr")
+
+rows.forEach(r=>r.classList.remove("best"))
+
+if(n>0){
+rows[n].classList.add("best")
+}
+
+}
+
+function progress(score){
+
+let cur=parseFloat(document.getElementById("current").value)||0
+let target=parseFloat(document.getElementById("target").value)||0
+
+let remain=target-cur
+
+if(remain<=0){
+document.getElementById("needBell").value=0
+return
+}
+
+if(score>0){
+document.getElementById("needBell").value=Math.ceil(remain/score)
+}
+
+}
+
+function toggleDark(){
+document.body.classList.toggle("dark")
+}
+
+calc()
+
+</script>
+
+</body>
+</html>
