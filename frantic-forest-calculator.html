@@ -11,7 +11,7 @@
 
 *{
 box-sizing:border-box;
-font-family:Segoe UI;
+font-family:Segoe UI,Arial;
 }
 
 body{
@@ -30,6 +30,18 @@ color:white;
 width:1000px;
 max-width:95%;
 padding:20px;
+}
+
+h1{
+text-align:center;
+margin-bottom:6px;
+}
+
+.dev{
+text-align:center;
+font-size:13px;
+margin-bottom:20px;
+opacity:.7;
 }
 
 .section{
@@ -52,17 +64,18 @@ margin-bottom:12px;
 }
 
 label{
-width:160px;
+width:170px;
 font-weight:600;
 }
 
 input,select{
-padding:8px;
+padding:10px;
 border-radius:8px;
 border:none;
 background:#f1f4ff;
-width:100px;
+width:110px;
 text-align:center;
+font-size:14px;
 }
 
 body.dark input,
@@ -74,6 +87,7 @@ color:white;
 table{
 width:100%;
 border-collapse:collapse;
+margin-top:10px;
 }
 
 th{
@@ -103,37 +117,61 @@ color:white;
 font-weight:700;
 }
 
+.topButtons{
+display:flex;
+gap:10px;
+margin-bottom:10px;
+}
+
+button{
+border:none;
+padding:9px 14px;
+border-radius:8px;
+cursor:pointer;
+color:white;
+font-weight:600;
+}
+
+.home{background:#555}
+.darkbtn{background:#222}
+.copy{background:#4c6fff}
+
 .resultGrid{
 display:flex;
 gap:20px;
 justify-content:center;
 margin-top:10px;
+flex-wrap:wrap;
 }
 
 .resultBox{
 background:#f4f7ff;
-padding:15px;
-border-radius:10px;
+padding:20px;
+border-radius:12px;
 text-align:center;
-min-width:160px;
+min-width:180px;
 }
 
 body.dark .resultBox{
 background:#1f2436;
 }
 
-button{
-border:none;
-padding:8px 14px;
-border-radius:8px;
-cursor:pointer;
-color:white;
-font-weight:600;
-margin-right:8px;
+.resultTitle{
+font-size:14px;
+opacity:.7;
 }
 
-.home{background:#555}
-.darkbtn{background:#222}
+.resultValue{
+font-size:32px;
+font-weight:700;
+margin-top:5px;
+}
+
+.damageHero{
+font-size:22px;
+font-weight:700;
+color:#4c6fff;
+}
 
 </style>
 </head>
@@ -142,11 +180,16 @@ margin-right:8px;
 
 <div class="container">
 
-<h2>Frantic Forest Calculator</h2>
+<h1>Frantic Forest Calculator</h1>
+<div class="dev">v4.5 • dev by cozyneko</div>
 
+<div class="topButtons">
 <button class="home" onclick="location.href='index.html'">Home</button>
-<button class="darkbtn" onclick="toggleDark()">Dark</button>
+<button class="darkbtn" onclick="toggleDark()">Dark Mode</button>
+<button class="copy" onclick="copyResult()">Copy Result</button>
+</div>
 
+<!-- PLAYER -->
 
 <div class="section">
 
@@ -154,31 +197,33 @@ margin-right:8px;
 
 <div class="row">
 <label>Base Power</label>
-<input id="power" value="50">
+<input id="power">
 <select id="unit">
 <option value="1e6">M</option>
 <option value="1e9" selected>B</option>
 <option value="1e12">T</option>
+<option value="1e15">aa</option>
 </select>
 </div>
 
 <div class="row">
 <label>Bonus %</label>
-<input id="bonus" value="0">
+<input id="bonus">
 </div>
 
 <div class="row">
 <label>Total Bells</label>
-<input id="bells" value="100">
+<input id="bells">
 </div>
 
 <div class="row">
 <label>Damage / Bell</label>
-<input id="damage" disabled>
+<div class="damageHero" id="damage">-</div>
 </div>
 
 </div>
 
+<!-- STABLE TABLE -->
 
 <div class="section">
 
@@ -191,6 +236,7 @@ margin-right:8px;
 <th>HP (B)</th>
 <th>Kill</th>
 <th>Score</th>
+<th>Power Needed</th>
 </tr>
 
 <tr>
@@ -198,6 +244,7 @@ margin-right:8px;
 <td><input id="hp1" value="3.295"></td>
 <td id="k1"></td>
 <td id="s1"></td>
+<td id="need1"></td>
 </tr>
 
 <tr>
@@ -205,6 +252,7 @@ margin-right:8px;
 <td><input id="hp2" value="4.985"></td>
 <td id="k2"></td>
 <td id="s2"></td>
+<td id="need2"></td>
 </tr>
 
 <tr>
@@ -212,6 +260,7 @@ margin-right:8px;
 <td><input id="hp3" value="6.591"></td>
 <td id="k3"></td>
 <td id="s3"></td>
+<td id="need3"></td>
 </tr>
 
 <tr>
@@ -219,6 +268,7 @@ margin-right:8px;
 <td><input id="hp4" value="9.887"></td>
 <td id="k4"></td>
 <td id="s4"></td>
+<td id="need4"></td>
 </tr>
 
 <tr>
@@ -226,6 +276,7 @@ margin-right:8px;
 <td><input id="hp5" value="13.18"></td>
 <td id="k5"></td>
 <td id="s5"></td>
+<td id="need5"></td>
 </tr>
 
 <tr>
@@ -233,6 +284,7 @@ margin-right:8px;
 <td><input id="hp6" value="26.36"></td>
 <td id="k6"></td>
 <td id="s6"></td>
+<td id="need6"></td>
 </tr>
 
 <tr>
@@ -240,27 +292,30 @@ margin-right:8px;
 <td><input id="hp7" value="49.43"></td>
 <td id="k7"></td>
 <td id="s7"></td>
+<td id="need7"></td>
 </tr>
 
 </table>
 
 </div>
 
+<!-- SCORE -->
 
 <div class="section">
 
-<h3>Stable Score</h3>
+<h3>Score per Kill</h3>
 
-<div class="row">Stable1 score <input id="sc1" value="0"></div>
-<div class="row">Stable2 score <input id="sc2" value="0"></div>
-<div class="row">Stable3 score <input id="sc3" value="0"></div>
-<div class="row">Stable4 score <input id="sc4" value="735"></div>
-<div class="row">Stable5 score <input id="sc5" value="1000"></div>
-<div class="row">Stable6 score <input id="sc6" value="2040"></div>
-<div class="row">Stable7 score <input id="sc7" value="3900"></div>
+<div class="row">Stable 1 <input id="sc1"></div>
+<div class="row">Stable 2 <input id="sc2"></div>
+<div class="row">Stable 3 <input id="sc3"></div>
+<div class="row">Stable 4 <input id="sc4" value="735"></div>
+<div class="row">Stable 5 <input id="sc5" value="1000"></div>
+<div class="row">Stable 6 <input id="sc6" value="2040"></div>
+<div class="row">Stable 7 <input id="sc7" value="3900"></div>
 
 </div>
 
+<!-- RESULT -->
 
 <div class="section">
 
@@ -269,19 +324,25 @@ margin-right:8px;
 <div class="resultGrid">
 
 <div class="resultBox">
-Recommended Stable
-<div id="bestStable">-</div>
+<div class="resultTitle">Recommended Stable</div>
+<div class="resultValue" id="bestStable">-</div>
 </div>
 
 <div class="resultBox">
-Total Score
-<div id="totalScore">0</div>
+<div class="resultTitle">Score / Bell</div>
+<div class="resultValue" id="scoreBell">-</div>
+</div>
+
+<div class="resultBox">
+<div class="resultTitle">Total Score</div>
+<div class="resultValue" id="totalScore">-</div>
 </div>
 
 </div>
 
 </div>
 
+<!-- EVENT SIM -->
 
 <div class="section">
 
@@ -310,19 +371,22 @@ Total Score
 <script>
 
 const inputs=document.querySelectorAll("input,select")
-
 inputs.forEach(i=>i.addEventListener("input",calc))
 
 function calc(){
 
-let base=parseFloat(document.getElementById("power").value)
-let unit=parseFloat(document.getElementById("unit").value)
-let bonus=parseFloat(document.getElementById("bonus").value)||0
-let bells=parseFloat(document.getElementById("bells").value)||0
+let base=parseFloat(power.value)
+let unitValue=parseFloat(unit.value)
+let bonusValue=parseFloat(bonus.value)||0
+let bellsValue=parseFloat(bells.value)||0
 
-let damage=base*unit*(1+bonus/100)
+if(!base)return
 
-document.getElementById("damage").value=(damage/1e9).toFixed(2)+" B"
+let damage = base * unitValue * (1 + bonusValue/100)
+
+damageDisplay=(damage/1e9).toFixed(2)+" B"
+
+document.getElementById("damage").innerText=damageDisplay
 
 let bestStable=0
 let bestScore=0
@@ -332,32 +396,33 @@ for(let i=1;i<=7;i++){
 let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
 let score=parseFloat(document.getElementById("sc"+i).value)||0
 
-let kill=damage>=hp?1:0
+let kill = damage>=hp
 
-document.getElementById("k"+i).innerText=kill
+document.getElementById("k"+i).innerText=kill?"✓":"—"
 document.getElementById("s"+i).innerText=kill?score:0
 
-let row=document.querySelectorAll("#stableTable tr")[i]
+let need = hp-damage
 
-row.classList.remove("killable")
-
-if(kill){
-row.classList.add("killable")
-}
+document.getElementById("need"+i).innerText=
+need>0?(need/1e9).toFixed(2)+"B":"✓"
 
 if(kill && score>bestScore){
+
 bestScore=score
 bestStable=i
+
 }
 
 }
 
 highlight(bestStable)
 
-document.getElementById("bestStable").innerText=
-bestStable?"Stable "+bestStable:"-"
+document.getElementById("bestStable").innerText=bestStable?("Stable "+bestStable):"-"
+document.getElementById("scoreBell").innerText=bestScore||"-"
 
-document.getElementById("totalScore").innerText=bestScore*bells
+let total=bestScore*bellsValue
+
+document.getElementById("totalScore").innerText=total||"-"
 
 progress(bestScore)
 
@@ -377,27 +442,41 @@ rows[n].classList.add("best")
 
 function progress(score){
 
-let cur=parseFloat(document.getElementById("current").value)||0
-let target=parseFloat(document.getElementById("target").value)||0
+let cur=parseFloat(current.value)||0
+let target=parseFloat(target.value)||0
+
+if(!score)return
 
 let remain=target-cur
+let need=Math.ceil(remain/score)
 
-if(remain<=0){
-document.getElementById("needBell").value=0
-return
+needBell.value=need>0?need:0
+
 }
 
-if(score>0){
-document.getElementById("needBell").value=Math.ceil(remain/score)
-}
+function copyResult(){
+
+let dmg=document.getElementById("damage").innerText
+let stable=document.getElementById("bestStable").innerText
+let score=document.getElementById("scoreBell").innerText
+let total=document.getElementById("totalScore").innerText
+
+let text=
+"Frantic Forest Result\n"+
+"Damage/Bell : "+dmg+"\n"+
+"Recommended : "+stable+"\n"+
+"Score/Bell : "+score+"\n"+
+"Total Score : "+total
+
+navigator.clipboard.writeText(text)
+
+alert("Result Copied")
 
 }
 
 function toggleDark(){
 document.body.classList.toggle("dark")
 }
-
-calc()
 
 </script>
 
