@@ -9,7 +9,10 @@
 
 <style>
 
-*{box-sizing:border-box;font-family:Segoe UI}
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+}
 
 body{
 margin:0;
@@ -28,8 +31,6 @@ width:1000px;
 max-width:95%;
 padding:20px;
 }
-
-h1{text-align:center}
 
 .section{
 background:white;
@@ -64,7 +65,8 @@ width:100px;
 text-align:center;
 }
 
-body.dark input,body.dark select{
+body.dark input,
+body.dark select{
 background:#1f2436;
 color:white;
 }
@@ -85,7 +87,9 @@ text-align:center;
 border-bottom:1px solid #eee;
 }
 
-body.dark th{background:#3a4060}
+body.dark th{
+background:#3a4060;
+}
 
 .killable{
 background:#4caf50;
@@ -98,24 +102,6 @@ background:#4c6fff;
 color:white;
 font-weight:700;
 }
-
-.topButtons{
-display:flex;
-gap:10px;
-margin-bottom:10px;
-}
-
-button{
-border:none;
-padding:8px 14px;
-border-radius:8px;
-cursor:pointer;
-color:white;
-font-weight:600;
-}
-
-.home{background:#555}
-.darkbtn{background:#222}
 
 .resultGrid{
 display:flex;
@@ -136,6 +122,19 @@ body.dark .resultBox{
 background:#1f2436;
 }
 
+button{
+border:none;
+padding:8px 14px;
+border-radius:8px;
+cursor:pointer;
+color:white;
+font-weight:600;
+margin-right:8px;
+}
+
+.home{background:#555}
+.darkbtn{background:#222}
+
 </style>
 </head>
 
@@ -143,15 +142,10 @@ background:#1f2436;
 
 <div class="container">
 
-<h1>Frantic Forest Calculator</h1>
-<div style="text-align:center;font-size:13px;margin-bottom:15px">
-v4 • dev by cozyneko
-</div>
+<h2>Frantic Forest Calculator</h2>
 
-<div class="topButtons">
 <button class="home" onclick="location.href='index.html'">Home</button>
 <button class="darkbtn" onclick="toggleDark()">Dark</button>
-</div>
 
 
 <div class="section">
@@ -160,23 +154,22 @@ v4 • dev by cozyneko
 
 <div class="row">
 <label>Base Power</label>
-<input id="power">
+<input id="power" value="50">
 <select id="unit">
 <option value="1e6">M</option>
 <option value="1e9" selected>B</option>
 <option value="1e12">T</option>
-<option value="1e15">aa</option>
 </select>
 </div>
 
 <div class="row">
 <label>Bonus %</label>
-<input id="bonus">
+<input id="bonus" value="0">
 </div>
 
 <div class="row">
 <label>Total Bells</label>
-<input id="bells">
+<input id="bells" value="100">
 </div>
 
 <div class="row">
@@ -198,7 +191,6 @@ v4 • dev by cozyneko
 <th>HP (B)</th>
 <th>Kill</th>
 <th>Score</th>
-<th>Power Needed (B)</th>
 </tr>
 
 <tr>
@@ -206,7 +198,6 @@ v4 • dev by cozyneko
 <td><input id="hp1" value="3.295"></td>
 <td id="k1"></td>
 <td id="s1"></td>
-<td id="need1"></td>
 </tr>
 
 <tr>
@@ -214,7 +205,6 @@ v4 • dev by cozyneko
 <td><input id="hp2" value="4.985"></td>
 <td id="k2"></td>
 <td id="s2"></td>
-<td id="need2"></td>
 </tr>
 
 <tr>
@@ -222,7 +212,6 @@ v4 • dev by cozyneko
 <td><input id="hp3" value="6.591"></td>
 <td id="k3"></td>
 <td id="s3"></td>
-<td id="need3"></td>
 </tr>
 
 <tr>
@@ -230,7 +219,6 @@ v4 • dev by cozyneko
 <td><input id="hp4" value="9.887"></td>
 <td id="k4"></td>
 <td id="s4"></td>
-<td id="need4"></td>
 </tr>
 
 <tr>
@@ -238,7 +226,6 @@ v4 • dev by cozyneko
 <td><input id="hp5" value="13.18"></td>
 <td id="k5"></td>
 <td id="s5"></td>
-<td id="need5"></td>
 </tr>
 
 <tr>
@@ -246,7 +233,6 @@ v4 • dev by cozyneko
 <td><input id="hp6" value="26.36"></td>
 <td id="k6"></td>
 <td id="s6"></td>
-<td id="need6"></td>
 </tr>
 
 <tr>
@@ -254,7 +240,6 @@ v4 • dev by cozyneko
 <td><input id="hp7" value="49.43"></td>
 <td id="k7"></td>
 <td id="s7"></td>
-<td id="need7"></td>
 </tr>
 
 </table>
@@ -266,9 +251,9 @@ v4 • dev by cozyneko
 
 <h3>Stable Score</h3>
 
-<div class="row">Stable1 score <input id="sc1"></div>
-<div class="row">Stable2 score <input id="sc2"></div>
-<div class="row">Stable3 score <input id="sc3"></div>
+<div class="row">Stable1 score <input id="sc1" value="0"></div>
+<div class="row">Stable2 score <input id="sc2" value="0"></div>
+<div class="row">Stable3 score <input id="sc3" value="0"></div>
 <div class="row">Stable4 score <input id="sc4" value="735"></div>
 <div class="row">Stable5 score <input id="sc5" value="1000"></div>
 <div class="row">Stable6 score <input id="sc6" value="2040"></div>
@@ -289,13 +274,8 @@ Recommended Stable
 </div>
 
 <div class="resultBox">
-Closest Stable
-<div id="closestStable">-</div>
-</div>
-
-<div class="resultBox">
 Total Score
-<div id="totalScore">-</div>
+<div id="totalScore">0</div>
 </div>
 
 </div>
@@ -330,40 +310,32 @@ Total Score
 <script>
 
 const inputs=document.querySelectorAll("input,select")
+
 inputs.forEach(i=>i.addEventListener("input",calc))
 
 function calc(){
 
 let base=parseFloat(document.getElementById("power").value)
-let unitValue=parseFloat(document.getElementById("unit").value)
-let bonusValue=parseFloat(document.getElementById("bonus").value)||0
-let bellsValue=parseFloat(document.getElementById("bells").value)||0
+let unit=parseFloat(document.getElementById("unit").value)
+let bonus=parseFloat(document.getElementById("bonus").value)||0
+let bells=parseFloat(document.getElementById("bells").value)||0
 
-if(!base)return
+let damage=base*unit*(1+bonus/100)
 
-let damage = base * unitValue * (1 + bonusValue/100)
-
-document.getElementById("damage").value=(damage/1e9).toFixed(2)+"B"
+document.getElementById("damage").value=(damage/1e9).toFixed(2)+" B"
 
 let bestStable=0
 let bestScore=0
-let closest=0
-let closestDiff=Infinity
 
 for(let i=1;i<=7;i++){
 
 let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
 let score=parseFloat(document.getElementById("sc"+i).value)||0
 
-let kill = damage>=hp ? 1 : 0
+let kill=damage>=hp?1:0
 
 document.getElementById("k"+i).innerText=kill
 document.getElementById("s"+i).innerText=kill?score:0
-
-let need = hp-damage
-
-document.getElementById("need"+i).innerText=
-need>0 ? (need/1e9).toFixed(2)+"B" : "✓"
 
 let row=document.querySelectorAll("#stableTable tr")[i]
 
@@ -378,22 +350,14 @@ bestScore=score
 bestStable=i
 }
 
-if(!kill && need<closestDiff){
-closestDiff=need
-closest=i
-}
-
 }
 
 highlight(bestStable)
 
 document.getElementById("bestStable").innerText=
-bestStable ? "Stable "+bestStable : "-"
+bestStable?"Stable "+bestStable:"-"
 
-document.getElementById("closestStable").innerText=
-closest ? "Stable "+closest : "-"
-
-document.getElementById("totalScore").innerText=bestScore*bellsValue
+document.getElementById("totalScore").innerText=bestScore*bells
 
 progress(bestScore)
 
@@ -416,8 +380,6 @@ function progress(score){
 let cur=parseFloat(document.getElementById("current").value)||0
 let target=parseFloat(document.getElementById("target").value)||0
 
-if(!score)return
-
 let remain=target-cur
 
 if(remain<=0){
@@ -425,9 +387,9 @@ document.getElementById("needBell").value=0
 return
 }
 
-let need=Math.ceil(remain/score)
-
-document.getElementById("needBell").value=need
+if(score>0){
+document.getElementById("needBell").value=Math.ceil(remain/score)
+}
 
 }
 
