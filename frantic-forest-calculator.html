@@ -247,7 +247,6 @@ v4 • dev by cozyneko
 <td id="k6"></td>
 <td id="s6"></td>
 <td id="need6"></td>
-<td id="need6"></td>
 </tr>
 
 <tr>
@@ -335,34 +334,44 @@ inputs.forEach(i=>i.addEventListener("input",calc))
 
 function calc(){
 
-let base=parseFloat(power.value)
-let unit=parseFloat(unit.value)
-let bonus=parseFloat(bonus.value)||0
-let bells=parseFloat(bells.value)||0
+let base=parseFloat(document.getElementById("power").value)
+let unitValue=parseFloat(document.getElementById("unit").value)
+let bonusValue=parseFloat(document.getElementById("bonus").value)||0
+let bellsValue=parseFloat(document.getElementById("bells").value)||0
 
 if(!base)return
 
-let damage=base*unit*(1+bonus/100)
+let damage = base * unitValue * (1 + bonusValue/100)
 
 document.getElementById("damage").value=(damage/1e9).toFixed(2)+"B"
 
 let bestStable=0
 let bestScore=0
 let closest=0
-let closestDiff=999999999999
+let closestDiff=Infinity
 
 for(let i=1;i<=7;i++){
 
 let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
 let score=parseFloat(document.getElementById("sc"+i).value)||0
 
-let kill=damage>=hp?1:0
+let kill = damage>=hp ? 1 : 0
 
 document.getElementById("k"+i).innerText=kill
 document.getElementById("s"+i).innerText=kill?score:0
 
-let need=hp-damage
-document.getElementById("need"+i).innerText=(need>0?(need/1e9).toFixed(2)+"B":"✓")
+let need = hp-damage
+
+document.getElementById("need"+i).innerText=
+need>0 ? (need/1e9).toFixed(2)+"B" : "✓"
+
+let row=document.querySelectorAll("#stableTable tr")[i]
+
+row.classList.remove("killable")
+
+if(kill){
+row.classList.add("killable")
+}
 
 if(kill && score>bestScore){
 bestScore=score
@@ -378,9 +387,13 @@ closest=i
 
 highlight(bestStable)
 
-document.getElementById("bestStable").innerText="Stable "+bestStable
-document.getElementById("closestStable").innerText="Stable "+closest
-document.getElementById("totalScore").innerText=(bestScore*bells)
+document.getElementById("bestStable").innerText=
+bestStable ? "Stable "+bestStable : "-"
+
+document.getElementById("closestStable").innerText=
+closest ? "Stable "+closest : "-"
+
+document.getElementById("totalScore").innerText=bestScore*bellsValue
 
 progress(bestScore)
 
@@ -389,6 +402,7 @@ progress(bestScore)
 function highlight(n){
 
 let rows=document.querySelectorAll("#stableTable tr")
+
 rows.forEach(r=>r.classList.remove("best"))
 
 if(n>0){
@@ -399,21 +413,29 @@ rows[n].classList.add("best")
 
 function progress(score){
 
-let cur=parseFloat(current.value)||0
-let target=parseFloat(target.value)||0
+let cur=parseFloat(document.getElementById("current").value)||0
+let target=parseFloat(document.getElementById("target").value)||0
 
 if(!score)return
 
 let remain=target-cur
+
+if(remain<=0){
+document.getElementById("needBell").value=0
+return
+}
+
 let need=Math.ceil(remain/score)
 
-needBell.value=need
+document.getElementById("needBell").value=need
 
 }
 
 function toggleDark(){
 document.body.classList.toggle("dark")
 }
+
+calc()
 
 </script>
 
