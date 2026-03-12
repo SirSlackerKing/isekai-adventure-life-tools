@@ -273,7 +273,7 @@ background:#5865F2;
 Family
 
 <button onclick="change('family',-1)">-</button>
-<input id="family" value="40">
+<input id="family" value="40" oninput="calc();saveData()">
 <button onclick="change('family',1)">+</button>
 
 </div>
@@ -304,7 +304,7 @@ Family
 <div class="familyBox">
 
 <button onclick="change('custom',-1)">-</button>
-<input id="custom" value="0">
+<input id="family" value="40" oninput="calc();saveData()">
 <button onclick="change('custom',1)">+</button>
 
 </div>
@@ -449,7 +449,7 @@ html+=`
 <div class="name">${i.name}</div>
 <div class="controls">
 <button onclick="change('${id}${index}',-1)">-</button>
-<input id="${id}${index}" value="0">
+<input id="${id}${index}" value="0" oninput="calc();saveData()">
 <button onclick="change('${id}${index}',1)">+</button>
 </div>
 </div>`
