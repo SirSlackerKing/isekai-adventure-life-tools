@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 
@@ -23,7 +24,7 @@ justify-content:center;
 }
 
 .container{
-width:1100px;
+width:1050px;
 max-width:95%;
 padding:20px;
 }
@@ -33,11 +34,6 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:20px;
-}
-
-.title{
-font-size:26px;
-font-weight:700;
 }
 
 .homeBtn{
@@ -54,7 +50,7 @@ background:#2a2f44;
 padding:20px;
 border-radius:14px;
 margin-bottom:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.25);
+box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 
 .grid{
@@ -91,14 +87,13 @@ border-radius:10px;
 cursor:pointer;
 color:white;
 font-weight:600;
-font-size:16px;
 touch-action:manipulation;
 }
 
 .smallBtn{
 width:42px;
 background:#4c6fff;
-font-size:20px;
+font-size:18px;
 }
 
 .copyBtn{
@@ -128,7 +123,6 @@ background:#3946a3;
 
 .star{
 color:gold;
-font-size:18px;
 }
 
 .resultBox{
@@ -139,12 +133,13 @@ text-align:center;
 }
 
 footer{
-margin-top:20px;
 text-align:center;
 opacity:.6;
+margin-top:20px;
 }
 
 </style>
+
 </head>
 
 <body>
@@ -152,10 +147,12 @@ opacity:.6;
 <div class="container">
 
 <header>
-<div class="title">🌲 Frantic Forest Calculator</div>
-<a class="homeBtn" href="index.html">Home</a>
-</header>
 
+<h2>🌲 Frantic Forest Calculator</h2>
+
+<a class="homeBtn" href="index.html">Home</a>
+
+</header>
 
 <div class="section">
 
@@ -171,9 +168,9 @@ opacity:.6;
 <div class="field">
 <label>Unit</label>
 <select id="unit">
-<option value="1e6">M</option>
-<option value="1e9" selected>B</option>
-<option value="1e12">T</option>
+<option value="1000000">M</option>
+<option value="1000000000" selected>B</option>
+<option value="1000000000000">T</option>
 </select>
 </div>
 
@@ -187,16 +184,13 @@ opacity:.6;
 <button class="smallBtn" onclick="changeBonus(5)">+</button>
 </div>
 
-<div style="margin-top:6px">
+<div>
 
-Bonus Level :
-<b>Lv <span id="bonusLevel">0</span></b><br>
+Bonus Level : <b>Lv <span id="bonusLevel">0</span></b><br>
 
-Crystal Used :
-<b><span id="crystalUsed">0</span></b><br>
+Crystal Used : <b><span id="crystalUsed">0</span></b><br>
 
-Next Level Cost :
-<b><span id="nextCrystal">20</span></b>
+Next Level Cost : <b><span id="nextCrystal">20</span></b>
 
 </div>
 
@@ -215,7 +209,6 @@ Next Level Cost :
 </div>
 
 </div>
-
 
 <div class="section">
 
@@ -243,7 +236,6 @@ Next Level Cost :
 
 </div>
 
-
 <div class="section">
 
 <h3>Stable Score</h3>
@@ -262,18 +254,15 @@ Next Level Cost :
 
 </div>
 
-
 <div class="section">
 
 <h3>Best Result</h3>
 
 <div class="resultBox">
 
-Recommended Stable :
-<b id="bestStable">-</b><br>
+Recommended Stable : <b id="bestStable">-</b><br>
 
-Total Score :
-<b id="totalScore">0</b>
+Total Score : <b id="totalScore">0</b>
 
 <button class="copyBtn" onclick="copyResult()">Copy Result</button>
 
@@ -281,34 +270,26 @@ Total Score :
 
 </div>
 
-
 <footer>
-
 Dev by SirSlackerKing
-
 </footer>
 
 </div>
-
 
 <script>
 
 let bestStableValue="-"
 let bestTotalScore=0
 
+function num(id){
+let v=parseFloat(document.getElementById(id).value)
+return isNaN(v)?0:v
+}
+
 function changeBonus(step){
-
 let b=document.getElementById("bonus")
-
-let v=parseFloat(b.value)||0
-
-v+=step
-if(v<0)v=0
-
-b.value=v
-
+b.value=Math.max(0,num("bonus")+step)
 calc()
-
 }
 
 document.querySelectorAll("input,select").forEach(el=>{
@@ -317,13 +298,12 @@ el.addEventListener("input",calc)
 
 function calc(){
 
-let base=parseFloat(power.value)||0
-let unit=parseFloat(unit.value)||1
-let bonus=parseFloat(bonus.value)||0
-let bells=parseFloat(bells.value)||0
+let base=num("power")
+let unit=parseFloat(document.getElementById("unit").value)
+let bonus=num("bonus")
+let bells=num("bells")
 
-let baseDamage=base*unit
-let damage=baseDamage*(1+bonus/100)
+let damage=(base*unit)*(1+bonus/100)
 
 document.getElementById("damage").value=(damage/1e9).toFixed(2)+" B"
 
@@ -331,11 +311,9 @@ let level=Math.floor(bonus/5)
 
 document.getElementById("bonusLevel").innerText=level
 
-let crystalUsed=10*level*(level+1)
-let nextCrystal=(level+1)*20
+document.getElementById("crystalUsed").innerText=10*level*(level+1)
 
-document.getElementById("crystalUsed").innerText=crystalUsed
-document.getElementById("nextCrystal").innerText=nextCrystal
+document.getElementById("nextCrystal").innerText=(level+1)*20
 
 let bestStable=0
 let bestScore=0
@@ -344,8 +322,8 @@ for(let i=1;i<=7;i++){
 
 document.getElementById("row"+i).classList.remove("bestRow")
 
-let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
-let score=parseFloat(document.getElementById("sc"+i).value)
+let hp=num("hp"+i)*1e9
+let score=num("sc"+i)
 
 let kill=damage>=hp
 
@@ -365,11 +343,12 @@ bestStable=i
 if(bestStable>0){
 
 document.getElementById("row"+bestStable).classList.add("bestRow")
+
 document.getElementById("r"+bestStable).innerHTML="⭐"
 
 }
 
-bestStableValue=bestStable>0?"Stable "+bestStable:"-"
+bestStableValue=bestStable?("Stable "+bestStable):"-"
 bestTotalScore=bestScore*bells
 
 document.getElementById("bestStable").innerText=bestStableValue
@@ -381,8 +360,8 @@ function copyResult(){
 
 let text=
 "Frantic Forest Calculator\n"+
-"Power "+power.value+"\n"+
-"Bonus "+bonus.value+"%\n"+
+"Power "+num("power")+"\n"+
+"Bonus "+num("bonus")+"%\n"+
 "Recommended "+bestStableValue+"\n"+
 "Total Score "+bestTotalScore
 
