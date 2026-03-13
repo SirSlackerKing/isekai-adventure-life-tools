@@ -50,34 +50,26 @@ font-weight:600;
 }
 
 .section{
-
 background:#2a2f44;
 padding:20px;
 border-radius:14px;
 margin-bottom:20px;
-
 box-shadow:0 10px 25px rgba(0,0,0,0.25);
-
 }
 
 .grid{
-
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
-
 }
 
 .field{
-
 display:flex;
 flex-direction:column;
 gap:4px;
-
 }
 
 input,select{
-
 padding:8px;
 border-radius:8px;
 border:none;
@@ -85,18 +77,14 @@ background:#1f2436;
 color:white;
 text-align:center;
 font-size:16px;
-
 }
 
 .bonusControl{
-
 display:flex;
 gap:6px;
-
 }
 
 button{
-
 border:none;
 padding:10px 14px;
 border-radius:10px;
@@ -104,76 +92,56 @@ cursor:pointer;
 color:white;
 font-weight:600;
 font-size:16px;
-
 touch-action:manipulation;
-
 }
 
 .smallBtn{
-
 width:42px;
 background:#4c6fff;
 font-size:20px;
-
 }
 
 .copyBtn{
-
 background:#4caf50;
 margin-top:12px;
-
 }
 
 table{
-
 width:100%;
 border-collapse:collapse;
-
 }
 
 th{
-
 background:#4c6fff;
 padding:10px;
-
 }
 
 td{
-
 padding:10px;
 text-align:center;
 border-bottom:1px solid #444;
-
 }
 
 .bestRow{
-
 background:#3946a3;
-
 }
 
 .star{
-
 color:gold;
 font-size:18px;
-
 }
 
 .resultBox{
-
 background:linear-gradient(135deg,#4c6fff,#6c7bff);
 padding:20px;
 border-radius:12px;
 text-align:center;
-
 }
 
 footer{
-
 margin-top:20px;
 text-align:center;
 opacity:.6;
-
 }
 
 </style>
@@ -184,12 +152,10 @@ opacity:.6;
 <div class="container">
 
 <header>
-
 <div class="title">🌲 Frantic Forest Calculator</div>
-
 <a class="homeBtn" href="index.html">Home</a>
-
 </header>
+
 
 <div class="section">
 
@@ -280,6 +246,25 @@ Next Level Cost :
 
 <div class="section">
 
+<h3>Stable Score</h3>
+
+<div class="grid">
+
+<div class="field">Stable1 <input id="sc1" value="240"></div>
+<div class="field">Stable2 <input id="sc2" value="352"></div>
+<div class="field">Stable3 <input id="sc3" value="480"></div>
+<div class="field">Stable4 <input id="sc4" value="735"></div>
+<div class="field">Stable5 <input id="sc5" value="1000"></div>
+<div class="field">Stable6 <input id="sc6" value="2040"></div>
+<div class="field">Stable7 <input id="sc7" value="3900"></div>
+
+</div>
+
+</div>
+
+
+<div class="section">
+
 <h3>Best Result</h3>
 
 <div class="resultBox">
@@ -290,15 +275,12 @@ Recommended Stable :
 Total Score :
 <b id="totalScore">0</b>
 
-<button class="copyBtn" onclick="copyResult()">
-
-Copy Result
-
-</button>
+<button class="copyBtn" onclick="copyResult()">Copy Result</button>
 
 </div>
 
 </div>
+
 
 <footer>
 
@@ -307,6 +289,7 @@ Dev by SirSlackerKing
 </footer>
 
 </div>
+
 
 <script>
 
@@ -329,9 +312,7 @@ calc()
 }
 
 document.querySelectorAll("input,select").forEach(el=>{
-
 el.addEventListener("input",calc)
-
 })
 
 function calc(){
@@ -344,11 +325,11 @@ let bells=parseFloat(bells.value)||0
 let baseDamage=base*unit
 let damage=baseDamage*(1+bonus/100)
 
-damageBox.value=(damage/1e9).toFixed(2)+" B"
+document.getElementById("damage").value=(damage/1e9).toFixed(2)+" B"
 
 let level=Math.floor(bonus/5)
 
-bonusLevel.innerText=level
+document.getElementById("bonusLevel").innerText=level
 
 let crystalUsed=10*level*(level+1)
 let nextCrystal=(level+1)*20
@@ -364,7 +345,7 @@ for(let i=1;i<=7;i++){
 document.getElementById("row"+i).classList.remove("bestRow")
 
 let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
-let score=parseFloat(document.getElementById("sc"+i)?.value||0)
+let score=parseFloat(document.getElementById("sc"+i).value)
 
 let kill=damage>=hp
 
@@ -372,7 +353,7 @@ document.getElementById("k"+i).innerText=kill?"Yes":"-"
 document.getElementById("s"+i).innerText=kill?score:0
 document.getElementById("r"+i).innerText=""
 
-if(kill&&score>bestScore){
+if(kill && score>bestScore){
 
 bestScore=score
 bestStable=i
@@ -384,7 +365,6 @@ bestStable=i
 if(bestStable>0){
 
 document.getElementById("row"+bestStable).classList.add("bestRow")
-
 document.getElementById("r"+bestStable).innerHTML="⭐"
 
 }
