@@ -1,103 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
 <title>Frantic Forest Calculator</title>
 
 <style>
-*{box-sizing:border-box;font-family:Segoe UI}
+
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+}
 
 body{
 margin:0;
-background:#eef2ff;
+background:linear-gradient(135deg,#1e2233,#2d3560);
+color:white;
 display:flex;
 justify-content:center;
 }
 
-body.dark{background:#1e2233;color:white}
+.container{
+width:1100px;
+max-width:95%;
+padding:20px;
+}
 
-.container{width:1100px;max-width:95%;padding:20px}
-
-.header{
+header{
 display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:20px;
 }
 
-.section{
-background:white;
-padding:20px;
-border-radius:14px;
-margin-bottom:20px;
-box-shadow:0 6px 16px rgba(0,0,0,0.08);
+.title{
+font-size:26px;
+font-weight:700;
 }
 
-body.dark .section{background:#2a2f44}
-
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-
-.field{display:flex;flex-direction:column;gap:4px}
-
-input,select{
-padding:8px;
-border-radius:8px;
-border:none;
-background:#f1f4ff;
-text-align:center;
-}
-
-body.dark input,body.dark select{
-background:#1f2436;color:white
-}
-
-.bonusControl{display:flex;gap:6px}
-
-button{
-border:none;
+.homeBtn{
+background:#4c6fff;
 padding:8px 14px;
 border-radius:8px;
-cursor:pointer;
+text-decoration:none;
 color:white;
 font-weight:600;
 }
 
-.smallBtn{width:34px;background:#4c6fff}
-.darkbtn{background:#222}
-.copybtn{background:#4caf50}
+.section{
+
+background:#2a2f44;
+padding:20px;
+border-radius:14px;
+margin-bottom:20px;
+
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+
+}
+
+.grid{
+
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+
+}
+
+.field{
+
+display:flex;
+flex-direction:column;
+gap:4px;
+
+}
+
+input,select{
+
+padding:8px;
+border-radius:8px;
+border:none;
+background:#1f2436;
+color:white;
+text-align:center;
+font-size:16px;
+
+}
+
+.bonusControl{
+
+display:flex;
+gap:6px;
+
+}
+
+button{
+
+border:none;
+padding:10px 14px;
+border-radius:10px;
+cursor:pointer;
+color:white;
+font-weight:600;
+font-size:16px;
+
+touch-action:manipulation;
+
+}
+
+.smallBtn{
+
+width:42px;
+background:#4c6fff;
+font-size:20px;
+
+}
+
+.copyBtn{
+
+background:#4caf50;
+margin-top:12px;
+
+}
 
 table{
+
 width:100%;
 border-collapse:collapse;
-border-radius:10px;
-overflow:hidden;
+
 }
 
 th{
-background:#5a6cff;
-color:white;
+
+background:#4c6fff;
 padding:10px;
+
 }
 
 td{
+
 padding:10px;
 text-align:center;
-border-bottom:1px solid #eee;
+border-bottom:1px solid #444;
+
 }
 
-.killable{background:#4caf50;color:white}
-.best{background:#4c6fff;color:white;font-weight:700}
+.bestRow{
 
-.star{font-size:18px;color:gold}
+background:#3946a3;
+
+}
+
+.star{
+
+color:gold;
+font-size:18px;
+
+}
 
 .resultBox{
-background:linear-gradient(135deg,#5a6cff,#7c8cff);
-color:white;
+
+background:linear-gradient(135deg,#4c6fff,#6c7bff);
 padding:20px;
 border-radius:12px;
 text-align:center;
-margin-top:10px;
+
+}
+
+footer{
+
+margin-top:20px;
+text-align:center;
+opacity:.6;
+
 }
 
 </style>
@@ -107,13 +183,13 @@ margin-top:10px;
 
 <div class="container">
 
-<div class="header">
-<h2>Frantic Forest Calculator</h2>
-<div>
-<button class="darkbtn" onclick="toggleDark()">Dark</button>
-<button class="copybtn" onclick="copyResult()">Copy Result</button>
-</div>
-</div>
+<header>
+
+<div class="title">🌲 Frantic Forest Calculator</div>
+
+<a class="homeBtn" href="index.html">Home</a>
+
+</header>
 
 <div class="section">
 
@@ -147,11 +223,14 @@ margin-top:10px;
 
 <div style="margin-top:6px">
 
-Bonus Level : <b>Lv <span id="bonusLevel">0</span></b><br>
+Bonus Level :
+<b>Lv <span id="bonusLevel">0</span></b><br>
 
-Crystal Used : <b><span id="crystalUsed">0</span></b><br>
+Crystal Used :
+<b><span id="crystalUsed">0</span></b><br>
 
-Next Level Cost : <b><span id="nextCrystal">20</span></b>
+Next Level Cost :
+<b><span id="nextCrystal">20</span></b>
 
 </div>
 
@@ -176,7 +255,7 @@ Next Level Cost : <b><span id="nextCrystal">20</span></b>
 
 <h3>Stable Table</h3>
 
-<table id="stableTable">
+<table>
 
 <tr>
 <th>Stable</th>
@@ -186,13 +265,13 @@ Next Level Cost : <b><span id="nextCrystal">20</span></b>
 <th>⭐</th>
 </tr>
 
-<tr><td>1</td><td><input id="hp1" value="3.295"></td><td id="k1"></td><td id="s1"></td><td id="r1"></td></tr>
-<tr><td>2</td><td><input id="hp2" value="4.985"></td><td id="k2"></td><td id="s2"></td><td id="r2"></td></tr>
-<tr><td>3</td><td><input id="hp3" value="6.591"></td><td id="k3"></td><td id="s3"></td><td id="r3"></td></tr>
-<tr><td>4</td><td><input id="hp4" value="9.887"></td><td id="k4"></td><td id="s4"></td><td id="r4"></td></tr>
-<tr><td>5</td><td><input id="hp5" value="13.18"></td><td id="k5"></td><td id="s5"></td><td id="r5"></td></tr>
-<tr><td>6</td><td><input id="hp6" value="26.36"></td><td id="k6"></td><td id="s6"></td><td id="r6"></td></tr>
-<tr><td>7</td><td><input id="hp7" value="49.43"></td><td id="k7"></td><td id="s7"></td><td id="r7"></td></tr>
+<tr id="row1"><td>1</td><td><input id="hp1" value="3.295"></td><td id="k1"></td><td id="s1"></td><td id="r1"></td></tr>
+<tr id="row2"><td>2</td><td><input id="hp2" value="4.985"></td><td id="k2"></td><td id="s2"></td><td id="r2"></td></tr>
+<tr id="row3"><td>3</td><td><input id="hp3" value="6.591"></td><td id="k3"></td><td id="s3"></td><td id="r3"></td></tr>
+<tr id="row4"><td>4</td><td><input id="hp4" value="9.887"></td><td id="k4"></td><td id="s4"></td><td id="r4"></td></tr>
+<tr id="row5"><td>5</td><td><input id="hp5" value="13.18"></td><td id="k5"></td><td id="s5"></td><td id="r5"></td></tr>
+<tr id="row6"><td>6</td><td><input id="hp6" value="26.36"></td><td id="k6"></td><td id="s6"></td><td id="r6"></td></tr>
+<tr id="row7"><td>7</td><td><input id="hp7" value="49.43"></td><td id="k7"></td><td id="s7"></td><td id="r7"></td></tr>
 
 </table>
 
@@ -201,89 +280,59 @@ Next Level Cost : <b><span id="nextCrystal">20</span></b>
 
 <div class="section">
 
-<h3>Stable Score</h3>
-
-<div class="grid">
-
-<div class="field">Stable1 <input id="sc1" value="240"></div>
-<div class="field">Stable2 <input id="sc2" value="352"></div>
-<div class="field">Stable3 <input id="sc3" value="480"></div>
-<div class="field">Stable4 <input id="sc4" value="735"></div>
-<div class="field">Stable5 <input id="sc5" value="1000"></div>
-<div class="field">Stable6 <input id="sc6" value="2040"></div>
-<div class="field">Stable7 <input id="sc7" value="3900"></div>
-
-</div>
-
-</div>
-
-
-<div class="section">
 <h3>Best Result</h3>
 
 <div class="resultBox">
-Recommended Stable : <b id="bestStable">-</b><br>
-Total Score : <b id="totalScore">0</b>
-</div>
+
+Recommended Stable :
+<b id="bestStable">-</b><br>
+
+Total Score :
+<b id="totalScore">0</b>
+
+<button class="copyBtn" onclick="copyResult()">
+
+Copy Result
+
+</button>
 
 </div>
 
-
-<div class="section">
-
-<h3>Auto Best Bonus</h3>
-<div id="autoBonus">-</div>
-
 </div>
 
+<footer>
 
-<div class="section">
+Dev by SirSlackerKing
 
-<h3>Crystal Efficiency</h3>
-<div id="efficiency">-</div>
-
-</div>
-
-
-<div class="section">
-
-<h3>Stable Unlock Table</h3>
-
-<table>
-
-<tr>
-<th>Stable</th>
-<th>Bonus Needed</th>
-<th>Crystal Needed</th>
-</tr>
-
-<tbody id="unlockTable"></tbody>
-
-</table>
+</footer>
 
 </div>
-
-
-</div>
-
 
 <script>
 
-const inputs=document.querySelectorAll("input,select")
-inputs.forEach(i=>i.addEventListener("input",calc))
+let bestStableValue="-"
+let bestTotalScore=0
 
 function changeBonus(step){
 
 let b=document.getElementById("bonus")
+
 let v=parseFloat(b.value)||0
 
 v+=step
 if(v<0)v=0
 
 b.value=v
+
 calc()
 
 }
+
+document.querySelectorAll("input,select").forEach(el=>{
+
+el.addEventListener("input",calc)
+
+})
 
 function calc(){
 
@@ -295,152 +344,72 @@ let bells=parseFloat(bells.value)||0
 let baseDamage=base*unit
 let damage=baseDamage*(1+bonus/100)
 
-damageBox=document.getElementById("damage")
 damageBox.value=(damage/1e9).toFixed(2)+" B"
 
 let level=Math.floor(bonus/5)
 
+bonusLevel.innerText=level
+
 let crystalUsed=10*level*(level+1)
 let nextCrystal=(level+1)*20
 
-bonusLevel.innerText=level
-crystalUsedSpan=document.getElementById("crystalUsed")
-crystalUsedSpan.innerText=crystalUsed
-nextCrystalSpan=document.getElementById("nextCrystal")
-nextCrystalSpan.innerText=nextCrystal
+document.getElementById("crystalUsed").innerText=crystalUsed
+document.getElementById("nextCrystal").innerText=nextCrystal
 
 let bestStable=0
 let bestScore=0
 
 for(let i=1;i<=7;i++){
 
-document.getElementById("r"+i).innerText=""
+document.getElementById("row"+i).classList.remove("bestRow")
 
 let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
-let score=parseFloat(document.getElementById("sc"+i).value)||0
+let score=parseFloat(document.getElementById("sc"+i)?.value||0)
 
-let kill=damage>=hp?1:0
+let kill=damage>=hp
 
-document.getElementById("k"+i).innerText=kill
+document.getElementById("k"+i).innerText=kill?"Yes":"-"
 document.getElementById("s"+i).innerText=kill?score:0
+document.getElementById("r"+i).innerText=""
 
-if(kill && score>bestScore){
+if(kill&&score>bestScore){
+
 bestScore=score
 bestStable=i
+
 }
 
 }
 
 if(bestStable>0){
-document.getElementById("r"+bestStable).innerHTML='<span class="star">⭐</span>'
-}
 
-bestStableText=bestStable?("Stable "+bestStable):"-"
+document.getElementById("row"+bestStable).classList.add("bestRow")
 
-document.getElementById("bestStable").innerText=bestStableText
-document.getElementById("totalScore").innerText=bestScore*bells
-
-autoBonusCalc(baseDamage)
-unlockTable(baseDamage)
-efficiencyCalc(baseDamage)
+document.getElementById("r"+bestStable).innerHTML="⭐"
 
 }
 
-function autoBonusCalc(baseDamage){
+bestStableValue=bestStable>0?"Stable "+bestStable:"-"
+bestTotalScore=bestScore*bells
 
-let text=""
-
-for(let i=1;i<=7;i++){
-
-let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
-
-let needBonus=((hp/baseDamage)-1)*100
-if(needBonus<0)needBonus=0
-
-text+="Stable "+i+" → "+needBonus.toFixed(1)+"%<br>"
-
-}
-
-document.getElementById("autoBonus").innerHTML=text
-
-}
-
-function unlockTable(baseDamage){
-
-let html=""
-
-for(let i=1;i<=7;i++){
-
-let hp=parseFloat(document.getElementById("hp"+i).value)*1e9
-
-let needBonus=((hp/baseDamage)-1)*100
-if(needBonus<0)needBonus=0
-
-let level=Math.ceil(needBonus/5)
-
-let crystal=10*level*(level+1)
-
-html+=`
-<tr>
-<td>${i}</td>
-<td>${needBonus.toFixed(1)}%</td>
-<td>${crystal}</td>
-</tr>
-`
-
-}
-
-document.getElementById("unlockTable").innerHTML=html
-
-}
-
-function efficiencyCalc(baseDamage){
-
-let text=""
-
-for(let i=1;i<=6;i++){
-
-let score1=parseFloat(document.getElementById("sc"+i).value)
-let score2=parseFloat(document.getElementById("sc"+(i+1)).value)
-
-let gain=score2-score1
-
-let hp=parseFloat(document.getElementById("hp"+(i+1)).value)*1e9
-
-let needBonus=((hp/baseDamage)-1)*100
-if(needBonus<0)needBonus=0
-
-let level=Math.ceil(needBonus/5)
-let crystal=10*level*(level+1)
-
-let eff=(gain/crystal).toFixed(3)
-
-text+="Stable "+i+" → "+(i+1)+" : "+eff+" score/crystal<br>"
-
-}
-
-document.getElementById("efficiency").innerHTML=text
+document.getElementById("bestStable").innerText=bestStableValue
+document.getElementById("totalScore").innerText=bestTotalScore
 
 }
 
 function copyResult(){
 
 let text=
-
 "Frantic Forest Calculator\n"+
 "Power "+power.value+"\n"+
 "Bonus "+bonus.value+"%\n"+
-"Best Stable "+bestStable.innerText+"\n"+
-"Total Score "+totalScore.innerText
+"Recommended "+bestStableValue+"\n"+
+"Total Score "+bestTotalScore
 
 navigator.clipboard.writeText(text)
 
 alert("Copied")
 
-}
-
-function toggleDark(){
-document.body.classList.toggle("dark")
 }
 
 calc()
