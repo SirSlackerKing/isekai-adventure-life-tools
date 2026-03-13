@@ -103,10 +103,6 @@ background:#4c6fff;
 
 .darkbtn{background:#222}
 
-.copybtn{background:#4caf50}
-
-.sharebtn{background:#6a4cff}
-
 table{
 width:100%;
 border-collapse:collapse;
@@ -194,12 +190,7 @@ grid-template-columns:1fr;
 
 <div class="header">
 <div class="title">Frantic Forest Calculator</div>
-
-<div>
 <button class="darkbtn" onclick="toggleDark()">Dark</button>
-<button class="copybtn" onclick="copyResult()">Copy</button>
-<button class="sharebtn" onclick="shareBuild()">Share</button>
-</div>
 </div>
 
 
@@ -224,6 +215,7 @@ grid-template-columns:1fr;
 </div>
 
 <div class="field">
+
 <label>Bonus</label>
 
 <div class="bonusControl">
@@ -232,9 +224,14 @@ grid-template-columns:1fr;
 <button class="smallBtn" onclick="changeBonus(5)">+</button>
 </div>
 
-<div>
-Lv <span id="bonusLevel">0</span> |
-Crystal <span id="crystalCost">0</span>
+<div style="margin-top:6px">
+
+Bonus Level : <b>Lv <span id="bonusLevel">0</span></b>
+
+<br>
+
+Crystal Cost : <b><span id="crystalCost">0</span> Crystals</b>
+
 </div>
 
 </div>
@@ -327,9 +324,9 @@ Crystal <span id="crystalCost">0</span>
 
 <div class="grid">
 
-<div class="field">Stable1 <input id="sc1" value="0"></div>
-<div class="field">Stable2 <input id="sc2" value="0"></div>
-<div class="field">Stable3 <input id="sc3" value="0"></div>
+<div class="field">Stable1 <input id="sc1" value="240"></div>
+<div class="field">Stable2 <input id="sc2" value="352"></div>
+<div class="field">Stable3 <input id="sc3" value="480"></div>
 <div class="field">Stable4 <input id="sc4" value="735"></div>
 <div class="field">Stable5 <input id="sc5" value="1000"></div>
 <div class="field">Stable6 <input id="sc6" value="2040"></div>
@@ -365,9 +362,7 @@ Total Score
 
 <h3>Next Stable Upgrade</h3>
 
-<div id="nextUpgrade">
--
-</div>
+<div id="nextUpgrade">-</div>
 
 </div>
 
@@ -412,15 +407,15 @@ inputs.forEach(i=>i.addEventListener("input",calc))
 
 function changeBonus(step){
 
-let b=document.getElementById("bonus")
+let bonusInput=document.getElementById("bonus")
 
-let v=parseFloat(b.value)||0
+let v=parseFloat(bonusInput.value)||0
 
 v+=step
 
 if(v<0)v=0
 
-b.value=v
+bonusInput.value=v
 
 calc()
 
@@ -428,21 +423,21 @@ calc()
 
 function calc(){
 
-let base=parseFloat(power.value)||0
-let unit=parseFloat(unit.value)||1
-let bonus=parseFloat(bonus.value)||0
-let bells=parseFloat(bells.value)||0
+let base=parseFloat(document.getElementById("power").value)||0
+let unit=parseFloat(document.getElementById("unit").value)||1
+let bonus=parseFloat(document.getElementById("bonus").value)||0
+let bells=parseFloat(document.getElementById("bells").value)||0
 
 let baseDamage=base*unit
 let damage=baseDamage*(1+bonus/100)
 
 document.getElementById("damage").value=(damage/1e9).toFixed(2)+" B"
 
-let level=bonus/5
+let level=Math.floor(bonus/5)
 let crystal=level*20
 
-bonusLevel.innerText=level
-crystalCost.innerText=crystal
+document.getElementById("bonusLevel").innerText=level
+document.getElementById("crystalCost").innerText=crystal
 
 let bestStable=0
 let bestScore=0
@@ -476,14 +471,12 @@ if(bestStable>0){
 document.querySelectorAll("#stableTable tr")[bestStable].classList.add("best")
 }
 
-bestStableText=bestStable?("Stable "+bestStable):"-"
+let bestStableText=bestStable?("Stable "+bestStable):"-"
 
 document.getElementById("bestStable").innerText=bestStableText
-
 document.getElementById("totalScore").innerText=bestScore*bells
 
 nextStable(bestStable,baseDamage,bestScore)
-
 planner(bestScore)
 
 }
@@ -493,7 +486,7 @@ function nextStable(best,baseDamage,currentScore){
 let next=best+1
 
 if(next>7){
-nextUpgrade.innerText="Max Stable"
+document.getElementById("nextUpgrade").innerText="Max Stable"
 return
 }
 
@@ -505,33 +498,32 @@ let needBonus=((hp/baseDamage)-1)*100
 if(needBonus<0)needBonus=0
 
 let level=Math.ceil(needBonus/5)
-
 let crystal=level*20
 
 let gain=score-currentScore
 
-nextUpgrade.innerText=
+document.getElementById("nextUpgrade").innerText=
 "Next Stable "+next+
 " | Need Bonus "+needBonus.toFixed(1)+"%"+
-" | Crystal "+crystal+
+" | Crystal Cost "+crystal+
 " | Score Gain "+gain
 
 }
 
 function planner(score){
 
-let cur=parseFloat(current.value)||0
-let target=parseFloat(target.value)||0
+let cur=parseFloat(document.getElementById("current").value)||0
+let target=parseFloat(document.getElementById("target").value)||0
 
 let remain=target-cur
 
 if(remain<=0){
-needBell.value=0
+document.getElementById("needBell").value=0
 return
 }
 
 if(score>0){
-needBell.value=Math.ceil(remain/score)
+document.getElementById("needBell").value=Math.ceil(remain/score)
 }
 
 let percent=0
@@ -540,39 +532,12 @@ if(target>0){
 percent=(cur/target)*100
 }
 
-progressFill.style.width=percent+"%"
+document.getElementById("progressFill").style.width=percent+"%"
 
 }
 
 function toggleDark(){
 document.body.classList.toggle("dark")
-}
-
-function copyResult(){
-
-let text=
-
-"Power "+power.value+"\n"+
-"Bonus "+bonus.value+"%\n"+
-"Best Stable "+bestStable.innerText+"\n"+
-"Total Score "+totalScore.innerText
-
-navigator.clipboard.writeText(text)
-
-}
-
-function shareBuild(){
-
-let url=
-location.origin+
-location.pathname+
-"?power="+power.value+
-"&bonus="+bonus.value
-
-navigator.clipboard.writeText(url)
-
-alert("Build link copied")
-
 }
 
 calc()
