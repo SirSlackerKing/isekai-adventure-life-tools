@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Touno Island Calculator</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
+body{
+margin:0;
+background:#eef2ff;
+display:flex;
+justify-content:center;
+}
+
+.container{
+width:900px;
+padding:20px;
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+margin-bottom:20px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card h2{
+margin-top:0;
+}
+
+input{
+width:100%;
+padding:8px;
+margin:6px 0 12px 0;
+}
+
+button{
+padding:10px 16px;
+border:none;
+border-radius:6px;
+background:#6366f1;
+color:white;
+cursor:pointer;
+}
+
+.result{
+margin-top:12px;
+padding:10px;
+background:#f3f4f6;
+border-radius:6px;
+}
+
+.note{
+font-size:13px;
+color:#555;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Touno Island Calculator</h1>
+
+
+<div class="card">
+
+<h2>Event Setup</h2>
+
+<label>Event Start Time</label>
+<input type="datetime-local" id="start">
+
+<label>Event End Time</label>
+<input type="datetime-local" id="end">
+
+</div>
+
+
+<div class="card">
+
+<h2>Event Progress Predictor</h2>
+
+<label>Current Stroll</label>
+<input type="number" id="stroll" value="0">
+
+<label>Current Stamina</label>
+<input type="number" id="stamina" value="0">
+
+<label>Sakuramochi</label>
+<input type="number" id="mochi" value="0">
+
+<button onclick="calculate()">Calculate</button>
+
+<div class="result" id="result"></div>
+
+<p class="note">
+*Regen subtracts 1 stamina because the last stamina may regenerate exactly when the event ends and cannot be used.
+</p>
+
+</div>
+
+
+<div class="card">
+
+<h2>Reward Planner</h2>
+
+<label>Target Stroll</label>
+<input type="number" id="target" value="7500">
+
+<button onclick="planner()">Calculate Needed Mochi</button>
+
+<div class="result" id="planner"></div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Kagura Dance Calculator</h2>
+
+<label>Fellow Power</label>
+<input type="number" id="power" value="1000000">
+
+<label>Support Bonus (%)</label>
+<input type="number" id="bonus" value="0">
+
+<label>Sakura Coins Used</label>
+<input type="number" id="coins" value="1">
+
+<button onclick="kagura()">Calculate Faith</button>
+
+<div class="result" id="kagura"></div>
+
+</div>
+
+
+</div>
+
+
+<script>
+
+function getRemainingMinutes(){
+
+let start = new Date(document.getElementById("start").value)
+let end = new Date(document.getElementById("end").value)
+let now = new Date()
+
+if(!start || !end) return 0
+
+if(now < start) now = start
+if(now > end) return 0
+
+let diff = end - now
+return Math.floor(diff/60000)
+
+}
+
+
+function getRegen(){
+
+let minutes = getRemainingMinutes()
+
+let regen = Math.floor(minutes/20) - 1
+
+if(regen < 0) regen = 0
+
+return regen
+
+}
+
+
+function calculate(){
+
+let stroll = parseInt(document.getElementById("stroll").value) || 0
+let stamina = parseInt(document.getElementById("stamina").value) || 0
+let mochi = parseInt(document.getElementById("mochi").value) || 0
+
+let regen = getRegen()
+
+let totalStamina = stamina + regen + (mochi*5)
+
+let finalStroll = stroll + totalStamina
+
+let text = ""
+
+text += "Regen Stamina: "+regen+"<br>"
+text += "Total Stamina Available: "+totalStamina+"<br>"
+text += "Predicted Final Stroll: "+finalStroll+"<br><br>"
+
+text += "Reward Prediction<br>"
+
+text += (finalStroll>=150 ? "✔":"❌")+" 150<br>"
+text += (finalStroll>=1000 ? "✔":"❌")+" 1000<br>"
+text += (finalStroll>=7500 ? "✔":"❌")+" 7500<br>"
+text += (finalStroll>=15000 ? "✔":"❌")+" 15000<br>"
+
+document.getElementById("result").innerHTML = text
+
+}
+
+
+function planner(){
+
+let stroll = parseInt(document.getElementById("stroll").value) || 0
+let stamina = parseInt(document.getElementById("stamina").value) || 0
+let target = parseInt(document.getElementById("target").value) || 0
+
+let regen = getRegen()
+
+let need = target - stroll - stamina - regen
+
+if(need < 0) need = 0
+
+let mochi = Math.ceil(need/5)
+
+let text=""
+
+text+="Need Stamina: "+need+"<br>"
+text+="Sakuramochi Needed: "+mochi
+
+document.getElementById("planner").innerHTML = text
+
+}
+
+
+function kagura(){
+
+let power = parseFloat(document.getElementById("power").value) || 0
+let bonus = parseFloat(document.getElementById("bonus").value) || 0
+let coins = parseFloat(document.getElementById("coins").value) || 0
+
+let base = power * (1 + bonus/100)
+
+let faith = base * coins / 1000
+
+let text=""
+
+text+="Faith Gained: "+Math.floor(faith)+"<br>"
+text+="Faith per Coin: "+Math.floor(faith/coins)
+
+document.getElementById("kagura").innerHTML = text
+
+}
+
+</script>
+
+
+</body>
+</html>
