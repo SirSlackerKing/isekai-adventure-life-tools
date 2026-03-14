@@ -84,7 +84,7 @@ margin-top:10px;
 
 .note{
 font-size:12px;
-margin-top:8px;
+margin-top:6px;
 color:#555;
 }
 
@@ -101,6 +101,11 @@ margin-top:10px;
 height:100%;
 background:#6366f1;
 width:0%;
+transition:0.3s;
+}
+
+.bar.done{
+background:#22c55e;
 }
 
 .buttons{
@@ -147,6 +152,7 @@ grid-template-columns:1fr;
 <a href="/">🏠 Home</a>
 </div>
 
+
 <div class="card">
 
 <h2>Remaining Time</h2>
@@ -173,9 +179,9 @@ Minutes
 <div class="result" id="timeResult"></div>
 
 <div class="note">
-* Stamina regenerates every 20 minutes.  
-The last stamina may regenerate exactly when the event ends and cannot be used.  
-This calculator subtracts 1 stamina to avoid overestimating.
+Stamina regenerates every 20 minutes.<br>
+The final stamina may regenerate exactly when the event ends and cannot be used.<br>
+This calculator subtracts 1 stamina to avoid overestimation.
 </div>
 
 </div>
@@ -197,7 +203,15 @@ This calculator subtracts 1 stamina to avoid overestimating.
 <label>Target Score</label>
 <input type="number" id="target" value="7500">
 
+
 <h3>Crystal Packs (Optional)</h3>
+
+<div class="note">
+199 Pack = 9 Mochi<br>
+988 Pack = 18 Mochi<br>
+1988 Pack = 27 Mochi<br>
+Each pack can be purchased 3 times per day.
+</div>
 
 <div class="grid">
 
@@ -217,6 +231,8 @@ This calculator subtracts 1 stamina to avoid overestimating.
 </div>
 
 </div>
+
+<div class="note" id="packLimitNote"></div>
 
 <div class="progress">
 <div class="bar" id="bar"></div>
@@ -267,15 +283,21 @@ function format(n){
 return Math.floor(n).toLocaleString()
 }
 
+
 function getRemainingMinutes(){
 
-let d=Number(days.value||0)
-let h=Number(hours.value||0)
-let m=Number(minutes.value||0)
+let d=Math.max(0,Number(days.value||0))
+let h=Math.max(0,Number(hours.value||0))
+let m=Math.max(0,Number(minutes.value||0))
 
-return d*1440 + h*60 + m
+let total=d*1440+h*60+m
+
+if(total<0) total=0
+
+return total
 
 }
+
 
 function getRegen(){
 
@@ -289,17 +311,55 @@ return regen
 
 }
 
-function getPackMochi(){
 
-return (pack199.value*9)+(pack988.value*18)+(pack1988.value*27)
+function getDaysLeft(){
+
+return Math.floor(getRemainingMinutes()/1440)
 
 }
+
+
+function getPackLimit(){
+
+return getDaysLeft()*3
+
+}
+
+
+function getPackMochi(){
+
+return (Number(pack199.value||0)*9)+
+(Number(pack988.value||0)*18)+
+(Number(pack1988.value||0)*27)
+
+}
+
 
 function getPackCrystal(){
 
-return (pack199.value*199)+(pack988.value*988)+(pack1988.value*1988)
+return (Number(pack199.value||0)*199)+
+(Number(pack988.value||0)*988)+
+(Number(pack1988.value||0)*1988)
 
 }
+
+
+function enforcePackLimit(){
+
+let limit=getPackLimit()
+
+pack199.value=Math.min(Number(pack199.value||0),limit)
+pack988.value=Math.min(Number(pack988.value||0),limit)
+pack1988.value=Math.min(Number(pack1988.value||0),limit)
+
+pack199.max=limit
+pack988.max=limit
+pack1988.max=limit
+
+packLimitNote.innerHTML="Pack Limit per type: "+limit
+
+}
+
 
 function calcTime(){
 
@@ -313,6 +373,7 @@ timeResult.innerHTML=
 
 }
 
+
 function calcProgress(){
 
 let stroll=Number(strollInput.value||0)
@@ -325,10 +386,12 @@ let totalMochi=inventoryMochi+packMochi
 
 let regen=getRegen()
 
+let staminaFromMochi=totalMochi*5
+
 let totalStamina=
-stamina
-+regen
-+(totalMochi*5)
+stamina+
+regen+
+staminaFromMochi
 
 let finalStroll=stroll+totalStamina
 
@@ -338,7 +401,14 @@ let percent=Math.min((finalStroll/target)*100,100)
 
 bar.style.width=percent+"%"
 
+if(percent>=100){
+bar.classList.add("done")
+}else{
+bar.classList.remove("done")
+}
+
 let remainingScore=target-finalStroll
+
 if(remainingScore<0) remainingScore=0
 
 let neededMochi=Math.ceil(remainingScore/5)
@@ -347,38 +417,58 @@ progressResult.innerHTML=
 
 "Predicted Final Stroll: "+format(finalStroll)+"<br>"+
 "Remaining Score: "+format(remainingScore)+"<br>"+
-"Needed Mochi: "+format(neededMochi)
+"Needed Mochi: "+format(neededMochi)+"<br><br>"+
+
+"Total Stamina: "+format(totalStamina)+"<br>"+
+"From Regen: "+format(regen)+"<br>"+
+"From Mochi: "+format(staminaFromMochi)
 
 recommendPacks(neededMochi)
 
 }
 
+
 function recommendPacks(needed){
 
-let daysLeft=Math.floor(getRemainingMinutes()/1440)
+let limit=getPackLimit()
 
-let maxPack=daysLeft*3
-
-let use1988=Math.min(Math.floor(needed/27),maxPack)
+let use1988=Math.min(Math.floor(needed/27),limit)
 needed-=use1988*27
 
-let use988=Math.min(Math.floor(needed/18),maxPack)
+let use988=Math.min(Math.floor(needed/18),limit)
 needed-=use988*18
 
-let use199=Math.min(Math.ceil(needed/9),maxPack)
+let use199=Math.min(Math.ceil(needed/9),limit)
+
+let mochi=
+(use1988*27)+
+(use988*18)+
+(use199*9)
 
 let crystal=
-(use1988*1988)+(use988*988)+(use199*199)
+(use1988*1988)+
+(use988*988)+
+(use199*199)
+
+let enough=needed<=0
 
 recommendResult.innerHTML=
 
-"Recommended Packs<br>"+
-"1988 × "+use1988+"<br>"+
-"988 × "+use988+"<br>"+
-"199 × "+use199+"<br><br>"+
-"Estimated Crystal: "+format(crystal)
+"Recommended Packs<br><br>"+
+
+"1988 × "+use1988+" / "+limit+"<br>"+
+"988 × "+use988+" / "+limit+"<br>"+
+"199 × "+use199+" / "+limit+"<br><br>"+
+
+"Total Mochi: "+format(mochi)+"<br>"+
+"Crystal Needed: "+format(crystal)+"<br><br>"+
+
+(enough
+? "✓ Enough to reach target"
+: "✗ Not enough packs within remaining days")
 
 }
+
 
 function calcKagura(){
 
@@ -395,14 +485,17 @@ kaguraResult.innerHTML=
 
 }
 
+
 function calculateAll(){
 
+enforcePackLimit()
 calcTime()
 calcProgress()
 calcKagura()
 saveData()
 
 }
+
 
 function saveData(){
 
@@ -411,6 +504,7 @@ localStorage.setItem(i.id,i.value)
 })
 
 }
+
 
 function loadData(){
 
@@ -421,6 +515,7 @@ if(v) i.value=v
 
 }
 
+
 function resetAll(){
 
 localStorage.clear()
@@ -428,9 +523,14 @@ location.reload()
 
 }
 
+
 function copyResult(){
 
-let text=progressResult.innerText
+let text=
+
+progressResult.innerText+
+"\n\n"+
+recommendResult.innerText
 
 navigator.clipboard.writeText(text)
 
@@ -438,9 +538,11 @@ alert("Copied!")
 
 }
 
+
 document.querySelectorAll("input").forEach(i=>{
 i.addEventListener("input",calculateAll)
 })
+
 
 const strollInput=document.getElementById("stroll")
 const staminaInput=document.getElementById("stamina")
@@ -455,6 +557,12 @@ const timeResult=document.getElementById("timeResult")
 const progressResult=document.getElementById("progressResult")
 const recommendResult=document.getElementById("recommendResult")
 const kaguraResult=document.getElementById("kaguraResult")
+
+const pack199=document.getElementById("pack199")
+const pack988=document.getElementById("pack988")
+const pack1988=document.getElementById("pack1988")
+
+const packLimitNote=document.getElementById("packLimitNote")
 
 const bar=document.getElementById("bar")
 
