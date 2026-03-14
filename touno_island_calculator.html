@@ -173,6 +173,12 @@ color:#666;
 
 <div class="result" id="timeResult"></div>
 
+<div class="small" style="margin-top:6px;">
+* Stamina regenerates every 20 minutes.<br>
+The last stamina may regenerate exactly when the event ends and cannot be used.<br>
+This calculator subtracts <b>1 stamina</b> to avoid overestimating.
+</div>
+
 </div>
 
 <div class="card">
@@ -320,7 +326,8 @@ let hours=get("hours")
 let minutes=get("minutes")
 
 let totalMinutes=days*1440+hours*60+minutes
-let regen=Math.floor(totalMinutes/5)
+let regen=Math.floor(totalMinutes/20)-1
+if(regen<0) regen=0
 
 document.getElementById("timeResult").innerHTML=
 `Remaining Minutes: <b>${totalMinutes}</b><br>
