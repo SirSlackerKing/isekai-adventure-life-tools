@@ -307,6 +307,8 @@ Damage / Bell<br> <span id="damage">0</span>
 <b id="bestStable">-</b><br>
 
 Score / Bell : <b id="scoreBell">0</b>
+  <br>
+Total Score : <b id="totalScore">0</b>
 
 <br>
 
@@ -417,6 +419,9 @@ bestStable=i
 
 document.getElementById("bestStable").innerText=bestStable?("Stable "+bestStable):"-"
 document.getElementById("scoreBell").innerText=bestScore
+let totalScore = bestScore ? bestScore * bells : 0
+document.getElementById("totalScore").innerText =
+totalScore.toLocaleString()
 
 let current=num("currentPoints")
 let target=num("targetPoints")
@@ -468,9 +473,11 @@ function copyResult(){
 
 let text=
 "Frantic Forest Calculator\n"+
+"CozyNeko Guild S12\n\n"+
 "Bonus "+num("bonus")+"%\n"+
 "Best Stable "+document.getElementById("bestStable").innerText+"\n"+
 "Score/Bell "+document.getElementById("scoreBell").innerText+"\n"+
+"Total Score "+document.getElementById("totalScore").innerText+"\n"+
 "Bells Needed "+document.getElementById("bellsNeeded").innerText
 
 navigator.clipboard.writeText(text)
