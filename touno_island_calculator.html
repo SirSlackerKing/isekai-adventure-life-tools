@@ -49,11 +49,28 @@ grid-template-columns:1fr 1fr 1fr;
 gap:10px;
 }
 
-input{
-width:100%;
-padding:8px;
-margin-top:4px;
+.stepper{
+display:flex;
+gap:6px;
+align-items:center;
+}
+
+.stepper input{
+flex:1;
 text-align:center;
+padding:8px;
+}
+
+.stepper button{
+width:36px;
+height:36px;
+font-size:18px;
+border:none;
+border-radius:6px;
+background:#6366f1;
+color:white;
+font-weight:700;
+touch-action:manipulation;
 }
 
 .result{
@@ -72,12 +89,6 @@ border-radius:6px;
 margin-top:10px;
 }
 
-.note{
-font-size:12px;
-margin-top:6px;
-color:#555;
-}
-
 .progress{
 width:100%;
 height:18px;
@@ -91,25 +102,15 @@ margin-top:10px;
 height:100%;
 background:#6366f1;
 width:0%;
-transition:0.3s;
 }
 
-.stepper{
-display:flex;
-gap:6px;
-align-items:center;
-}
-
-.stepper button{
-width:34px;
-height:34px;
-font-size:18px;
-font-weight:700;
+button.action{
+padding:8px 12px;
 border:none;
 border-radius:6px;
 background:#6366f1;
 color:white;
-touch-action:manipulation;
+cursor:pointer;
 }
 
 .buttons{
@@ -118,14 +119,10 @@ display:flex;
 gap:10px;
 }
 
-button{
-padding:8px 12px;
-border:none;
-border-radius:6px;
-background:#6366f1;
-color:white;
-cursor:pointer;
-touch-action:manipulation;
+.note{
+font-size:12px;
+margin-top:6px;
+color:#555;
 }
 
 .footer{
@@ -161,18 +158,45 @@ grid-template-columns:1fr;
 <div class="grid">
 
 <div>
+
 Days
+
+<div class="stepper">
+
+<button onclick="step('days',-1)">-</button>
 <input type="number" id="days">
+<button onclick="step('days',1)">+</button>
+
+</div>
+
 </div>
 
 <div>
+
 Hours
+
+<div class="stepper">
+
+<button onclick="step('hours',-1)">-</button>
 <input type="number" id="hours">
+<button onclick="step('hours',1)">+</button>
+
+</div>
+
 </div>
 
 <div>
+
 Minutes
+
+<div class="stepper">
+
+<button onclick="step('minutes',-1)">-</button>
 <input type="number" id="minutes">
+<button onclick="step('minutes',1)">+</button>
+
+</div>
+
 </div>
 
 </div>
@@ -199,14 +223,12 @@ Minutes
 <label>Target Score</label>
 <input type="number" id="target" value="7500">
 
-
 <h3>Crystal Packs</h3>
 
 <div class="note">
 199 Pack = 9 Mochi<br>
 988 Pack = 18 Mochi<br>
-1988 Pack = 27 Mochi<br>
-3 purchases per day each pack
+1988 Pack = 27 Mochi
 </div>
 
 <div class="grid">
@@ -218,9 +240,7 @@ Minutes
 <div class="stepper">
 
 <button onclick="step('pack199',-1)">-</button>
-
 <input type="number" id="pack199">
-
 <button onclick="step('pack199',1)">+</button>
 
 </div>
@@ -234,9 +254,7 @@ Minutes
 <div class="stepper">
 
 <button onclick="step('pack988',-1)">-</button>
-
 <input type="number" id="pack988">
-
 <button onclick="step('pack988',1)">+</button>
 
 </div>
@@ -250,9 +268,7 @@ Minutes
 <div class="stepper">
 
 <button onclick="step('pack1988',-1)">-</button>
-
 <input type="number" id="pack1988">
-
 <button onclick="step('pack1988',1)">+</button>
 
 </div>
@@ -260,7 +276,6 @@ Minutes
 </div>
 
 </div>
-
 
 <div class="progress">
 <div class="bar" id="bar"></div>
@@ -272,13 +287,12 @@ Minutes
 
 <div class="buttons">
 
-<button onclick="copyResult()">Copy Result</button>
-<button onclick="resetAll()">Reset</button>
+<button class="action" onclick="copyResult()">Copy Result</button>
+<button class="action" onclick="resetAll()">Reset</button>
 
 </div>
 
 </div>
-
 
 
 <div class="card">
@@ -298,7 +312,6 @@ Minutes
 
 </div>
 
-
 <div class="footer">
 Dev by @thinking.j17 | cozyneko guild S12
 </div>
@@ -310,6 +323,21 @@ Dev by @thinking.j17 | cozyneko guild S12
 
 function format(n){
 return Math.floor(n).toLocaleString()
+}
+
+
+function step(id,delta){
+
+let el=document.getElementById(id)
+
+let value=Number(el.value||0)+delta
+
+if(value<0)value=0
+
+el.value=value
+
+calculateAll()
+
 }
 
 
@@ -351,34 +379,6 @@ return getDaysLeft()*3
 }
 
 
-function clampPackValues(){
-
-pack199.value=Math.max(0,Number(pack199.value||0))
-pack988.value=Math.max(0,Number(pack988.value||0))
-pack1988.value=Math.max(0,Number(pack1988.value||0))
-
-}
-
-
-function step(id,delta){
-
-let el=document.getElementById(id)
-
-let v=Number(el.value||0)+delta
-
-if(v<0) v=0
-
-let limit=getPackLimit()
-
-if(v>limit) v=limit
-
-el.value=v
-
-calculateAll()
-
-}
-
-
 function getPackMochi(){
 
 return (Number(pack199.value||0)*9)+
@@ -403,10 +403,10 @@ timeResult.innerHTML=
 
 function calcProgress(){
 
-let stroll=Number(strollInput.value||0)
-let stamina=Number(staminaInput.value||0)
+let stroll=Number(stroll.value||0)
+let stamina=Number(stamina.value||0)
 
-let inventoryMochi=Number(mochiInput.value||0)
+let inventoryMochi=Number(mochi.value||0)
 let packMochi=getPackMochi()
 
 let totalMochi=inventoryMochi+packMochi
@@ -420,7 +420,7 @@ regen+
 
 let finalStroll=stroll+totalStamina
 
-let target=Number(targetInput.value||0)
+let target=Number(target.value||0)
 
 let percent=Math.min((finalStroll/target)*100,100)
 
@@ -455,19 +455,14 @@ needed-=use988*18
 
 let use199=Math.min(Math.ceil(needed/9),limit)
 
-let mochi=
-(use1988*27)+
-(use988*18)+
-(use199*9)
-
 let crystal=
 (use1988*1988)+
 (use988*988)+
 (use199*199)
 
-let enough=needed<=0
-
 let missing=Math.ceil(needed)
+
+let enough=needed<=0
 
 recommendResult.innerHTML=
 
@@ -506,7 +501,6 @@ kaguraResult.innerHTML=
 
 function calculateAll(){
 
-clampPackValues()
 calcTime()
 calcProgress()
 calcKagura()
@@ -562,18 +556,9 @@ i.addEventListener("input",calculateAll)
 })
 
 
-const strollInput=document.getElementById("stroll")
-const staminaInput=document.getElementById("stamina")
-const mochiInput=document.getElementById("mochi")
-const targetInput=document.getElementById("target")
-
 const powerInput=document.getElementById("power")
 const bonusInput=document.getElementById("bonus")
 const coinsInput=document.getElementById("coins")
-
-const pack199=document.getElementById("pack199")
-const pack988=document.getElementById("pack988")
-const pack1988=document.getElementById("pack1988")
 
 const timeResult=document.getElementById("timeResult")
 const progressResult=document.getElementById("progressResult")
