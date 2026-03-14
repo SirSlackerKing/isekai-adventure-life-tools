@@ -67,12 +67,19 @@ margin-top:4px;
 }
 
 .result{
-background:#eef2ff;
+background:#e0e7ff;
 border-left:4px solid #6366f1;
 padding:12px;
 border-radius:6px;
 margin-top:10px;
 font-weight:600;
+}
+
+.subresult{
+background:#f8fafc;
+padding:10px;
+border-radius:6px;
+margin-top:10px;
 }
 
 .note{
@@ -94,6 +101,21 @@ margin-top:10px;
 height:100%;
 background:#6366f1;
 width:0%;
+}
+
+.buttons{
+margin-top:10px;
+display:flex;
+gap:10px;
+}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:6px;
+background:#6366f1;
+color:white;
+cursor:pointer;
 }
 
 .footer{
@@ -133,17 +155,17 @@ grid-template-columns:1fr;
 
 <div>
 Days
-<input type="number" id="days" value="0">
+<input type="number" id="days">
 </div>
 
 <div>
 Hours
-<input type="number" id="hours" value="0">
+<input type="number" id="hours">
 </div>
 
 <div>
 Minutes
-<input type="number" id="minutes" value="0">
+<input type="number" id="minutes">
 </div>
 
 </div>
@@ -164,16 +186,37 @@ This calculator subtracts 1 stamina to avoid overestimating.
 <h2>Progress Predictor</h2>
 
 <label>Current Stroll</label>
-<input type="number" id="stroll" value="0">
+<input type="number" id="stroll">
 
 <label>Current Stamina</label>
-<input type="number" id="stamina" value="0">
+<input type="number" id="stamina">
 
 <label>Sakuramochi (Inventory)</label>
-<input type="number" id="mochi" value="0">
+<input type="number" id="mochi">
 
-<label>Target Reward</label>
+<label>Target Score</label>
 <input type="number" id="target" value="7500">
+
+<h3>Crystal Packs (Optional)</h3>
+
+<div class="grid">
+
+<div>
+199 Crystal Pack
+<input type="number" id="pack199">
+</div>
+
+<div>
+988 Crystal Pack
+<input type="number" id="pack988">
+</div>
+
+<div>
+1988 Crystal Pack
+<input type="number" id="pack1988">
+</div>
+
+</div>
 
 <div class="progress">
 <div class="bar" id="bar"></div>
@@ -181,23 +224,32 @@ This calculator subtracts 1 stamina to avoid overestimating.
 
 <div class="result" id="progressResult"></div>
 
+<div class="subresult" id="recommendResult"></div>
+
+<div class="buttons">
+
+<button onclick="copyResult()">Copy Result</button>
+<button onclick="resetAll()">Reset</button>
+
+</div>
+
 </div>
 
 
 <div class="card">
 
-<h2>Crystal Pack Planner</h2>
+<h2>Kagura Dance Calculator</h2>
 
-<label>199 Crystal Pack</label>
-<input type="number" id="pack199" value="0">
+<label>Fellow Power</label>
+<input type="number" id="power">
 
-<label>988 Crystal Pack</label>
-<input type="number" id="pack988" value="0">
+<label>Support Bonus %</label>
+<input type="number" id="bonus">
 
-<label>1988 Crystal Pack</label>
-<input type="number" id="pack1988" value="0">
+<label>Sakura Coins Used</label>
+<input type="number" id="coins">
 
-<div class="result" id="crystalResult"></div>
+<div class="result" id="kaguraResult"></div>
 
 </div>
 
@@ -217,9 +269,9 @@ return Math.floor(n).toLocaleString()
 
 function getRemainingMinutes(){
 
-let d=Number(days.value)
-let h=Number(hours.value)
-let m=Number(minutes.value)
+let d=Number(days.value||0)
+let h=Number(hours.value||0)
+let m=Number(minutes.value||0)
 
 return d*1440 + h*60 + m
 
@@ -239,21 +291,13 @@ return regen
 
 function getPackMochi(){
 
-let p199=Number(pack199.value)
-let p988=Number(pack988.value)
-let p1988=Number(pack1988.value)
-
-return (p199*9)+(p988*18)+(p1988*27)
+return (pack199.value*9)+(pack988.value*18)+(pack1988.value*27)
 
 }
 
 function getPackCrystal(){
 
-let p199=Number(pack199.value)
-let p988=Number(pack988.value)
-let p1988=Number(pack1988.value)
-
-return (p199*199)+(p988*988)+(p1988*1988)
+return (pack199.value*199)+(pack988.value*988)+(pack1988.value*1988)
 
 }
 
@@ -269,26 +313,12 @@ timeResult.innerHTML=
 
 }
 
-function calcCrystal(){
-
-let mochi=getPackMochi()
-let stamina=mochi*5
-let crystal=getPackCrystal()
-
-crystalResult.innerHTML=
-
-"Total Mochi: "+format(mochi)+"<br>"+
-"Total Stamina: "+format(stamina)+"<br>"+
-"Total Crystals: "+format(crystal)
-
-}
-
 function calcProgress(){
 
-let stroll=Number(strollInput.value)
-let stamina=Number(staminaInput.value)
+let stroll=Number(strollInput.value||0)
+let stamina=Number(staminaInput.value||0)
 
-let inventoryMochi=Number(mochiInput.value)
+let inventoryMochi=Number(mochiInput.value||0)
 let packMochi=getPackMochi()
 
 let totalMochi=inventoryMochi+packMochi
@@ -302,26 +332,109 @@ stamina
 
 let finalStroll=stroll+totalStamina
 
-let target=Number(targetInput.value)
+let target=Number(targetInput.value||0)
 
 let percent=Math.min((finalStroll/target)*100,100)
 
 bar.style.width=percent+"%"
 
+let remainingScore=target-finalStroll
+if(remainingScore<0) remainingScore=0
+
+let neededMochi=Math.ceil(remainingScore/5)
+
 progressResult.innerHTML=
 
-"Regen Stamina: "+format(regen)+"<br>"+
-"Total Mochi: "+format(totalMochi)+"<br>"+
-"Total Stamina: "+format(totalStamina)+"<br>"+
-"Predicted Final Stroll: "+format(finalStroll)
+"Predicted Final Stroll: "+format(finalStroll)+"<br>"+
+"Remaining Score: "+format(remainingScore)+"<br>"+
+"Needed Mochi: "+format(neededMochi)
+
+recommendPacks(neededMochi)
+
+}
+
+function recommendPacks(needed){
+
+let daysLeft=Math.floor(getRemainingMinutes()/1440)
+
+let maxPack=daysLeft*3
+
+let use1988=Math.min(Math.floor(needed/27),maxPack)
+needed-=use1988*27
+
+let use988=Math.min(Math.floor(needed/18),maxPack)
+needed-=use988*18
+
+let use199=Math.min(Math.ceil(needed/9),maxPack)
+
+let crystal=
+(use1988*1988)+(use988*988)+(use199*199)
+
+recommendResult.innerHTML=
+
+"Recommended Packs<br>"+
+"1988 × "+use1988+"<br>"+
+"988 × "+use988+"<br>"+
+"199 × "+use199+"<br><br>"+
+"Estimated Crystal: "+format(crystal)
+
+}
+
+function calcKagura(){
+
+let power=Number(powerInput.value||0)
+let bonus=Number(bonusInput.value||0)
+let coins=Number(coinsInput.value||0)
+
+let faith=(power*(1+bonus/100)*coins)/1000
+
+kaguraResult.innerHTML=
+
+"Faith Earned: "+format(faith)+"<br>"+
+"Faith per Coin: "+format(faith/coins)
 
 }
 
 function calculateAll(){
 
 calcTime()
-calcCrystal()
 calcProgress()
+calcKagura()
+saveData()
+
+}
+
+function saveData(){
+
+document.querySelectorAll("input").forEach(i=>{
+localStorage.setItem(i.id,i.value)
+})
+
+}
+
+function loadData(){
+
+document.querySelectorAll("input").forEach(i=>{
+let v=localStorage.getItem(i.id)
+if(v) i.value=v
+})
+
+}
+
+function resetAll(){
+
+localStorage.clear()
+location.reload()
+
+}
+
+function copyResult(){
+
+let text=progressResult.innerText
+
+navigator.clipboard.writeText(text)
+
+alert("Copied!")
 
 }
 
@@ -334,12 +447,18 @@ const staminaInput=document.getElementById("stamina")
 const mochiInput=document.getElementById("mochi")
 const targetInput=document.getElementById("target")
 
+const powerInput=document.getElementById("power")
+const bonusInput=document.getElementById("bonus")
+const coinsInput=document.getElementById("coins")
+
 const timeResult=document.getElementById("timeResult")
-const crystalResult=document.getElementById("crystalResult")
 const progressResult=document.getElementById("progressResult")
+const recommendResult=document.getElementById("recommendResult")
+const kaguraResult=document.getElementById("kaguraResult")
 
 const bar=document.getElementById("bar")
 
+loadData()
 calculateAll()
 
 </script>
