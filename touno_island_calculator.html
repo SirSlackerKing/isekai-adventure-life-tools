@@ -28,6 +28,7 @@ padding:20px;
 
 h1{
 text-align:center;
+margin-bottom:20px;
 }
 
 .card{
@@ -36,6 +37,10 @@ padding:20px;
 border-radius:10px;
 margin-bottom:20px;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.card h2{
+margin-top:0;
 }
 
 input,select{
@@ -51,7 +56,7 @@ border-radius:6px;
 background:#6366f1;
 color:white;
 cursor:pointer;
-margin-right:6px;
+margin-bottom:10px;
 }
 
 .result{
@@ -75,12 +80,13 @@ color:#555;
 
 <h1>Touno Island Calculator</h1>
 
+
 <div class="card">
 
 <h2>Event Setup</h2>
 
 <label>Event Start Date</label>
-<input type="datetime-local" id="start">
+<input type="date" id="startDate">
 
 <label>Event Duration</label>
 <select id="duration">
@@ -93,14 +99,17 @@ color:#555;
 <option value="7">7 Days</option>
 </select>
 
-<button onclick="calculateEnd()">Generate End Time</button>
+<button onclick="generateEvent()">Generate Event Time</button>
+
+<label>Event Start Time</label>
+<input type="datetime-local" id="start">
 
 <label>Event End Time</label>
 <input type="datetime-local" id="end">
 
 <button onclick="useServerTime()">Use SEA Server Time (Now)</button>
 
-<div class="result" id="timeInfo"></div>
+<div class="result" id="timeRemaining"></div>
 
 </div>
 
@@ -129,103 +138,161 @@ color:#555;
 </div>
 
 
+<div class="card">
+
+<h2>Reward Planner</h2>
+
+<label>Target Stroll</label>
+<input type="number" id="target" value="7500">
+
+<button onclick="planner()">Calculate Needed Mochi</button>
+
+<div class="result" id="planner"></div>
+
+</div>
+
+
+<div class="card">
+
+<h2>Kagura Dance Calculator</h2>
+
+<label>Fellow Power</label>
+<input type="number" id="power" value="1000000">
+
+<label>Support Bonus (%)</label>
+<input type="number" id="bonus" value="0">
+
+<label>Sakura Coins Used</label>
+<input type="number" id="coins" value="1">
+
+<button onclick="kagura()">Calculate Faith</button>
+
+<div class="result" id="kagura"></div>
+
+</div>
+
+
+</div>
+
+
 <script>
 
-let serverNow = null
+
+function formatDateTime(date){
+
+let y=date.getFullYear()
+let m=String(date.getMonth()+1).padStart(2,"0")
+let d=String(date.getDate()).padStart(2,"0")
+let h=String(date.getHours()).padStart(2,"0")
+let min=String(date.getMinutes()).padStart(2,"0")
+
+return `${y}-${m}-${d}T${h}:${min}`
+
+}
 
 
-function calculateEnd(){
 
-let startInput = document.getElementById("start").value
-let days = parseInt(document.getElementById("duration").value)
+function generateEvent(){
 
-if(!startInput) return
+let startDate=document.getElementById("startDate").value
+let days=parseInt(document.getElementById("duration").value)
 
-let start = new Date(startInput)
+if(!startDate) return
+
+let start=new Date(startDate)
 
 start.setHours(10,0,0,0)
 
-let end = new Date(start)
+let end=new Date(start)
+
 end.setDate(end.getDate()+days)
+
 end.setHours(22,0,0,0)
 
-document.getElementById("start").value =
-start.toISOString().slice(0,16)
-
-document.getElementById("end").value =
-end.toISOString().slice(0,16)
+document.getElementById("start").value=formatDateTime(start)
+document.getElementById("end").value=formatDateTime(end)
 
 updateTime()
 
 }
+
+
 
 function useServerTime(){
 
-serverNow = new Date()
+let now=new Date()
+
+let seaOffset=7*60
+let localOffset=now.getTimezoneOffset()
+
+let seaTime=new Date(now.getTime()+(localOffset+seaOffset)*60000)
+
+document.getElementById("start").value=formatDateTime(seaTime)
 
 updateTime()
 
 }
 
-
-function getNow(){
-
-return serverNow ? serverNow : new Date()
-
-}
 
 
 function updateTime(){
 
-let end = new Date(document.getElementById("end").value)
+let start=new Date(document.getElementById("start").value)
+let end=new Date(document.getElementById("end").value)
+let now=new Date()
 
-if(!end) return
+if(isNaN(start)||isNaN(end)) return
 
-let now = getNow()
+let diff=end-now
 
-let diff = end-now
+if(diff<0){
+document.getElementById("timeRemaining").innerHTML="Event Ended"
+return
+}
 
-if(diff<0) diff=0
-
-let minutes = Math.floor(diff/60000)
-
-let days = Math.floor(minutes/1440)
+let minutes=Math.floor(diff/60000)
+let days=Math.floor(minutes/1440)
 minutes%=1440
 
-let hours = Math.floor(minutes/60)
+let hours=Math.floor(minutes/60)
 minutes%=60
 
-document.getElementById("timeInfo").innerHTML =
-"Time Remaining: "+
-days+"d "+
-hours+"h "+
-minutes+"m"
+document.getElementById("timeRemaining").innerHTML=
+"Time Remaining: "+days+"d "+hours+"h "+minutes+"m"
 
 }
 
 
+
+setInterval(updateTime,1000)
+
+
+
 function getRemainingMinutes(){
 
-let end = new Date(document.getElementById("end").value)
+let start=new Date(document.getElementById("start").value)
+let end=new Date(document.getElementById("end").value)
+let now=new Date()
 
-let now = getNow()
+if(isNaN(start)||isNaN(end)) return 0
 
-if(!end) return 0
+if(now<start) now=start
 
-let diff = end-now
+if(now>end) return 0
 
-if(diff<0) return 0
+let diff=end-now
 
 return Math.floor(diff/60000)
 
 }
 
 
+
 function getRegen(){
 
-let minutes = getRemainingMinutes()
+let minutes=getRemainingMinutes()
 
-let regen = Math.floor(minutes/20)-1
+let regen=Math.floor(minutes/20)-1
 
 if(regen<0) regen=0
 
@@ -234,19 +301,18 @@ return regen
 }
 
 
+
 function calculate(){
 
-updateTime()
+let stroll=parseInt(document.getElementById("stroll").value)||0
+let stamina=parseInt(document.getElementById("stamina").value)||0
+let mochi=parseInt(document.getElementById("mochi").value)||0
 
-let stroll = parseInt(document.getElementById("stroll").value)||0
-let stamina = parseInt(document.getElementById("stamina").value)||0
-let mochi = parseInt(document.getElementById("mochi").value)||0
+let regen=getRegen()
 
-let regen = getRegen()
+let totalStamina=stamina+regen+(mochi*5)
 
-let totalStamina = stamina + regen + (mochi*5)
-
-let finalStroll = stroll + totalStamina
+let finalStroll=stroll+totalStamina
 
 let text=""
 
@@ -262,6 +328,52 @@ text+=(finalStroll>=7500?"✔":"❌")+" 7500<br>"
 text+=(finalStroll>=15000?"✔":"❌")+" 15000<br>"
 
 document.getElementById("result").innerHTML=text
+
+}
+
+
+
+function planner(){
+
+let stroll=parseInt(document.getElementById("stroll").value)||0
+let stamina=parseInt(document.getElementById("stamina").value)||0
+let target=parseInt(document.getElementById("target").value)||0
+
+let regen=getRegen()
+
+let need=target-stroll-stamina-regen
+
+if(need<0) need=0
+
+let mochi=Math.ceil(need/5)
+
+let text=""
+
+text+="Need Stamina: "+need+"<br>"
+text+="Sakuramochi Needed: "+mochi
+
+document.getElementById("planner").innerHTML=text
+
+}
+
+
+
+function kagura(){
+
+let power=parseFloat(document.getElementById("power").value)||0
+let bonus=parseFloat(document.getElementById("bonus").value)||0
+let coins=parseFloat(document.getElementById("coins").value)||0
+
+let base=power*(1+bonus/100)
+
+let faith=base*coins/1000
+
+let text=""
+
+text+="Faith Gained: "+Math.floor(faith)+"<br>"
+text+="Faith per Coin: "+Math.floor(faith/coins)
+
+document.getElementById("kagura").innerHTML=text
 
 }
 
