@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Touno Island Calculator</title>
 
@@ -41,13 +41,9 @@ margin-bottom:20px;
 box-shadow:0 8px 18px rgba(0,0,0,0.08);
 }
 
-h2{
-margin-top:0;
-}
-
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
 gap:14px;
 }
 
@@ -112,6 +108,12 @@ font-size:14px;
 line-height:1.6;
 }
 
+.small{
+font-size:13px;
+color:#666;
+margin-top:6px;
+}
+
 button.action{
 background:#6366f1;
 border:none;
@@ -122,9 +124,17 @@ cursor:pointer;
 margin-right:10px;
 }
 
-.small{
+.footer{
+margin-top:30px;
+text-align:center;
 font-size:13px;
 color:#666;
+}
+
+.footer a{
+color:#6366f1;
+text-decoration:none;
+font-weight:600;
 }
 
 </style>
@@ -173,7 +183,7 @@ color:#666;
 
 <div class="result" id="timeResult"></div>
 
-<div class="small" style="margin-top:6px;">
+<div class="small">
 * Stamina regenerates every 20 minutes.<br>
 The last stamina may regenerate exactly when the event ends and cannot be used.<br>
 This calculator subtracts <b>1 stamina</b> to avoid overestimating.
@@ -183,7 +193,7 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 
 <div class="card">
 
-<h2>Progress Predictor</h2>
+<h2>Resources</h2>
 
 <div class="grid">
 
@@ -198,7 +208,7 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 </div>
 
 <div>
-<label>Sakuramochi (Inventory)</label>
+<label>Sakuramochi</label>
 <input type="number" id="mochi">
 </div>
 
@@ -211,17 +221,10 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 
 <h3>Crystal Packs</h3>
 
-<div class="small">
-199 = 9 Mochi<br>
-988 = 18 Mochi<br>
-1988 = 27 Mochi<br>
-Limit: 3 packs per day
-</div>
-
 <div class="grid">
 
 <div>
-<label>199 Crystal Pack</label>
+<label>199 Pack</label>
 <div class="stepper">
 <button onclick="step('pack199',-1)">-</button>
 <input type="number" id="pack199" value="0">
@@ -230,7 +233,7 @@ Limit: 3 packs per day
 </div>
 
 <div>
-<label>988 Crystal Pack</label>
+<label>988 Pack</label>
 <div class="stepper">
 <button onclick="step('pack988',-1)">-</button>
 <input type="number" id="pack988" value="0">
@@ -239,7 +242,7 @@ Limit: 3 packs per day
 </div>
 
 <div>
-<label>1988 Crystal Pack</label>
+<label>1988 Pack</label>
 <div class="stepper">
 <button onclick="step('pack1988',-1)">-</button>
 <input type="number" id="pack1988" value="0">
@@ -266,28 +269,19 @@ Limit: 3 packs per day
 
 <h2>Kagura Dance Calculator</h2>
 
-<div class="grid">
-
-<div>
-<label>Fellow Power</label>
-<input type="number" id="power">
-</div>
-
-<div>
-<label>Support Bonus %</label>
-<input type="number" id="bonus">
-</div>
-
-<div>
-<label>Sakura Coins Used</label>
-<input type="number" id="coins">
+<div class="small">
+⚠ Kagura calculator not finalized yet. Formula may change.
 </div>
 
 </div>
 
-<div class="result" id="kaguraResult"></div>
+<footer class="footer">
 
-</div>
+<a href="https://sirslackerking.github.io/isekai-adventure-life-tools/">Home</a>
+<br>
+Dev by @thingking.j17 | cozy neko guild
+
+</footer>
 
 </div>
 
@@ -303,31 +297,31 @@ let el=document.getElementById(id)
 let value=Number(el.value)||0
 
 value+=amount
-
 if(value<0)value=0
 
 if(id.includes("pack")){
-let limit=get("days")*3
+let minutes=getMinutes()
+let limit=Math.ceil(minutes/1440)*3
 if(value>limit)value=limit
 }
 
 el.value=value
 
 calculate()
-
 save()
 
 }
 
+function getMinutes(){
+return get("days")*1440+get("hours")*60+get("minutes")
+}
+
 function calculate(){
 
-let days=get("days")
-let hours=get("hours")
-let minutes=get("minutes")
+let totalMinutes=getMinutes()
 
-let totalMinutes=days*1440+hours*60+minutes
 let regen=Math.floor(totalMinutes/20)-1
-if(regen<0) regen=0
+if(regen<0)regen=0
 
 document.getElementById("timeResult").innerHTML=
 `Remaining Minutes: <b>${totalMinutes}</b><br>
@@ -346,62 +340,65 @@ let packMochi=p199*9+p988*18+p1988*27
 
 let totalMochi=mochi+packMochi
 
-let score=stroll+(stamina+regen+totalMochi)*5
+let totalStamina=stamina+regen+(totalMochi*5)
 
-let percent=Math.min(score/target*100,100)
+let totalStroll=totalStamina
+
+let predictedScore=stroll+(totalStroll*5)
+
+let scoreWithoutPacks=
+stroll+((stamina+regen+(mochi*5))*5)
+
+let percent=Math.min(predictedScore/target*100,100)
 
 document.getElementById("progressBar").style.width=percent+"%"
 
 let result=""
 
-let best="Best Value Pack: 199 Crystal"
+if(predictedScore>=target){
 
-let value199=199/9
-let value988=988/18
-let value1988=1988/27
+result=`
+RESOURCES<br><br>
 
-let min=Math.min(value199,value988,value1988)
+Stamina Now: <b>${stamina}</b><br>
+Stamina Regen: <b>${regen}</b><br>
+Total Mochi: <b>${totalMochi}</b><br>
+Total Stamina: <b>${totalStamina}</b><br>
+Total Stroll: <b>${totalStroll}</b><br><br>
 
-if(min==value199)best="Best Value Pack: 199 Crystal"
-if(min==value988)best="Best Value Pack: 988 Crystal"
-if(min==value1988)best="Best Value Pack: 1988 Crystal"
+PROJECTION<br><br>
 
-if(score>=target){
-
-result=`✅ Target reachable<br>
-Predicted Score: <b>${Math.floor(score)}</b><br>
-${best}`
+Score Without Packs: <b>${Math.floor(scoreWithoutPacks)}</b><br>
+Predicted Score: <b>${Math.floor(predictedScore)}</b>
+`
 
 }else{
 
-let need=target-score
-let mochiNeed=Math.ceil(need/5)
+let needScore=target-predictedScore
+let needStroll=Math.ceil(needScore/5)
+let needMochi=Math.ceil(needStroll/5)
 
-result=`❌ Not enough resources<br>
-Need <b>${mochiNeed}</b> more Mochi<br>
-${best}`
+result=`
+RESOURCES<br><br>
+
+Stamina Now: <b>${stamina}</b><br>
+Stamina Regen: <b>${regen}</b><br>
+Total Mochi: <b>${totalMochi}</b><br>
+Total Stamina: <b>${totalStamina}</b><br>
+Total Stroll: <b>${totalStroll}</b><br><br>
+
+PROJECTION<br><br>
+
+Score Without Packs: <b>${Math.floor(scoreWithoutPacks)}</b><br>
+Predicted Score: <b>${Math.floor(predictedScore)}</b><br><br>
+
+❌ Need <b>${needMochi}</b> Mochi<br>
+Need <b>${needStroll}</b> Stroll
+`
 
 }
 
 document.getElementById("result").innerHTML=result
-
-calculateKagura()
-
-}
-
-function calculateKagura(){
-
-let power=get("power")
-let bonus=get("bonus")
-let coins=get("coins")
-
-if(power==0)return
-
-let score=power*(1+bonus/100)*coins
-
-document.getElementById("kaguraResult").innerHTML=
-`Estimated Kagura Score:<br>
-<b>${Math.floor(score)}</b>`
 
 }
 
@@ -427,7 +424,6 @@ p1988:get("pack1988")
 function load(){
 
 let data=localStorage.getItem("tounoCalc")
-
 if(!data)return
 
 data=JSON.parse(data)
@@ -446,18 +442,14 @@ pack1988.value=data.p1988||0
 }
 
 function resetCalc(){
-
 localStorage.removeItem("tounoCalc")
 location.reload()
-
 }
 
 function copyResult(){
-
 navigator.clipboard.writeText(
 document.getElementById("result").innerText
 )
-
 }
 
 document.querySelectorAll("input").forEach(el=>{
