@@ -28,7 +28,6 @@ padding:20px;
 
 h1{
 text-align:center;
-margin-bottom:20px;
 }
 
 .card{
@@ -39,11 +38,7 @@ margin-bottom:20px;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
-.card h2{
-margin-top:0;
-}
-
-input{
+input,select{
 width:100%;
 padding:8px;
 margin:6px 0 12px 0;
@@ -56,6 +51,7 @@ border-radius:6px;
 background:#6366f1;
 color:white;
 cursor:pointer;
+margin-right:6px;
 }
 
 .result{
@@ -79,16 +75,32 @@ color:#555;
 
 <h1>Touno Island Calculator</h1>
 
-
 <div class="card">
 
 <h2>Event Setup</h2>
 
-<label>Event Start Time</label>
+<label>Event Start Date</label>
 <input type="datetime-local" id="start">
+
+<label>Event Duration</label>
+<select id="duration">
+<option value="1">1 Day</option>
+<option value="2">2 Days</option>
+<option value="3">3 Days</option>
+<option value="4">4 Days</option>
+<option value="5">5 Days</option>
+<option value="6">6 Days</option>
+<option value="7">7 Days</option>
+</select>
+
+<button onclick="calculateEnd()">Generate End Time</button>
 
 <label>Event End Time</label>
 <input type="datetime-local" id="end">
+
+<button onclick="useServerTime()">Use SEA Server Time (Now)</button>
+
+<div class="result" id="timeInfo"></div>
 
 </div>
 
@@ -117,57 +129,85 @@ color:#555;
 </div>
 
 
-<div class="card">
-
-<h2>Reward Planner</h2>
-
-<label>Target Stroll</label>
-<input type="number" id="target" value="7500">
-
-<button onclick="planner()">Calculate Needed Mochi</button>
-
-<div class="result" id="planner"></div>
-
-</div>
-
-
-<div class="card">
-
-<h2>Kagura Dance Calculator</h2>
-
-<label>Fellow Power</label>
-<input type="number" id="power" value="1000000">
-
-<label>Support Bonus (%)</label>
-<input type="number" id="bonus" value="0">
-
-<label>Sakura Coins Used</label>
-<input type="number" id="coins" value="1">
-
-<button onclick="kagura()">Calculate Faith</button>
-
-<div class="result" id="kagura"></div>
-
-</div>
-
-
-</div>
-
-
 <script>
+
+let serverNow = null
+
+
+function calculateEnd(){
+
+let start = new Date(document.getElementById("start").value)
+let days = parseInt(document.getElementById("duration").value)
+
+if(!start) return
+
+start.setDate(start.getDate()+days)
+
+document.getElementById("end").value =
+start.toISOString().slice(0,16)
+
+updateTime()
+
+}
+
+
+function useServerTime(){
+
+serverNow = new Date()
+
+updateTime()
+
+}
+
+
+function getNow(){
+
+return serverNow ? serverNow : new Date()
+
+}
+
+
+function updateTime(){
+
+let end = new Date(document.getElementById("end").value)
+
+if(!end) return
+
+let now = getNow()
+
+let diff = end-now
+
+if(diff<0) diff=0
+
+let minutes = Math.floor(diff/60000)
+
+let days = Math.floor(minutes/1440)
+minutes%=1440
+
+let hours = Math.floor(minutes/60)
+minutes%=60
+
+document.getElementById("timeInfo").innerHTML =
+"Time Remaining: "+
+days+"d "+
+hours+"h "+
+minutes+"m"
+
+}
+
 
 function getRemainingMinutes(){
 
-let start = new Date(document.getElementById("start").value)
 let end = new Date(document.getElementById("end").value)
-let now = new Date()
 
-if(!start || !end) return 0
+let now = getNow()
 
-if(now < start) now = start
-if(now > end) return 0
+if(!end) return 0
 
-let diff = end - now
+let diff = end-now
+
+if(diff<0) return 0
+
 return Math.floor(diff/60000)
 
 }
@@ -177,9 +217,9 @@ function getRegen(){
 
 let minutes = getRemainingMinutes()
 
-let regen = Math.floor(minutes/20) - 1
+let regen = Math.floor(minutes/20)-1
 
-if(regen < 0) regen = 0
+if(regen<0) regen=0
 
 return regen
 
@@ -188,9 +228,11 @@ return regen
 
 function calculate(){
 
-let stroll = parseInt(document.getElementById("stroll").value) || 0
-let stamina = parseInt(document.getElementById("stamina").value) || 0
-let mochi = parseInt(document.getElementById("mochi").value) || 0
+updateTime()
+
+let stroll = parseInt(document.getElementById("stroll").value)||0
+let stamina = parseInt(document.getElementById("stamina").value)||0
+let mochi = parseInt(document.getElementById("mochi").value)||0
 
 let regen = getRegen()
 
@@ -198,69 +240,24 @@ let totalStamina = stamina + regen + (mochi*5)
 
 let finalStroll = stroll + totalStamina
 
-let text = ""
-
-text += "Regen Stamina: "+regen+"<br>"
-text += "Total Stamina Available: "+totalStamina+"<br>"
-text += "Predicted Final Stroll: "+finalStroll+"<br><br>"
-
-text += "Reward Prediction<br>"
-
-text += (finalStroll>=150 ? "✔":"❌")+" 150<br>"
-text += (finalStroll>=1000 ? "✔":"❌")+" 1000<br>"
-text += (finalStroll>=7500 ? "✔":"❌")+" 7500<br>"
-text += (finalStroll>=15000 ? "✔":"❌")+" 15000<br>"
-
-document.getElementById("result").innerHTML = text
-
-}
-
-
-function planner(){
-
-let stroll = parseInt(document.getElementById("stroll").value) || 0
-let stamina = parseInt(document.getElementById("stamina").value) || 0
-let target = parseInt(document.getElementById("target").value) || 0
-
-let regen = getRegen()
-
-let need = target - stroll - stamina - regen
-
-if(need < 0) need = 0
-
-let mochi = Math.ceil(need/5)
-
 let text=""
 
-text+="Need Stamina: "+need+"<br>"
-text+="Sakuramochi Needed: "+mochi
+text+="Regen Stamina: "+regen+"<br>"
+text+="Total Stamina Available: "+totalStamina+"<br>"
+text+="Predicted Final Stroll: "+finalStroll+"<br><br>"
 
-document.getElementById("planner").innerHTML = text
+text+="Reward Prediction<br>"
 
-}
+text+=(finalStroll>=150?"✔":"❌")+" 150<br>"
+text+=(finalStroll>=1000?"✔":"❌")+" 1000<br>"
+text+=(finalStroll>=7500?"✔":"❌")+" 7500<br>"
+text+=(finalStroll>=15000?"✔":"❌")+" 15000<br>"
 
-
-function kagura(){
-
-let power = parseFloat(document.getElementById("power").value) || 0
-let bonus = parseFloat(document.getElementById("bonus").value) || 0
-let coins = parseFloat(document.getElementById("coins").value) || 0
-
-let base = power * (1 + bonus/100)
-
-let faith = base * coins / 1000
-
-let text=""
-
-text+="Faith Gained: "+Math.floor(faith)+"<br>"
-text+="Faith per Coin: "+Math.floor(faith/coins)
-
-document.getElementById("kagura").innerHTML = text
+document.getElementById("result").innerHTML=text
 
 }
 
 </script>
-
 
 </body>
 </html>
