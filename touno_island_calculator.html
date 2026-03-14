@@ -4,7 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <title>Touno Island Calculator</title>
 
@@ -33,19 +35,6 @@ text-align:center;
 margin-bottom:20px;
 }
 
-.home{
-text-align:center;
-margin-bottom:15px;
-}
-
-.home a{
-background:#6366f1;
-color:white;
-padding:8px 14px;
-border-radius:6px;
-text-decoration:none;
-}
-
 .card{
 background:white;
 padding:18px;
@@ -64,6 +53,7 @@ input{
 width:100%;
 padding:8px;
 margin-top:4px;
+text-align:center;
 }
 
 .result{
@@ -104,8 +94,22 @@ width:0%;
 transition:0.3s;
 }
 
-.bar.done{
-background:#22c55e;
+.stepper{
+display:flex;
+gap:6px;
+align-items:center;
+}
+
+.stepper button{
+width:34px;
+height:34px;
+font-size:18px;
+font-weight:700;
+border:none;
+border-radius:6px;
+background:#6366f1;
+color:white;
+touch-action:manipulation;
 }
 
 .buttons{
@@ -121,6 +125,7 @@ border-radius:6px;
 background:#6366f1;
 color:white;
 cursor:pointer;
+touch-action:manipulation;
 }
 
 .footer{
@@ -148,10 +153,6 @@ grid-template-columns:1fr;
 
 <h1>Touno Island Calculator</h1>
 
-<div class="home">
-<a href="/">🏠 Home</a>
-</div>
-
 
 <div class="card">
 
@@ -178,13 +179,8 @@ Minutes
 
 <div class="result" id="timeResult"></div>
 
-<div class="note">
-Stamina regenerates every 20 minutes.<br>
-The final stamina may regenerate exactly when the event ends and cannot be used.<br>
-This calculator subtracts 1 stamina to avoid overestimation.
 </div>
 
-</div>
 
 
 <div class="card">
@@ -204,35 +200,67 @@ This calculator subtracts 1 stamina to avoid overestimation.
 <input type="number" id="target" value="7500">
 
 
-<h3>Crystal Packs (Optional)</h3>
+<h3>Crystal Packs</h3>
 
 <div class="note">
 199 Pack = 9 Mochi<br>
 988 Pack = 18 Mochi<br>
 1988 Pack = 27 Mochi<br>
-Each pack can be purchased 3 times per day.
+3 purchases per day each pack
 </div>
 
 <div class="grid">
 
 <div>
+
 199 Crystal Pack
+
+<div class="stepper">
+
+<button onclick="step('pack199',-1)">-</button>
+
 <input type="number" id="pack199">
+
+<button onclick="step('pack199',1)">+</button>
+
+</div>
+
 </div>
 
 <div>
+
 988 Crystal Pack
+
+<div class="stepper">
+
+<button onclick="step('pack988',-1)">-</button>
+
 <input type="number" id="pack988">
+
+<button onclick="step('pack988',1)">+</button>
+
+</div>
+
 </div>
 
 <div>
+
 1988 Crystal Pack
+
+<div class="stepper">
+
+<button onclick="step('pack1988',-1)">-</button>
+
 <input type="number" id="pack1988">
+
+<button onclick="step('pack1988',1)">+</button>
+
+</div>
+
 </div>
 
 </div>
 
-<div class="note" id="packLimitNote"></div>
 
 <div class="progress">
 <div class="bar" id="bar"></div>
@@ -250,6 +278,7 @@ Each pack can be purchased 3 times per day.
 </div>
 
 </div>
+
 
 
 <div class="card">
@@ -290,11 +319,7 @@ let d=Math.max(0,Number(days.value||0))
 let h=Math.max(0,Number(hours.value||0))
 let m=Math.max(0,Number(minutes.value||0))
 
-let total=d*1440+h*60+m
-
-if(total<0) total=0
-
-return total
+return d*1440 + h*60 + m
 
 }
 
@@ -326,37 +351,39 @@ return getDaysLeft()*3
 }
 
 
+function clampPackValues(){
+
+pack199.value=Math.max(0,Number(pack199.value||0))
+pack988.value=Math.max(0,Number(pack988.value||0))
+pack1988.value=Math.max(0,Number(pack1988.value||0))
+
+}
+
+
+function step(id,delta){
+
+let el=document.getElementById(id)
+
+let v=Number(el.value||0)+delta
+
+if(v<0) v=0
+
+let limit=getPackLimit()
+
+if(v>limit) v=limit
+
+el.value=v
+
+calculateAll()
+
+}
+
+
 function getPackMochi(){
 
 return (Number(pack199.value||0)*9)+
 (Number(pack988.value||0)*18)+
 (Number(pack1988.value||0)*27)
-
-}
-
-
-function getPackCrystal(){
-
-return (Number(pack199.value||0)*199)+
-(Number(pack988.value||0)*988)+
-(Number(pack1988.value||0)*1988)
-
-}
-
-
-function enforcePackLimit(){
-
-let limit=getPackLimit()
-
-pack199.value=Math.min(Number(pack199.value||0),limit)
-pack988.value=Math.min(Number(pack988.value||0),limit)
-pack1988.value=Math.min(Number(pack1988.value||0),limit)
-
-pack199.max=limit
-pack988.max=limit
-pack1988.max=limit
-
-packLimitNote.innerHTML="Pack Limit per type: "+limit
 
 }
 
@@ -386,12 +413,10 @@ let totalMochi=inventoryMochi+packMochi
 
 let regen=getRegen()
 
-let staminaFromMochi=totalMochi*5
-
 let totalStamina=
 stamina+
 regen+
-staminaFromMochi
+(totalMochi*5)
 
 let finalStroll=stroll+totalStamina
 
@@ -401,12 +426,6 @@ let percent=Math.min((finalStroll/target)*100,100)
 
 bar.style.width=percent+"%"
 
-if(percent>=100){
-bar.classList.add("done")
-}else{
-bar.classList.remove("done")
-}
-
 let remainingScore=target-finalStroll
 
 if(remainingScore<0) remainingScore=0
@@ -415,13 +434,9 @@ let neededMochi=Math.ceil(remainingScore/5)
 
 progressResult.innerHTML=
 
-"Predicted Final Stroll: "+format(finalStroll)+"<br>"+
+"Final Stroll: "+format(finalStroll)+"<br>"+
 "Remaining Score: "+format(remainingScore)+"<br>"+
-"Needed Mochi: "+format(neededMochi)+"<br><br>"+
-
-"Total Stamina: "+format(totalStamina)+"<br>"+
-"From Regen: "+format(regen)+"<br>"+
-"From Mochi: "+format(staminaFromMochi)
+"Needed Mochi: "+format(neededMochi)
 
 recommendPacks(neededMochi)
 
@@ -452,6 +467,8 @@ let crystal=
 
 let enough=needed<=0
 
+let missing=Math.ceil(needed)
+
 recommendResult.innerHTML=
 
 "Recommended Packs<br><br>"+
@@ -460,12 +477,13 @@ recommendResult.innerHTML=
 "988 × "+use988+" / "+limit+"<br>"+
 "199 × "+use199+" / "+limit+"<br><br>"+
 
-"Total Mochi: "+format(mochi)+"<br>"+
 "Crystal Needed: "+format(crystal)+"<br><br>"+
 
 (enough
 ? "✓ Enough to reach target"
-: "✗ Not enough packs within remaining days")
+: "✗ Not enough packs within remaining days<br>"+
+"You still need "+format(missing)+" Mochi.<br>"+
+"Buy additional Mochi from Bundle Shop.")
 
 }
 
@@ -488,7 +506,7 @@ kaguraResult.innerHTML=
 
 function calculateAll(){
 
-enforcePackLimit()
+clampPackValues()
 calcTime()
 calcProgress()
 calcKagura()
@@ -553,16 +571,14 @@ const powerInput=document.getElementById("power")
 const bonusInput=document.getElementById("bonus")
 const coinsInput=document.getElementById("coins")
 
-const timeResult=document.getElementById("timeResult")
-const progressResult=document.getElementById("progressResult")
-const recommendResult=document.getElementById("recommendResult")
-const kaguraResult=document.getElementById("kaguraResult")
-
 const pack199=document.getElementById("pack199")
 const pack988=document.getElementById("pack988")
 const pack1988=document.getElementById("pack1988")
 
-const packLimitNote=document.getElementById("packLimitNote")
+const timeResult=document.getElementById("timeResult")
+const progressResult=document.getElementById("progressResult")
+const recommendResult=document.getElementById("recommendResult")
+const kaguraResult=document.getElementById("kaguraResult")
 
 const bar=document.getElementById("bar")
 
