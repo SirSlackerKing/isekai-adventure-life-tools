@@ -75,6 +75,12 @@ margin-top:10px;
 font-weight:600;
 }
 
+.note{
+font-size:12px;
+margin-top:8px;
+color:#555;
+}
+
 .progress{
 width:100%;
 height:18px;
@@ -144,6 +150,12 @@ Minutes
 
 <div class="result" id="timeResult"></div>
 
+<div class="note">
+* Stamina regenerates every 20 minutes.  
+The last stamina may regenerate exactly when the event ends and cannot be used.  
+This calculator subtracts 1 stamina to avoid overestimating.
+</div>
+
 </div>
 
 
@@ -186,24 +198,6 @@ Minutes
 <input type="number" id="pack1988" value="0">
 
 <div class="result" id="crystalResult"></div>
-
-</div>
-
-
-<div class="card">
-
-<h2>Kagura Calculator</h2>
-
-<label>Fellow Power</label>
-<input type="number" id="power" value="1000000">
-
-<label>Support Bonus %</label>
-<input type="number" id="bonus" value="0">
-
-<label>Sakura Coins</label>
-<input type="number" id="coins" value="1">
-
-<div class="result" id="kaguraResult"></div>
 
 </div>
 
@@ -323,27 +317,11 @@ progressResult.innerHTML=
 
 }
 
-function calcKagura(){
-
-let power=Number(powerInput.value)
-let bonus=Number(bonusInput.value)
-let coins=Number(coinsInput.value)
-
-let faith=power*(1+bonus/100)*coins/1000
-
-kaguraResult.innerHTML=
-
-"Faith Gained: "+format(faith)+"<br>"+
-"Faith per Coin: "+format(faith/coins)
-
-}
-
 function calculateAll(){
 
 calcTime()
 calcCrystal()
 calcProgress()
-calcKagura()
 
 }
 
@@ -356,14 +334,9 @@ const staminaInput=document.getElementById("stamina")
 const mochiInput=document.getElementById("mochi")
 const targetInput=document.getElementById("target")
 
-const powerInput=document.getElementById("power")
-const bonusInput=document.getElementById("bonus")
-const coinsInput=document.getElementById("coins")
-
 const timeResult=document.getElementById("timeResult")
 const crystalResult=document.getElementById("crystalResult")
 const progressResult=document.getElementById("progressResult")
-const kaguraResult=document.getElementById("kaguraResult")
 
 const bar=document.getElementById("bar")
 
