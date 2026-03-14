@@ -1,12 +1,8 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Touno Island Calculator</title>
 
@@ -15,6 +11,7 @@ content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
 *{
 box-sizing:border-box;
 font-family:Segoe UI;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
@@ -22,12 +19,12 @@ margin:0;
 background:#eef2ff;
 display:flex;
 justify-content:center;
+padding:20px;
 }
 
 .container{
 width:100%;
 max-width:900px;
-padding:20px;
 }
 
 h1{
@@ -37,111 +34,94 @@ margin-bottom:20px;
 
 .card{
 background:white;
-padding:18px;
-border-radius:10px;
-margin-bottom:18px;
-box-shadow:0 2px 6px rgba(0,0,0,0.1);
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
 }
 
 .grid{
 display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:10px;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:14px;
+margin-top:10px;
+}
+
+label{
+font-size:14px;
+font-weight:600;
+}
+
+input{
+width:100%;
+padding:8px;
+border-radius:6px;
+border:1px solid #ccc;
+margin-top:4px;
 }
 
 .stepper{
 display:flex;
 gap:6px;
-align-items:center;
+margin-top:4px;
 }
 
 .stepper input{
-flex:1;
 text-align:center;
-padding:8px;
 }
 
 .stepper button{
 width:36px;
 height:36px;
-font-size:18px;
 border:none;
 border-radius:6px;
 background:#6366f1;
 color:white;
+font-size:18px;
 font-weight:700;
+cursor:pointer;
 touch-action:manipulation;
 }
 
-.result{
-background:#e0e7ff;
-border-left:4px solid #6366f1;
-padding:12px;
-border-radius:6px;
-margin-top:10px;
-font-weight:600;
+button.action{
+background:#4f46e5;
+border:none;
+color:white;
+padding:10px 14px;
+border-radius:8px;
+cursor:pointer;
+margin-right:10px;
 }
 
-.subresult{
-background:#f8fafc;
-padding:10px;
-border-radius:6px;
-margin-top:10px;
+.result{
+background:#eef2ff;
+padding:12px;
+border-radius:8px;
+margin-top:12px;
+font-size:14px;
+line-height:1.6;
 }
 
 .progress{
-width:100%;
-height:18px;
-background:#e5e7eb;
-border-radius:8px;
-overflow:hidden;
+height:10px;
+background:#ddd;
+border-radius:6px;
 margin-top:10px;
+overflow:hidden;
 }
 
 .bar{
 height:100%;
-background:#6366f1;
 width:0%;
+background:#4f46e5;
 }
 
-button.action{
-padding:8px 12px;
-border:none;
-border-radius:6px;
-background:#6366f1;
-color:white;
-cursor:pointer;
-}
-
-.buttons{
-margin-top:10px;
-display:flex;
-gap:10px;
-}
-
-.note{
-font-size:12px;
-margin-top:6px;
-color:#555;
-}
-
-.footer{
-text-align:center;
-margin-top:30px;
+.small{
 font-size:13px;
 color:#666;
 }
 
-@media(max-width:600px){
-
-.grid{
-grid-template-columns:1fr;
-}
-
-}
-
 </style>
-
 </head>
 
 <body>
@@ -150,7 +130,6 @@ grid-template-columns:1fr;
 
 <h1>Touno Island Calculator</h1>
 
-
 <div class="card">
 
 <h2>Remaining Time</h2>
@@ -158,45 +137,30 @@ grid-template-columns:1fr;
 <div class="grid">
 
 <div>
-
-Days
-
+<label>Days</label>
 <div class="stepper">
-
 <button onclick="step('days',-1)">-</button>
-<input type="number" id="days">
+<input type="number" id="days" value="0">
 <button onclick="step('days',1)">+</button>
-
 </div>
-
 </div>
 
 <div>
-
-Hours
-
+<label>Hours</label>
 <div class="stepper">
-
 <button onclick="step('hours',-1)">-</button>
-<input type="number" id="hours">
+<input type="number" id="hours" value="0">
 <button onclick="step('hours',1)">+</button>
-
 </div>
-
 </div>
 
 <div>
-
-Minutes
-
+<label>Minutes</label>
 <div class="stepper">
-
 <button onclick="step('minutes',-1)">-</button>
-<input type="number" id="minutes">
+<input type="number" id="minutes" value="0">
 <button onclick="step('minutes',1)">+</button>
-
 </div>
-
 </div>
 
 </div>
@@ -205,370 +169,235 @@ Minutes
 
 </div>
 
-
-
 <div class="card">
 
 <h2>Progress Predictor</h2>
 
+<div class="grid">
+
+<div>
 <label>Current Stroll</label>
 <input type="number" id="stroll">
+</div>
 
+<div>
 <label>Current Stamina</label>
 <input type="number" id="stamina">
+</div>
 
+<div>
 <label>Sakuramochi (Inventory)</label>
 <input type="number" id="mochi">
+</div>
 
+<div>
 <label>Target Score</label>
 <input type="number" id="target" value="7500">
+</div>
+
+</div>
 
 <h3>Crystal Packs</h3>
 
-<div class="note">
+<div class="small">
 199 Pack = 9 Mochi<br>
 988 Pack = 18 Mochi<br>
-1988 Pack = 27 Mochi
+1988 Pack = 27 Mochi<br>
+Limit: 3 per pack per day
 </div>
 
 <div class="grid">
 
 <div>
-
-199 Crystal Pack
-
+<label>199 Crystal Pack</label>
 <div class="stepper">
-
 <button onclick="step('pack199',-1)">-</button>
-<input type="number" id="pack199">
+<input type="number" id="pack199" value="0">
 <button onclick="step('pack199',1)">+</button>
-
 </div>
-
 </div>
 
 <div>
-
-988 Crystal Pack
-
+<label>988 Crystal Pack</label>
 <div class="stepper">
-
 <button onclick="step('pack988',-1)">-</button>
-<input type="number" id="pack988">
+<input type="number" id="pack988" value="0">
 <button onclick="step('pack988',1)">+</button>
-
 </div>
-
 </div>
 
 <div>
-
-1988 Crystal Pack
-
+<label>1988 Crystal Pack</label>
 <div class="stepper">
-
 <button onclick="step('pack1988',-1)">-</button>
-<input type="number" id="pack1988">
+<input type="number" id="pack1988" value="0">
 <button onclick="step('pack1988',1)">+</button>
-
 </div>
-
 </div>
 
 </div>
 
 <div class="progress">
-<div class="bar" id="bar"></div>
+<div class="bar" id="progressBar"></div>
 </div>
 
-<div class="result" id="progressResult"></div>
+<div class="result" id="result"></div>
 
-<div class="subresult" id="recommendResult"></div>
-
-<div class="buttons">
+<br>
 
 <button class="action" onclick="copyResult()">Copy Result</button>
-<button class="action" onclick="resetAll()">Reset</button>
+<button class="action" onclick="resetCalc()">Reset</button>
 
 </div>
 
 </div>
-
-
-<div class="card">
-
-<h2>Kagura Dance Calculator</h2>
-
-<label>Fellow Power</label>
-<input type="number" id="power">
-
-<label>Support Bonus %</label>
-<input type="number" id="bonus">
-
-<label>Sakura Coins Used</label>
-<input type="number" id="coins">
-
-<div class="result" id="kaguraResult"></div>
-
-</div>
-
-<div class="footer">
-Dev by @thinking.j17 | cozyneko guild S12
-</div>
-
-</div>
-
 
 <script>
 
-function format(n){
-return Math.floor(n).toLocaleString()
+function get(id){
+return Number(document.getElementById(id).value)||0
 }
 
-
-function step(id,delta){
+function step(id,amount){
 
 let el=document.getElementById(id)
-
-let value=Number(el.value||0)+delta
+let value=Number(el.value)||0
+value+=amount
 
 if(value<0)value=0
 
+if(id.includes("pack")){
+let days=get("days")
+let limit=days*3
+if(value>limit)value=limit
+}
+
 el.value=value
 
-calculateAll()
+calculate()
+save()
 
 }
 
+function calculate(){
 
-function getRemainingMinutes(){
+let days=get("days")
+let hours=get("hours")
+let minutes=get("minutes")
 
-let d=Math.max(0,Number(days.value||0))
-let h=Math.max(0,Number(hours.value||0))
-let m=Math.max(0,Number(minutes.value||0))
+let totalMinutes=days*1440+hours*60+minutes
+let regen=Math.floor(totalMinutes/5)
 
-return d*1440 + h*60 + m
+document.getElementById("timeResult").innerHTML=
+`Remaining Minutes: <b>${totalMinutes}</b><br>
+Regen Stamina: <b>${regen}</b>`
 
-}
+let stroll=get("stroll")
+let stamina=get("stamina")
+let mochi=get("mochi")
+let target=get("target")
 
+let p199=get("pack199")
+let p988=get("pack988")
+let p1988=get("pack1988")
 
-function getRegen(){
+let packMochi=p199*9+p988*18+p1988*27
 
-let minutes=getRemainingMinutes()
+let totalMochi=mochi+packMochi
 
-let regen=Math.floor(minutes/20)-1
+let score=stroll+(stamina+regen+totalMochi)*5
 
-if(regen<0) regen=0
+let percent=Math.min(score/target*100,100)
 
-return regen
+document.getElementById("progressBar").style.width=percent+"%"
 
-}
+let need=target-score
 
+let result=""
 
-function getDaysLeft(){
+if(score>=target){
 
-return Math.floor(getRemainingMinutes()/1440)
+result=`✅ Target reachable<br>
+Predicted Score: <b>${Math.floor(score)}</b>`
 
-}
+}else{
 
+let mochiNeed=Math.ceil(need/5)
 
-function getPackLimit(){
-
-return getDaysLeft()*3
-
-}
-
-
-function getPackMochi(){
-
-return (Number(pack199.value||0)*9)+
-(Number(pack988.value||0)*18)+
-(Number(pack1988.value||0)*27)
-
-}
-
-
-function calcTime(){
-
-let minutes=getRemainingMinutes()
-let regen=getRegen()
-
-timeResult.innerHTML=
-
-"Remaining Minutes: "+format(minutes)+"<br>"+
-"Regen Stamina: "+format(regen)
+result=`❌ Not enough packs within remaining days<br>
+Need <b>${mochiNeed}</b> more Sakuramochi<br>
+Consider buying from Bundle Shop.`
 
 }
 
-
-function calcProgress(){
-
-let stroll=Number(stroll.value||0)
-let stamina=Number(stamina.value||0)
-
-let inventoryMochi=Number(mochi.value||0)
-let packMochi=getPackMochi()
-
-let totalMochi=inventoryMochi+packMochi
-
-let regen=getRegen()
-
-let totalStamina=
-stamina+
-regen+
-(totalMochi*5)
-
-let finalStroll=stroll+totalStamina
-
-let target=Number(target.value||0)
-
-let percent=Math.min((finalStroll/target)*100,100)
-
-bar.style.width=percent+"%"
-
-let remainingScore=target-finalStroll
-
-if(remainingScore<0) remainingScore=0
-
-let neededMochi=Math.ceil(remainingScore/5)
-
-progressResult.innerHTML=
-
-"Final Stroll: "+format(finalStroll)+"<br>"+
-"Remaining Score: "+format(remainingScore)+"<br>"+
-"Needed Mochi: "+format(neededMochi)
-
-recommendPacks(neededMochi)
+document.getElementById("result").innerHTML=result
 
 }
 
+function save(){
 
-function recommendPacks(needed){
+localStorage.setItem("tounoCalc",JSON.stringify({
 
-let limit=getPackLimit()
+days:get("days"),
+hours:get("hours"),
+minutes:get("minutes"),
+stroll:get("stroll"),
+stamina:get("stamina"),
+mochi:get("mochi"),
+target:get("target"),
+p199:get("pack199"),
+p988:get("pack988"),
+p1988:get("pack1988")
 
-let use1988=Math.min(Math.floor(needed/27),limit)
-needed-=use1988*27
-
-let use988=Math.min(Math.floor(needed/18),limit)
-needed-=use988*18
-
-let use199=Math.min(Math.ceil(needed/9),limit)
-
-let crystal=
-(use1988*1988)+
-(use988*988)+
-(use199*199)
-
-let missing=Math.ceil(needed)
-
-let enough=needed<=0
-
-recommendResult.innerHTML=
-
-"Recommended Packs<br><br>"+
-
-"1988 × "+use1988+" / "+limit+"<br>"+
-"988 × "+use988+" / "+limit+"<br>"+
-"199 × "+use199+" / "+limit+"<br><br>"+
-
-"Crystal Needed: "+format(crystal)+"<br><br>"+
-
-(enough
-? "✓ Enough to reach target"
-: "✗ Not enough packs within remaining days<br>"+
-"You still need "+format(missing)+" Mochi.<br>"+
-"Buy additional Mochi from Bundle Shop.")
+}))
 
 }
 
+function load(){
 
-function calcKagura(){
+let data=localStorage.getItem("tounoCalc")
 
-let power=Number(powerInput.value||0)
-let bonus=Number(bonusInput.value||0)
-let coins=Number(coinsInput.value||0)
+if(!data)return
 
-let faith=(power*(1+bonus/100)*coins)/1000
+data=JSON.parse(data)
 
-kaguraResult.innerHTML=
-
-"Faith Earned: "+format(faith)+"<br>"+
-"Faith per Coin: "+format(faith/coins)
-
-}
-
-
-function calculateAll(){
-
-calcTime()
-calcProgress()
-calcKagura()
-saveData()
+days.value=data.days||0
+hours.value=data.hours||0
+minutes.value=data.minutes||0
+stroll.value=data.stroll||0
+stamina.value=data.stamina||0
+mochi.value=data.mochi||0
+target.value=data.target||7500
+pack199.value=data.p199||0
+pack988.value=data.p988||0
+pack1988.value=data.p1988||0
 
 }
 
+function resetCalc(){
 
-function saveData(){
-
-document.querySelectorAll("input").forEach(i=>{
-localStorage.setItem(i.id,i.value)
-})
-
-}
-
-
-function loadData(){
-
-document.querySelectorAll("input").forEach(i=>{
-let v=localStorage.getItem(i.id)
-if(v) i.value=v
-})
-
-}
-
-
-function resetAll(){
-
-localStorage.clear()
+localStorage.removeItem("tounoCalc")
 location.reload()
 
 }
 
-
 function copyResult(){
 
-let text=
-
-progressResult.innerText+
-"\n\n"+
-recommendResult.innerText
-
-navigator.clipboard.writeText(text)
-
-alert("Copied!")
+navigator.clipboard.writeText(
+document.getElementById("result").innerText
+)
 
 }
 
-
-document.querySelectorAll("input").forEach(i=>{
-i.addEventListener("input",calculateAll)
+document.querySelectorAll("input").forEach(el=>{
+el.addEventListener("input",()=>{
+calculate()
+save()
+})
 })
 
-
-const powerInput=document.getElementById("power")
-const bonusInput=document.getElementById("bonus")
-const coinsInput=document.getElementById("coins")
-
-const timeResult=document.getElementById("timeResult")
-const progressResult=document.getElementById("progressResult")
-const recommendResult=document.getElementById("recommendResult")
-const kaguraResult=document.getElementById("kaguraResult")
-
-const bar=document.getElementById("bar")
-
-loadData()
-calculateAll()
+load()
+calculate()
 
 </script>
 
