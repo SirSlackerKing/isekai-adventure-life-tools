@@ -136,20 +136,28 @@ let serverNow = null
 
 function calculateEnd(){
 
-let start = new Date(document.getElementById("start").value)
+let startInput = document.getElementById("start").value
 let days = parseInt(document.getElementById("duration").value)
 
-if(!start) return
+if(!startInput) return
 
-start.setDate(start.getDate()+days)
+let start = new Date(startInput)
+
+start.setHours(10,0,0,0)
+
+let end = new Date(start)
+end.setDate(end.getDate()+days)
+end.setHours(22,0,0,0)
+
+document.getElementById("start").value =
+start.toISOString().slice(0,16)
 
 document.getElementById("end").value =
-start.toISOString().slice(0,16)
+end.toISOString().slice(0,16)
 
 updateTime()
 
 }
-
 
 function useServerTime(){
 
