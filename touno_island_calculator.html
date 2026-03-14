@@ -22,41 +22,45 @@ justify-content:center;
 }
 
 .container{
-width:900px;
+width:100%;
+max-width:900px;
 padding:20px;
-}
-
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:10px;
-}
-
-.home{
-background:#4f46e5;
-color:white;
-padding:8px 14px;
-border-radius:6px;
-text-decoration:none;
-font-size:14px;
 }
 
 h1{
 text-align:center;
-margin:10px 0 20px 0;
+margin-bottom:10px;
+}
+
+.home{
+text-align:center;
+margin-bottom:20px;
+}
+
+.home a{
+text-decoration:none;
+background:#6366f1;
+color:white;
+padding:8px 14px;
+border-radius:6px;
 }
 
 .card{
 background:white;
-padding:20px;
+padding:18px;
 border-radius:10px;
-margin-bottom:20px;
+margin-bottom:18px;
 box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
 .card h2{
 margin-top:0;
+}
+
+input{
+width:100%;
+padding:8px;
+margin:6px 0 12px 0;
 }
 
 .grid{
@@ -65,45 +69,34 @@ grid-template-columns:1fr 1fr;
 gap:10px;
 }
 
-input,select{
-width:100%;
-padding:8px;
-margin-top:4px;
-margin-bottom:10px;
-}
-
 .result{
-margin-top:10px;
-padding:10px;
 background:#f3f4f6;
+padding:10px;
 border-radius:6px;
+margin-top:10px;
 }
 
-.bar{
-height:16px;
+.progress{
+width:100%;
 background:#e5e7eb;
 border-radius:8px;
 overflow:hidden;
-margin-top:6px;
+height:18px;
+margin-top:10px;
 }
 
-.fill{
+.bar{
 height:100%;
 background:#6366f1;
 width:0%;
 }
 
 .note{
-font-size:12px;
+font-size:13px;
 color:#555;
 }
 
-@media(max-width:700px){
-
-.container{
-width:100%;
-padding:12px;
-}
+@media(max-width:600px){
 
 .grid{
 grid-template-columns:1fr;
@@ -118,55 +111,75 @@ grid-template-columns:1fr;
 
 <div class="container">
 
-<div class="topbar">
-<a class="home" href="./">🏠 Home</a>
-</div>
-
 <h1>Touno Island Calculator</h1>
 
+<div class="home">
+<a href="/">🏠 Home</a>
+</div>
+
+
+<!-- EVENT TIME -->
 
 <div class="card">
 
-<h2>Event Setup</h2>
+<h2>Event Time Setup</h2>
 
 <div class="grid">
 
 <div>
-<label>Start Date</label>
-<input type="date" id="startDate">
+<label>Event Start</label>
+<input type="datetime-local" id="start">
 </div>
 
 <div>
-<label>Duration</label>
-<select id="duration">
-<option value="1">1 Day</option>
-<option value="2">2 Days</option>
-<option value="3">3 Days</option>
-<option value="4">4 Days</option>
-<option value="5">5 Days</option>
-<option value="6">6 Days</option>
-<option value="7">7 Days</option>
-</select>
+<label>Event End</label>
+<input type="datetime-local" id="end">
 </div>
 
 </div>
 
-<div class="result" id="eventInfo"></div>
+<div class="grid">
 
-<div class="result" id="timeRemaining"></div>
+<div>
+<label>Simulation Time</label>
+<input type="datetime-local" id="now">
+</div>
+
+<div style="display:flex;align-items:end;">
+<button onclick="useNow()">Use Realtime Now</button>
+</div>
 
 </div>
 
+<div class="result" id="timeInfo"></div>
+
+<p class="note">
+Stamina regenerates every 20 minutes.  
+Calculator subtracts 1 stamina because the last regen at event end cannot be used.
+</p>
+
+</div>
+
+
+<!-- PROGRESS -->
 
 <div class="card">
 
-<h2>Progress Predictor</h2>
+<h2>Event Progress Predictor</h2>
 
+<div class="grid">
+
+<div>
 <label>Current Stroll</label>
 <input type="number" id="stroll" value="0">
+</div>
 
+<div>
 <label>Current Stamina</label>
 <input type="number" id="stamina" value="0">
+</div>
+
+</div>
 
 <label>Sakuramochi</label>
 <input type="number" id="mochi" value="0">
@@ -174,185 +187,238 @@ grid-template-columns:1fr;
 <label>Target Reward</label>
 <input type="number" id="target" value="7500">
 
-<div class="result" id="progressResult"></div>
-
-<div class="bar">
-<div class="fill" id="progressBar"></div>
+<div class="progress">
+<div class="bar" id="bar"></div>
 </div>
 
+<div class="result" id="progressResult"></div>
+
+</div>
+
+
+<!-- CRYSTAL PLANNER -->
+
+<div class="card">
+
+<h2>Crystal Pack Planner</h2>
+
+<div class="grid">
+
+<div>
+<label>Days Remaining</label>
+<input type="number" id="days" value="1">
+</div>
+
+<div></div>
+
+</div>
+
+<div class="grid">
+
+<div>
+<label>188 Pack / day</label>
+<input type="number" id="pack188" value="0">
+</div>
+
+<div>
+<label>988 Pack / day</label>
+<input type="number" id="pack988" value="0">
+</div>
+
+</div>
+
+<label>1988 Pack / day</label>
+<input type="number" id="pack1988" value="0">
+
+<div class="result" id="crystalResult"></div>
+
 <p class="note">
-*Regen subtracts 1 stamina because the last stamina may regenerate exactly when the event ends and cannot be used.
+188 pack gives best value per Sakuramochi.
 </p>
 
 </div>
 
 
+<!-- KAGURA -->
+
 <div class="card">
 
-<h2>Kagura Dance</h2>
+<h2>Kagura Dance Calculator</h2>
 
+<div class="grid">
+
+<div>
 <label>Fellow Power</label>
 <input type="number" id="power" value="1000000">
+</div>
 
+<div>
 <label>Support Bonus (%)</label>
 <input type="number" id="bonus" value="0">
+</div>
 
-<label>Sakura Coins Used</label>
+</div>
+
+<label>Sakura Coins</label>
 <input type="number" id="coins" value="1">
 
 <div class="result" id="kaguraResult"></div>
 
 </div>
 
-
 </div>
 
 
 <script>
 
-function format(dt){
+function useNow(){
 
-let y=dt.getFullYear()
-let m=String(dt.getMonth()+1).padStart(2,"0")
-let d=String(dt.getDate()).padStart(2,"0")
-let h=String(dt.getHours()).padStart(2,"0")
-let min=String(dt.getMinutes()).padStart(2,"0")
-
-return `${y}-${m}-${d} ${h}:${min}`
+let now = new Date()
+document.getElementById("now").value = now.toISOString().slice(0,16)
+calculateAll()
 
 }
 
+function getMinutesRemaining(){
 
-function generateEvent(){
+let start = new Date(document.getElementById("start").value)
+let end = new Date(document.getElementById("end").value)
+let now = new Date(document.getElementById("now").value)
 
-let startDate=document.getElementById("startDate").value
-let days=parseInt(document.getElementById("duration").value)
+if(!start || !end || !now) return 0
 
-if(!startDate) return
+if(now < start) now = start
+if(now > end) return 0
 
-let start=new Date(startDate)
-
-start.setHours(10,0,0,0)
-
-let end=new Date(start)
-
-end.setDate(end.getDate()+days)
-
-end.setHours(22,0,0,0)
-
-document.getElementById("eventInfo").innerHTML=
-"Start: "+format(start)+"<br>End: "+format(end)
-
-window.eventStart=start
-window.eventEnd=end
+let diff = end - now
+return Math.floor(diff/60000)
 
 }
 
+function getRegen(){
 
-function remainingMinutes(){
+let minutes = getMinutesRemaining()
 
-if(!window.eventStart||!window.eventEnd) return 0
+let regen = Math.floor(minutes/20) - 1
 
-let now=new Date()
+if(regen < 0) regen = 0
 
-if(now<eventStart) now=eventStart
-if(now>eventEnd) return 0
-
-return Math.floor((eventEnd-now)/60000)
+return regen
 
 }
 
+function progressCalc(){
 
-function updateTimer(){
+let stroll = Number(strollInput.value)
+let stamina = Number(staminaInput.value)
+let mochi = Number(mochiInput.value)
 
-if(!window.eventEnd) return
+let regen = getRegen()
 
-let diff=eventEnd-new Date()
+let totalStamina =
+stamina + regen + (mochi*5)
 
-if(diff<0){
-document.getElementById("timeRemaining").innerHTML="Event Ended"
-return
-}
+let final =
+stroll + totalStamina
 
-let m=Math.floor(diff/60000)
-let d=Math.floor(m/1440)
+let target = Number(targetInput.value)
 
-m%=1440
+let percent = Math.min((final/target)*100,100)
 
-let h=Math.floor(m/60)
+bar.style.width = percent+"%"
 
-m%=60
+progressResult.innerHTML =
 
-document.getElementById("timeRemaining").innerHTML=
-"Time Remaining: "+d+"d "+h+"h "+m+"m"
-
-}
-
-
-function calculateProgress(){
-
-let stroll=parseInt(strollInput.value)||0
-let stamina=parseInt(staminaInput.value)||0
-let mochi=parseInt(mochiInput.value)||0
-let target=parseInt(targetInput.value)||0
-
-let regen=Math.floor(remainingMinutes()/20)-1
-if(regen<0) regen=0
-
-let totalStamina=stamina+regen+(mochi*5)
-
-let finalStroll=stroll+totalStamina
-
-let need=target-finalStroll
-if(need<0) need=0
-
-let needMochi=Math.ceil(need/5)
-
-progressResult.innerHTML=
-"Regen: "+regen+
-"<br>Total Stamina: "+totalStamina+
-"<br>Final Stroll: "+finalStroll+
-"<br>Mochi Needed: "+needMochi
-
-let percent=(finalStroll/target)*100
-if(percent>100) percent=100
-
-progressBar.style.width=percent+"%"
+"Regen Stamina: "+regen+"<br>"+
+"Total Stamina: "+totalStamina+"<br>"+
+"Predicted Final Stroll: "+final
 
 }
 
+function crystalCalc(){
 
-function kagura(){
+let days = Number(daysInput.value)
 
-let power=parseFloat(powerInput.value)||0
-let bonus=parseFloat(bonusInput.value)||0
-let coins=parseFloat(coinsInput.value)||0
+let p188 = Number(pack188Input.value)
+let p988 = Number(pack988Input.value)
+let p1988 = Number(pack1988Input.value)
 
-let base=power*(1+bonus/100)
+let mochi =
+(days*p188*4) +
+(days*p988*8) +
+(days*p1988*12)
 
-let faith=base*coins/1000
+let stamina = mochi*5
 
-kaguraResult.innerHTML=
-"Faith: "+Math.floor(faith)+
-"<br>Faith per Coin: "+Math.floor(faith/coins)
+let crystals =
+(days*p188*188) +
+(days*p988*988) +
+(days*p1988*1988)
+
+crystalResult.innerHTML =
+
+"Total Mochi: "+mochi+"<br>"+
+"Total Stamina: "+stamina+"<br>"+
+"Total Crystals: "+crystals
 
 }
 
+function kaguraCalc(){
 
-setInterval(updateTimer,1000)
+let power = Number(powerInput.value)
+let bonus = Number(bonusInput.value)
+let coins = Number(coinsInput.value)
 
+let faith =
+power * (1 + bonus/100) * coins / 1000
 
-startDate.oninput=generateEvent
-duration.onchange=generateEvent
+kaguraResult.innerHTML =
 
-strollInput.oninput=calculateProgress
-staminaInput.oninput=calculateProgress
-mochiInput.oninput=calculateProgress
-targetInput.oninput=calculateProgress
+"Faith Gained: "+Math.floor(faith)+"<br>"+
+"Faith per Coin: "+Math.floor(faith/coins)
 
-powerInput.oninput=kagura
-bonusInput.oninput=kagura
-coinsInput.oninput=kagura
+}
+
+function calculateAll(){
+
+let minutes = getMinutesRemaining()
+let regen = getRegen()
+
+timeInfo.innerHTML =
+"Minutes Remaining: "+minutes+
+"<br>Regen Stamina: "+regen
+
+progressCalc()
+crystalCalc()
+kaguraCalc()
+
+}
+
+document.querySelectorAll("input").forEach(i=>{
+i.addEventListener("input",calculateAll)
+})
+
+const strollInput = document.getElementById("stroll")
+const staminaInput = document.getElementById("stamina")
+const mochiInput = document.getElementById("mochi")
+const targetInput = document.getElementById("target")
+
+const daysInput = document.getElementById("days")
+const pack188Input = document.getElementById("pack188")
+const pack988Input = document.getElementById("pack988")
+const pack1988Input = document.getElementById("pack1988")
+
+const powerInput = document.getElementById("power")
+const bonusInput = document.getElementById("bonus")
+const coinsInput = document.getElementById("coins")
+
+const progressResult = document.getElementById("progressResult")
+const crystalResult = document.getElementById("crystalResult")
+const kaguraResult = document.getElementById("kaguraResult")
+const timeInfo = document.getElementById("timeInfo")
+const bar = document.getElementById("bar")
+
+calculateAll()
 
 </script>
 
