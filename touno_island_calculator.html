@@ -44,10 +44,6 @@ font-size:14px;
 font-weight:600;
 }
 
-.homebtn:hover{
-background:#4f46e5;
-}
-
 h1{
 text-align:center;
 margin:6px 0 18px 0;
@@ -255,14 +251,14 @@ Calculator subtracts <b>1 stamina</b> to avoid overestimate.
 
 <div>
 <label>Current Stroll</label>
-<input type="number" id="stroll" value="0">
+<input type="number" id="stroll">
 </div>
 
 <div class="resource">
 <span class="icon">⚡</span>
 <div style="width:100%">
 <label>Current Stamina</label>
-<input type="number" id="stamina" value="0">
+<input type="number" id="stamina">
 </div>
 </div>
 
@@ -270,7 +266,7 @@ Calculator subtracts <b>1 stamina</b> to avoid overestimate.
 <span class="icon">🍡</span>
 <div style="width:100%">
 <label>Sakuramochi</label>
-<input type="number" id="mochi" value="0">
+<input type="number" id="mochi">
 </div>
 </div>
 
@@ -390,8 +386,6 @@ let stamina=get("stamina")
 let mochi=get("mochi")
 let target=get("target")
 
-if(target<=0)target=1
-
 let p199=get("pack199")
 let p988=get("pack988")
 let p1988=get("pack1988")
@@ -484,16 +478,16 @@ if(!data)return
 
 data=JSON.parse(data)
 
-document.getElementById("days").value=data.days||0
-document.getElementById("hours").value=data.hours||0
-document.getElementById("minutes").value=data.minutes||0
-document.getElementById("stroll").value=data.stroll||0
-document.getElementById("stamina").value=data.stamina||0
-document.getElementById("mochi").value=data.mochi||0
-document.getElementById("target").value=data.target||7500
-document.getElementById("pack199").value=data.p199||0
-document.getElementById("pack988").value=data.p988||0
-document.getElementById("pack1988").value=data.p1988||0
+days.value=data.days||0
+hours.value=data.hours||0
+minutes.value=data.minutes||0
+stroll.value=data.stroll||0
+stamina.value=data.stamina||0
+mochi.value=data.mochi||0
+target.value=data.target||7500
+pack199.value=data.p199||0
+pack988.value=data.p988||0
+pack1988.value=data.p1988||0
 
 }
 
