@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
@@ -14,6 +13,7 @@ body{
 margin:0;
 font-family:Segoe UI,Arial;
 background:linear-gradient(180deg,#eef3ff,#dce7ff);
+overflow-x:hidden;
 }
 
 /* container */
@@ -27,20 +27,64 @@ text-align:center;
 
 /* banner */
 
-.banner{
+.bannerWrap{
+position:relative;
 width:100%;
 border-radius:16px;
+overflow:hidden;
 box-shadow:0 10px 30px rgba(0,0,0,0.25);
 margin-bottom:25px;
 }
 
-/* title */
-
-h1{
-margin:10px 0 6px 0;
-color:#3b4ba8;
-font-size:26px;
+.banner{
+width:100%;
+height:260px;
+object-fit:cover;
 }
+
+/* animated logo */
+
+.logo{
+position:absolute;
+bottom:15px;
+left:20px;
+color:white;
+font-size:32px;
+font-weight:700;
+text-shadow:0 4px 10px rgba(0,0,0,.6);
+animation:logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-6px)}
+}
+
+/* particles */
+
+.particle{
+position:absolute;
+width:4px;
+height:4px;
+background:white;
+border-radius:50%;
+opacity:.7;
+animation:particleMove linear infinite;
+}
+
+@keyframes particleMove{
+from{
+transform:translateY(0);
+opacity:0;
+}
+50%{opacity:1}
+to{
+transform:translateY(-200px);
+opacity:0;
+}
+}
+
+/* subtitle */
 
 .subtitle{
 color:#666;
@@ -63,17 +107,39 @@ background:white;
 border-radius:16px;
 padding:28px 20px;
 cursor:pointer;
+
 box-shadow:0 6px 20px rgba(0,0,0,0.15);
+
 transition:all .25s;
+position:relative;
+overflow:hidden;
 }
 
 .card:hover{
-transform:translateY(-4px);
-box-shadow:0 12px 30px rgba(0,0,0,0.25);
+transform:translateY(-6px) scale(1.03);
+box-shadow:0 16px 40px rgba(0,0,0,0.3);
+}
+
+.card::after{
+content:"";
+position:absolute;
+top:-50%;
+left:-50%;
+width:200%;
+height:200%;
+background:linear-gradient(120deg,transparent,rgba(255,255,255,.4),transparent);
+transform:rotate(25deg);
+opacity:0;
+transition:.6s;
+}
+
+.card:hover::after{
+opacity:1;
+left:100%;
 }
 
 .icon{
-font-size:32px;
+font-size:34px;
 margin-bottom:8px;
 }
 
@@ -104,11 +170,11 @@ color:#777;
 grid-template-columns:1fr;
 }
 
-.card{
-padding:32px 20px;
+.banner{
+height:200px;
 }
 
-h1{
+.logo{
 font-size:24px;
 }
 
@@ -121,13 +187,32 @@ font-size:24px;
 
 <div class="container">
 
-<img src="isekai_adventure_life_banner_animated.mp4" class="banner">
+<!-- Banner -->
 
-<h1>Isekai Adventure Life Tools</h1>
+<div class="bannerWrap">
+
+<video class="banner" autoplay muted loop playsinline>
+<source src="isekai_adventure_life_banner_animated.mp4" type="video/mp4">
+</video>
+
+<div class="logo">
+ISEKAI Adventure Life Tools
+</div>
+
+<!-- particles -->
+
+<div class="particle" style="left:20%;bottom:10%;animation-duration:6s"></div>
+<div class="particle" style="left:40%;bottom:5%;animation-duration:7s"></div>
+<div class="particle" style="left:60%;bottom:8%;animation-duration:5s"></div>
+<div class="particle" style="left:75%;bottom:6%;animation-duration:8s"></div>
+
+</div>
 
 <div class="subtitle">
 Community tools for Isekai Adventure Life
 </div>
+
+<!-- Tool cards -->
 
 <div class="grid">
 
@@ -158,6 +243,7 @@ Blessing Calculator
 <div class="cardDesc">
 Calculate blessing points
 </div>
+
 </div>
 
 <div class="card"
@@ -189,7 +275,7 @@ Stamina planner & crystal packs
 </div>
 
 </div>
-  
+
 </div>
 
 <div class="footer">
