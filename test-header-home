@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Isekai Adventure Life Tools</title>
+
+<style>
+
+body{
+margin:0;
+background:#eef3ff;
+font-family:Segoe UI,Arial;
+}
+
+/* HERO HEADER */
+
+.hero{
+position:relative;
+height:340px;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* BACKGROUND IMAGE */
+
+.hero img{
+position:absolute;
+width:120%;
+height:120%;
+object-fit:cover;
+z-index:1;
+
+will-change:transform;
+
+animation:cameraMove 20s ease-in-out infinite;
+}
+
+/* GRADIENT OVERLAY */
+
+.overlay{
+position:absolute;
+width:100%;
+height:100%;
+z-index:2;
+
+background:linear-gradient(
+to bottom,
+rgba(0,0,0,0) 40%,
+rgba(0,0,0,0.35)
+);
+}
+
+/* LOGO */
+
+.logo{
+position:relative;
+z-index:3;
+
+font-size:46px;
+font-weight:800;
+color:white;
+
+text-shadow:
+0 6px 12px rgba(0,0,0,0.6);
+
+animation:logoFloat 5s ease-in-out infinite;
+}
+
+/* SPARK PARTICLES */
+
+.spark{
+position:absolute;
+width:4px;
+height:4px;
+background:white;
+border-radius:50%;
+z-index:4;
+
+animation:sparkFloat 6s linear infinite;
+}
+
+/* BACKGROUND CAMERA MOTION */
+
+@keyframes cameraMove{
+
+0%{
+transform:scale(1.05) translateX(-2%);
+}
+
+50%{
+transform:scale(1.08) translateX(2%);
+}
+
+100%{
+transform:scale(1.05) translateX(-2%);
+}
+
+}
+
+/* LOGO FLOAT */
+
+@keyframes logoFloat{
+
+0%,100%{
+transform:translateY(0);
+}
+
+50%{
+transform:translateY(-10px);
+}
+
+}
+
+/* SPARK FLOAT */
+
+@keyframes sparkFloat{
+
+0%{
+transform:translateY(0);
+opacity:0;
+}
+
+50%{
+opacity:1;
+}
+
+100%{
+transform:translateY(-200px);
+opacity:0;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="hero">
+
+<img src="isekai_banner.jpg">
+
+<div class="overlay"></div>
+
+<div class="logo">
+ISEKAI Adventure Life Tools
+</div>
+
+<!-- SPARK PARTICLES -->
+
+<div class="spark" style="left:20%;bottom:10%;animation-delay:0s"></div>
+<div class="spark" style="left:35%;bottom:5%;animation-delay:1s"></div>
+<div class="spark" style="left:50%;bottom:8%;animation-delay:2s"></div>
+<div class="spark" style="left:65%;bottom:4%;animation-delay:3s"></div>
+<div class="spark" style="left:80%;bottom:6%;animation-delay:1.5s"></div>
+
+</div>
+
+</body>
+</html>
