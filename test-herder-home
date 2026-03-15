@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Isekai Adventure Life Tools</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Segoe UI,Arial;
+background:#eef3ff;
+}
+
+/* HEADER */
+
+.header{
+position:relative;
+height:320px;
+overflow:hidden;
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+/* background */
+
+.header img{
+position:absolute;
+width:110%;
+height:110%;
+object-fit:cover;
+animation:zoomBG 20s ease-in-out infinite alternate;
+}
+
+/* logo */
+
+.logo{
+position:relative;
+z-index:2;
+font-size:48px;
+font-weight:800;
+color:white;
+text-shadow:0 4px 10px rgba(0,0,0,0.5);
+animation:floatLogo 4s ease-in-out infinite;
+}
+
+/* clouds */
+
+.cloud{
+position:absolute;
+top:40px;
+width:200px;
+opacity:0.5;
+animation:cloudMove 60s linear infinite;
+}
+
+.cloud2{
+top:120px;
+width:250px;
+animation-duration:80s;
+}
+
+/* particles */
+
+.particle{
+position:absolute;
+width:6px;
+height:6px;
+background:white;
+border-radius:50%;
+opacity:0.7;
+animation:particleFloat 8s linear infinite;
+}
+
+/* animations */
+
+@keyframes zoomBG{
+from{transform:scale(1);}
+to{transform:scale(1.06);}
+}
+
+@keyframes floatLogo{
+0%,100%{transform:translateY(0);}
+50%{transform:translateY(-8px);}
+}
+
+@keyframes cloudMove{
+from{transform:translateX(-300px);}
+to{transform:translateX(120vw);}
+}
+
+@keyframes particleFloat{
+from{
+transform:translateY(0);
+opacity:0;
+}
+50%{
+opacity:1;
+}
+to{
+transform:translateY(-200px);
+opacity:0;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<img src="isekai_home_cover_upscaled.jpg">
+
+<div class="logo">
+ISEKAI Adventure Life Tools
+</div>
+
+<img class="cloud" src="https://i.imgur.com/NM6QK8R.png">
+<img class="cloud cloud2" src="https://i.imgur.com/NM6QK8R.png">
+
+<!-- particles -->
+<div class="particle" style="left:20%;bottom:20%;animation-delay:0s"></div>
+<div class="particle" style="left:40%;bottom:10%;animation-delay:2s"></div>
+<div class="particle" style="left:60%;bottom:15%;animation-delay:4s"></div>
+<div class="particle" style="left:75%;bottom:5%;animation-delay:1s"></div>
+<div class="particle" style="left:30%;bottom:0%;animation-delay:3s"></div>
+
+</div>
+
+</body>
+</html>
