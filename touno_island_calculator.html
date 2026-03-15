@@ -30,15 +30,39 @@ max-width:900px;
 
 h1{
 text-align:center;
-margin-bottom:20px;
+margin-bottom:6px;
+}
+
+.homeBtn{
+display:block;
+margin:0 auto 20px auto;
+text-align:center;
+width:120px;
+background:#6366f1;
+color:white;
+padding:8px;
+border-radius:8px;
+text-decoration:none;
+font-size:14px;
 }
 
 .card{
 background:white;
 border-radius:14px;
-padding:20px;
+padding:22px;
 margin-bottom:20px;
 box-shadow:0 8px 18px rgba(0,0,0,0.08);
+transition:all .2s;
+}
+
+.card:hover{
+transform:translateY(-3px);
+box-shadow:0 12px 24px rgba(0,0,0,0.12);
+}
+
+.sectionTitle{
+font-size:18px;
+margin-bottom:14px;
 }
 
 .grid{
@@ -85,10 +109,10 @@ text-align:center;
 }
 
 .progress{
-height:12px;
+height:14px;
 background:#e5e7eb;
-border-radius:6px;
-margin-top:12px;
+border-radius:8px;
+margin-top:10px;
 overflow:hidden;
 }
 
@@ -96,12 +120,20 @@ overflow:hidden;
 height:100%;
 width:0%;
 background:linear-gradient(90deg,#6366f1,#22c55e);
+transition:width .4s ease;
+}
+
+.progressText{
+font-size:13px;
+margin-top:6px;
+text-align:right;
+color:#555;
 }
 
 .result{
 background:#f1f5ff;
 border-left:4px solid #6366f1;
-padding:12px;
+padding:14px;
 border-radius:8px;
 margin-top:12px;
 font-size:14px;
@@ -111,7 +143,7 @@ line-height:1.6;
 .small{
 font-size:13px;
 color:#666;
-margin-top:6px;
+margin-top:8px;
 }
 
 button.action{
@@ -144,11 +176,13 @@ font-weight:600;
 
 <div class="container">
 
-<h1>Touno Island Calculator</h1>
+<h1>🏝️ Touno Island Calculator</h1>
+
+<a class="homeBtn" href="https://sirslackerking.github.io/isekai-adventure-life-tools/">🏠 Home</a>
 
 <div class="card">
 
-<h2>Remaining Time</h2>
+<div class="sectionTitle">⏳ Remaining Time</div>
 
 <div class="grid">
 
@@ -193,38 +227,38 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 
 <div class="card">
 
-<h2>Resources</h2>
+<div class="sectionTitle">⚡ Resources</div>
 
 <div class="grid">
 
 <div>
-<label>Current Stroll</label>
+<label>🚶 Current Stroll</label>
 <input type="number" id="stroll" value="0">
 </div>
 
 <div>
-<label>Current Stamina</label>
+<label>⚡ Current Stamina</label>
 <input type="number" id="stamina" value="0">
 </div>
 
 <div>
-<label>Sakuramochi</label>
+<label>🍡 Sakuramochi</label>
 <input type="number" id="mochi" value="0">
 </div>
 
 <div>
-<label>Target Score</label>
+<label>🎯 Target Score</label>
 <input type="number" id="target" value="7500">
 </div>
 
 </div>
 
-<h3>Crystal Packs</h3>
+<h3>💎 Crystal Packs</h3>
 
 <div class="grid">
 
 <div>
-<label>199 Pack</label>
+<label>💎 199 Pack</label>
 <div class="stepper">
 <button onclick="step('pack199',-1)">-</button>
 <input type="number" id="pack199" value="0">
@@ -233,7 +267,7 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 </div>
 
 <div>
-<label>988 Pack</label>
+<label>💎💎 988 Pack</label>
 <div class="stepper">
 <button onclick="step('pack988',-1)">-</button>
 <input type="number" id="pack988" value="0">
@@ -242,7 +276,7 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 </div>
 
 <div>
-<label>1988 Pack</label>
+<label>💎💎💎 1988 Pack</label>
 <div class="stepper">
 <button onclick="step('pack1988',-1)">-</button>
 <input type="number" id="pack1988" value="0">
@@ -256,6 +290,8 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 <div class="bar" id="progressBar"></div>
 </div>
 
+<div class="progressText" id="progressText">0%</div>
+
 <div class="result" id="result"></div>
 
 <br>
@@ -267,7 +303,7 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 
 <div class="card">
 
-<h2>Kagura Dance Calculator</h2>
+<div class="sectionTitle">💃 Kagura Dance Calculator</div>
 
 <div class="small">
 ⚠ Kagura calculator not finalized yet. Formula may change.
@@ -277,8 +313,6 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 
 <footer class="footer">
 
-<a href="https://sirslackerking.github.io/isekai-adventure-life-tools/">Home</a>
-<br>
 Dev by @thingking.j17 | cozy neko guild
 
 </footer>
@@ -354,13 +388,14 @@ stroll+((stamina+regen+(mochi*5))*5)
 let percent=Math.min(predictedScore/target*100,100)
 
 document.getElementById("progressBar").style.width=percent+"%"
+document.getElementById("progressText").innerText=Math.floor(percent)+"%"
 
 let result=""
 
 if(predictedScore>=target){
 
 result=`
-RESOURCES<br><br>
+<b>RESOURCES</b><br><br>
 
 Stamina Now: <b>${stamina}</b><br>
 Stamina Regen: <b>${regen}</b><br>
@@ -368,7 +403,7 @@ Total Mochi: <b>${totalMochi}</b><br>
 Total Stamina: <b>${totalStamina}</b><br>
 Total Stroll: <b>${totalStroll}</b><br><br>
 
-PROJECTION<br><br>
+<b>PROJECTION</b><br><br>
 
 Score Without Packs: <b>${Math.floor(scoreWithoutPacks)}</b><br>
 Predicted Score: <b>${Math.floor(predictedScore)}</b>
@@ -381,7 +416,7 @@ let needStroll=Math.ceil(needScore/5)
 let needMochi=Math.ceil(needStroll/5)
 
 result=`
-RESOURCES<br><br>
+<b>RESOURCES</b><br><br>
 
 Stamina Now: <b>${stamina}</b><br>
 Stamina Regen: <b>${regen}</b><br>
@@ -389,7 +424,7 @@ Total Mochi: <b>${totalMochi}</b><br>
 Total Stamina: <b>${totalStamina}</b><br>
 Total Stroll: <b>${totalStroll}</b><br><br>
 
-PROJECTION<br><br>
+<b>PROJECTION</b><br><br>
 
 Score Without Packs: <b>${Math.floor(scoreWithoutPacks)}</b><br>
 Predicted Score: <b>${Math.floor(predictedScore)}</b><br><br>
