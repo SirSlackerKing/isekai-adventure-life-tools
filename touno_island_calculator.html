@@ -17,34 +17,56 @@ font-family:Segoe UI;
 
 body{
 margin:0;
-background:linear-gradient(180deg,#eef2ff,#dbeafe);
+background:linear-gradient(180deg,#e9efff,#dfe7ff);
 display:flex;
 justify-content:center;
-padding:20px;
+padding:16px;
 }
 
 .container{
 width:100%;
-max-width:900px;
+max-width:920px;
+}
+
+.topbar{
+display:flex;
+justify-content:flex-start;
+margin-bottom:12px;
+}
+
+.homebtn{
+background:#6366f1;
+color:white;
+padding:8px 14px;
+border-radius:8px;
+text-decoration:none;
+font-size:14px;
+font-weight:600;
 }
 
 h1{
 text-align:center;
-margin-bottom:20px;
+margin:6px 0 18px 0;
 }
 
 .card{
 background:white;
-border-radius:14px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 8px 18px rgba(0,0,0,0.08);
+border-radius:16px;
+padding:18px;
+margin-bottom:18px;
+box-shadow:0 10px 24px rgba(0,0,0,0.08);
+border:2px solid #eef2ff;
+}
+
+.card h2{
+margin-top:0;
+margin-bottom:12px;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:14px;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:12px;
 }
 
 label{
@@ -59,6 +81,7 @@ padding:8px;
 border-radius:6px;
 border:1px solid #d1d5db;
 margin-top:4px;
+font-size:14px;
 }
 
 .stepper{
@@ -68,8 +91,8 @@ margin-top:4px;
 }
 
 .stepper button{
-width:36px;
-height:36px;
+width:34px;
+height:34px;
 border:none;
 border-radius:8px;
 background:#6366f1;
@@ -77,33 +100,43 @@ color:white;
 font-size:18px;
 font-weight:700;
 cursor:pointer;
-touch-action:manipulation;
 }
 
 .stepper input{
 text-align:center;
 }
 
+.resource{
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+.icon{
+font-size:18px;
+}
+
 .progress{
-height:12px;
+height:14px;
 background:#e5e7eb;
-border-radius:6px;
-margin-top:12px;
+border-radius:8px;
+margin-top:14px;
 overflow:hidden;
 }
 
 .bar{
 height:100%;
 width:0%;
-background:linear-gradient(90deg,#6366f1,#22c55e);
+background:linear-gradient(90deg,#ff8ccf,#ff4fa2,#8b5cf6);
+transition:width .3s;
 }
 
 .result{
-background:#f1f5ff;
+background:#f6f8ff;
 border-left:4px solid #6366f1;
 padding:12px;
-border-radius:8px;
-margin-top:12px;
+border-radius:10px;
+margin-top:14px;
 font-size:14px;
 line-height:1.6;
 }
@@ -114,27 +147,42 @@ color:#666;
 margin-top:6px;
 }
 
-button.action{
+.buttons{
+margin-top:14px;
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.action{
 background:#6366f1;
 border:none;
 color:white;
-padding:10px 14px;
+padding:9px 14px;
 border-radius:8px;
 cursor:pointer;
-margin-right:10px;
+font-weight:600;
 }
 
 .footer{
-margin-top:30px;
+margin-top:26px;
 text-align:center;
 font-size:13px;
 color:#666;
 }
 
-.footer a{
-color:#6366f1;
-text-decoration:none;
-font-weight:600;
+@media (max-width:600px){
+
+.stepper button{
+width:40px;
+height:40px;
+font-size:20px;
+}
+
+input{
+font-size:16px;
+}
+
 }
 
 </style>
@@ -144,11 +192,15 @@ font-weight:600;
 
 <div class="container">
 
-<h1>Touno Island Calculator</h1>
+<div class="topbar">
+<a class="homebtn" href="https://sirslackerking.github.io/isekai-adventure-life-tools/">Home</a>
+</div>
+
+<h1>🌸 Touno Island Calculator</h1>
 
 <div class="card">
 
-<h2>Remaining Time</h2>
+<h2>⏳ Remaining Time</h2>
 
 <div class="grid">
 
@@ -184,16 +236,16 @@ font-weight:600;
 <div class="result" id="timeResult"></div>
 
 <div class="small">
-* Stamina regenerates every 20 minutes.<br>
-The last stamina may regenerate exactly when the event ends and cannot be used.<br>
-This calculator subtracts <b>1 stamina</b> to avoid overestimating.
+Stamina regenerates every 20 minutes.<br>
+The last stamina may regenerate when the event ends.<br>
+Calculator subtracts <b>1 stamina</b> to avoid overestimate.
 </div>
 
 </div>
 
 <div class="card">
 
-<h2>Resources</h2>
+<h2>📦 Resources</h2>
 
 <div class="grid">
 
@@ -202,14 +254,20 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 <input type="number" id="stroll">
 </div>
 
-<div>
+<div class="resource">
+<span class="icon">⚡</span>
+<div style="width:100%">
 <label>Current Stamina</label>
 <input type="number" id="stamina">
 </div>
+</div>
 
-<div>
+<div class="resource">
+<span class="icon">🍡</span>
+<div style="width:100%">
 <label>Sakuramochi</label>
 <input type="number" id="mochi">
+</div>
 </div>
 
 <div>
@@ -219,7 +277,7 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 
 </div>
 
-<h3>Crystal Packs</h3>
+<h3>💎 Crystal Packs</h3>
 
 <div class="grid">
 
@@ -258,30 +316,26 @@ This calculator subtracts <b>1 stamina</b> to avoid overestimating.
 
 <div class="result" id="result"></div>
 
-<br>
-
+<div class="buttons">
 <button class="action" onclick="copyResult()">Copy Result</button>
 <button class="action" onclick="resetCalc()">Reset</button>
+</div>
 
 </div>
 
 <div class="card">
 
-<h2>Kagura Dance Calculator</h2>
+<h2>🎴 Kagura Dance</h2>
 
 <div class="small">
-⚠ Kagura calculator not finalized yet. Formula may change.
+⚠ Kagura calculator not finalized yet.
 </div>
 
 </div>
 
-<footer class="footer">
-
-<a href="https://sirslackerking.github.io/isekai-adventure-life-tools/">Home</a>
-<br>
+<div class="footer">
 Dev by @thingking.j17 | cozy neko guild
-
-</footer>
+</div>
 
 </div>
 
@@ -358,16 +412,14 @@ let result=""
 if(predictedScore>=target){
 
 result=`
-RESOURCES<br><br>
+<b>RESOURCES</b><br>
+⚡ Stamina Now: <b>${stamina}</b><br>
+⚡ Stamina Regen: <b>${regen}</b><br>
+🍡 Total Mochi: <b>${totalMochi}</b><br>
+⚡ Total Stamina: <b>${totalStamina}</b><br>
+🚶 Total Stroll: <b>${totalStroll}</b><br><br>
 
-Stamina Now: <b>${stamina}</b><br>
-Stamina Regen: <b>${regen}</b><br>
-Total Mochi: <b>${totalMochi}</b><br>
-Total Stamina: <b>${totalStamina}</b><br>
-Total Stroll: <b>${totalStroll}</b><br><br>
-
-PROJECTION<br><br>
-
+<b>PROJECTION</b><br>
 Score Without Packs: <b>${Math.floor(scoreWithoutPacks)}</b><br>
 Predicted Score: <b>${Math.floor(predictedScore)}</b>
 `
@@ -379,16 +431,14 @@ let needStroll=Math.ceil(needScore/5)
 let needMochi=Math.ceil(needStroll/5)
 
 result=`
-RESOURCES<br><br>
+<b>RESOURCES</b><br>
+⚡ Stamina Now: <b>${stamina}</b><br>
+⚡ Stamina Regen: <b>${regen}</b><br>
+🍡 Total Mochi: <b>${totalMochi}</b><br>
+⚡ Total Stamina: <b>${totalStamina}</b><br>
+🚶 Total Stroll: <b>${totalStroll}</b><br><br>
 
-Stamina Now: <b>${stamina}</b><br>
-Stamina Regen: <b>${regen}</b><br>
-Total Mochi: <b>${totalMochi}</b><br>
-Total Stamina: <b>${totalStamina}</b><br>
-Total Stroll: <b>${totalStroll}</b><br><br>
-
-PROJECTION<br><br>
-
+<b>PROJECTION</b><br>
 Score Without Packs: <b>${Math.floor(scoreWithoutPacks)}</b><br>
 Predicted Score: <b>${Math.floor(predictedScore)}</b><br><br>
 
