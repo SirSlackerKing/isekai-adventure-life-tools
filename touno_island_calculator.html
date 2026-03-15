@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
 
 <meta charset="UTF-8">
@@ -12,20 +13,19 @@
 *{
 box-sizing:border-box;
 font-family:Segoe UI;
--webkit-tap-highlight-color:transparent;
 }
 
 body{
 margin:0;
-background:linear-gradient(180deg,#eef2ff,#dbeafe);
+background:#eef2ff;
 display:flex;
 justify-content:center;
-padding:20px;
 }
 
 .container{
 width:100%;
 max-width:900px;
+padding:20px;
 }
 
 h1{
@@ -33,97 +33,86 @@ text-align:center;
 margin-bottom:20px;
 }
 
+.home{
+text-align:center;
+margin-bottom:15px;
+}
+
+.home a{
+background:#6366f1;
+color:white;
+padding:8px 14px;
+border-radius:6px;
+text-decoration:none;
+}
+
 .card{
 background:white;
-border-radius:14px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 8px 18px rgba(0,0,0,0.08);
+padding:18px;
+border-radius:10px;
+margin-bottom:18px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:14px;
-}
-
-label{
-font-size:13px;
-font-weight:600;
-color:#444;
+grid-template-columns:1fr 1fr 1fr;
+gap:10px;
 }
 
 input{
 width:100%;
 padding:8px;
+margin-top:4px;
+}
+
+.result{
+background:#eef2ff;
+border-left:4px solid #6366f1;
+padding:12px;
 border-radius:6px;
-border:1px solid #d1d5db;
-margin-top:4px;
+margin-top:10px;
+font-weight:600;
 }
 
-.stepper{
-display:flex;
-gap:6px;
-margin-top:4px;
-}
-
-.stepper button{
-width:36px;
-height:36px;
-border:none;
-border-radius:8px;
-background:#6366f1;
-color:white;
-font-size:18px;
-font-weight:700;
-cursor:pointer;
-}
-
-.stepper input{
-text-align:center;
+.note{
+font-size:12px;
+margin-top:8px;
+color:#555;
 }
 
 .progress{
-height:12px;
+width:100%;
+height:18px;
 background:#e5e7eb;
-border-radius:6px;
-margin-top:12px;
+border-radius:8px;
 overflow:hidden;
+margin-top:10px;
 }
 
 .bar{
 height:100%;
-width:0%;
-background:linear-gradient(90deg,#6366f1,#22c55e);
-}
-
-.result{
-background:#f1f5ff;
-border-left:4px solid #6366f1;
-padding:12px;
-border-radius:8px;
-margin-top:12px;
-font-size:14px;
-line-height:1.6;
-}
-
-button.action{
 background:#6366f1;
-border:none;
-color:white;
-padding:10px 14px;
-border-radius:8px;
-cursor:pointer;
-margin-right:10px;
+width:0%;
 }
 
-.small{
+.footer{
+text-align:center;
+margin-top:30px;
 font-size:13px;
 color:#666;
-margin-top:8px;
+}
+
+@media(max-width:600px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
 }
 
 </style>
+
 </head>
 
 <body>
@@ -132,6 +121,10 @@ margin-top:8px;
 
 <h1>Touno Island Calculator</h1>
 
+<div class="home">
+<a href="/">🏠 Home</a>
+</div>
+
 <div class="card">
 
 <h2>Remaining Time</h2>
@@ -139,266 +132,215 @@ margin-top:8px;
 <div class="grid">
 
 <div>
-<label>Days</label>
-<div class="stepper">
-<button onclick="step('days',-1)">-</button>
+Days
 <input type="number" id="days" value="0">
-<button onclick="step('days',1)">+</button>
-</div>
 </div>
 
 <div>
-<label>Hours</label>
-<div class="stepper">
-<button onclick="step('hours',-1)">-</button>
+Hours
 <input type="number" id="hours" value="0">
-<button onclick="step('hours',1)">+</button>
-</div>
 </div>
 
 <div>
-<label>Minutes</label>
-<div class="stepper">
-<button onclick="step('minutes',-1)">-</button>
+Minutes
 <input type="number" id="minutes" value="0">
-<button onclick="step('minutes',1)">+</button>
-</div>
 </div>
 
 </div>
 
 <div class="result" id="timeResult"></div>
 
+<div class="note">
+* Stamina regenerates every 20 minutes.  
+The last stamina may regenerate exactly when the event ends and cannot be used.  
+This calculator subtracts 1 stamina to avoid overestimating.
 </div>
+
+</div>
+
 
 <div class="card">
 
-<h2>Resources</h2>
+<h2>Progress Predictor</h2>
 
-<div class="grid">
-
-<div>
-<label>Current Score</label>
+<label>Current Stroll</label>
 <input type="number" id="stroll" value="0">
-</div>
 
-<div>
 <label>Current Stamina</label>
 <input type="number" id="stamina" value="0">
-</div>
 
-<div>
-<label>Sakuramochi</label>
+<label>Sakuramochi (Inventory)</label>
 <input type="number" id="mochi" value="0">
-</div>
 
-<div>
-<label>Target Score</label>
+<label>Target Reward</label>
 <input type="number" id="target" value="7500">
-</div>
-
-</div>
-
-<h3>Crystal Packs</h3>
-
-<div class="grid">
-
-<div>
-<label>199 Pack</label>
-<div class="stepper">
-<button onclick="step('pack199',-1)">-</button>
-<input type="number" id="pack199" value="0">
-<button onclick="step('pack199',1)">+</button>
-</div>
-</div>
-
-<div>
-<label>988 Pack</label>
-<div class="stepper">
-<button onclick="step('pack988',-1)">-</button>
-<input type="number" id="pack988" value="0">
-<button onclick="step('pack988',1)">+</button>
-</div>
-</div>
-
-<div>
-<label>1988 Pack</label>
-<div class="stepper">
-<button onclick="step('pack1988',-1)">-</button>
-<input type="number" id="pack1988" value="0">
-<button onclick="step('pack1988',1)">+</button>
-</div>
-</div>
-
-</div>
 
 <div class="progress">
-<div class="bar" id="progressBar"></div>
+<div class="bar" id="bar"></div>
 </div>
 
-<div class="result" id="result"></div>
-
-<br>
-
-<button class="action" onclick="copyResult()">Copy Result</button>
-<button class="action" onclick="resetCalc()">Reset</button>
+<div class="result" id="progressResult"></div>
 
 </div>
 
+
+<div class="card">
+
+<h2>Crystal Pack Planner</h2>
+
+<label>199 Crystal Pack</label>
+<input type="number" id="pack199" value="0">
+
+<label>988 Crystal Pack</label>
+<input type="number" id="pack988" value="0">
+
+<label>1988 Crystal Pack</label>
+<input type="number" id="pack1988" value="0">
+
+<div class="result" id="crystalResult"></div>
+
 </div>
+
+
+<div class="footer">
+Dev by @thinking.j17 | cozyneko guild S12
+</div>
+
+</div>
+
 
 <script>
 
-function get(id){
-return Number(document.getElementById(id).value)||0
+function format(n){
+return Math.floor(n).toLocaleString()
 }
 
-function getMinutes(){
-return get("days")*1440 + get("hours")*60 + get("minutes")
-}
+function getRemainingMinutes(){
 
-function step(id,amount){
+let d=Number(days.value)
+let h=Number(hours.value)
+let m=Number(minutes.value)
 
-let el=document.getElementById(id)
-let value=Number(el.value)||0
-
-value+=amount
-if(value<0)value=0
-
-if(id.includes("pack")){
-let minutes=getMinutes()
-let limit=Math.max(3,Math.ceil(minutes/1440)*3)
-if(value>limit)value=limit
-}
-
-el.value=value
-
-calculate()
-save()
+return d*1440 + h*60 + m
 
 }
 
-function calculate(){
+function getRegen(){
 
-let minutes=getMinutes()
+let minutes=getRemainingMinutes()
 
-let regen=Math.max(0,Math.floor(minutes/20)-1)
+let regen=Math.floor(minutes/20)-1
 
-document.getElementById("timeResult").innerHTML=
-`Remaining Minutes: <b>${minutes}</b><br>
-Regen Stamina: <b>${regen}</b>`
+if(regen<0) regen=0
 
-let stroll=get("stroll")
-let stamina=get("stamina")
-let mochi=get("mochi")
-let target=get("target")
-
-if(target<=0) target=1
-
-let p199=get("pack199")
-let p988=get("pack988")
-let p1988=get("pack1988")
-
-let packMochi=p199*9+p988*18+p1988*27
-
-let totalMochi=mochi+packMochi
-
-let totalStamina=stamina+regen+(totalMochi*5)
-
-let totalStroll=totalStamina
-
-let predictedScore=stroll+(totalStroll*5)
-
-let percent=Math.min((predictedScore/target)*100,100)
-
-document.getElementById("progressBar").style.width=percent+"%"
-
-let text=""
-
-if(predictedScore>=target){
-
-text=`
-Total Stamina: <b>${totalStamina}</b><br>
-Total Stroll: <b>${totalStroll}</b><br>
-Predicted Score: <b>${Math.floor(predictedScore)}</b>
-`
-
-}else{
-
-let needScore=target-predictedScore
-let needStroll=Math.ceil(needScore/5)
-let needMochi=Math.ceil(needStroll/5)
-
-text=`
-Predicted Score: <b>${Math.floor(predictedScore)}</b><br><br>
-Need <b>${needMochi}</b> Mochi<br>
-Need <b>${needStroll}</b> Stroll
-`
+return regen
 
 }
 
-document.getElementById("result").innerHTML=text
+function getPackMochi(){
+
+let p199=Number(pack199.value)
+let p988=Number(pack988.value)
+let p1988=Number(pack1988.value)
+
+return (p199*9)+(p988*18)+(p1988*27)
 
 }
 
-function save(){
+function getPackCrystal(){
 
-localStorage.setItem("tounoCalc",JSON.stringify({
+let p199=Number(pack199.value)
+let p988=Number(pack988.value)
+let p1988=Number(pack1988.value)
 
-days:get("days"),
-hours:get("hours"),
-minutes:get("minutes"),
-stroll:get("stroll"),
-stamina:get("stamina"),
-mochi:get("mochi"),
-target:get("target"),
-pack199:get("pack199"),
-pack988:get("pack988"),
-pack1988:get("pack1988")
-
-}))
+return (p199*199)+(p988*988)+(p1988*1988)
 
 }
 
-function load(){
+function calcTime(){
 
-let data=localStorage.getItem("tounoCalc")
-if(!data)return
+let minutes=getRemainingMinutes()
+let regen=getRegen()
 
-data=JSON.parse(data)
+timeResult.innerHTML=
 
-for(let key in data){
-let el=document.getElementById(key)
-if(el) el.value=data[key]
-}
+"Remaining Minutes: "+format(minutes)+"<br>"+
+"Regen Stamina: "+format(regen)
 
 }
 
-function resetCalc(){
+function calcCrystal(){
 
-localStorage.removeItem("tounoCalc")
+let mochi=getPackMochi()
+let stamina=mochi*5
+let crystal=getPackCrystal()
 
-location.reload()
+crystalResult.innerHTML=
 
-}
-
-function copyResult(){
-
-navigator.clipboard.writeText(
-document.getElementById("result").innerText
-)
+"Total Mochi: "+format(mochi)+"<br>"+
+"Total Stamina: "+format(stamina)+"<br>"+
+"Total Crystals: "+format(crystal)
 
 }
 
-document.querySelectorAll("input").forEach(el=>{
-el.addEventListener("input",()=>{
-calculate()
-save()
-})
+function calcProgress(){
+
+let stroll=Number(strollInput.value)
+let stamina=Number(staminaInput.value)
+
+let inventoryMochi=Number(mochiInput.value)
+let packMochi=getPackMochi()
+
+let totalMochi=inventoryMochi+packMochi
+
+let regen=getRegen()
+
+let totalStamina=
+stamina
++regen
++(totalMochi*5)
+
+let finalStroll=stroll+totalStamina
+
+let target=Number(targetInput.value)
+
+let percent=Math.min((finalStroll/target)*100,100)
+
+bar.style.width=percent+"%"
+
+progressResult.innerHTML=
+
+"Regen Stamina: "+format(regen)+"<br>"+
+"Total Mochi: "+format(totalMochi)+"<br>"+
+"Total Stamina: "+format(totalStamina)+"<br>"+
+"Predicted Final Stroll: "+format(finalStroll)
+
+}
+
+function calculateAll(){
+
+calcTime()
+calcCrystal()
+calcProgress()
+
+}
+
+document.querySelectorAll("input").forEach(i=>{
+i.addEventListener("input",calculateAll)
 })
 
-load()
-calculate()
+const strollInput=document.getElementById("stroll")
+const staminaInput=document.getElementById("stamina")
+const mochiInput=document.getElementById("mochi")
+const targetInput=document.getElementById("target")
+
+const timeResult=document.getElementById("timeResult")
+const crystalResult=document.getElementById("crystalResult")
+const progressResult=document.getElementById("progressResult")
+
+const bar=document.getElementById("bar")
+
+calculateAll()
 
 </script>
 
