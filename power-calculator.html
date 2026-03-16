@@ -1,80 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Isekai Power Calculator</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<title>Isekai Adventure Life Power Calculator</title>
 
 <style>
 
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+-webkit-tap-highlight-color:transparent;
+touch-action:manipulation;
+user-select:none;
+}
+
 body{
-font-family:Arial, sans-serif;
-background:#0f172a;
-color:white;
 margin:0;
+background:linear-gradient(180deg,#eef2ff,#e6f0ff);
+display:flex;
+justify-content:center;
 padding:20px;
 }
 
 .container{
-max-width:420px;
-margin:auto;
-background:#1e293b;
-padding:20px;
-border-radius:12px;
-box-shadow:0 10px 20px rgba(0,0,0,0.4);
+width:1000px;
+max-width:100%;
 }
 
-h1{
-text-align:center;
-font-size:22px;
-margin-bottom:20px;
+.header{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
 }
 
-label{
-font-size:14px;
-display:block;
-margin-top:12px;
+.title{
+font-size:28px;
+font-weight:700;
 }
 
-input{
-width:100%;
-padding:10px;
-margin-top:5px;
-border-radius:8px;
-border:none;
-font-size:16px;
-}
-
-button{
-width:100%;
-margin-top:18px;
-padding:12px;
-font-size:16px;
-background:#22c55e;
-border:none;
-border-radius:10px;
+.homeBtn{
+background:#6366f1;
 color:white;
-font-weight:bold;
+border:none;
+padding:8px 14px;
+border-radius:8px;
 cursor:pointer;
 }
 
-button:hover{
-background:#16a34a;
+.dev{
+font-size:12px;
+opacity:.6;
+text-align:right;
+}
+
+.card{
+background:white;
+border-radius:14px;
+padding:18px;
+margin-bottom:14px;
+box-shadow:0 6px 20px rgba(0,0,0,.06);
+}
+
+.cardTitle{
+font-weight:700;
+margin-bottom:12px;
+font-size:16px;
+}
+
+.row{
+display:flex;
+align-items:center;
+margin-bottom:10px;
+gap:10px;
+}
+
+.label{
+flex:1;
+font-size:14px;
+}
+
+.controls{
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+input{
+width:110px;
+padding:6px;
+border-radius:6px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+.stepBtn{
+width:30px;
+height:30px;
+border:none;
+background:#e5e7eb;
+border-radius:6px;
+font-weight:bold;
 }
 
 .result{
-margin-top:20px;
-background:#020617;
-padding:15px;
-border-radius:10px;
-line-height:1.6;
+background:#111827;
+color:white;
+border-radius:12px;
+padding:16px;
+font-size:14px;
 }
 
-.dev{
-text-align:center;
-margin-top:15px;
-font-size:12px;
-opacity:0.6;
+.resultRow{
+display:flex;
+justify-content:space-between;
+margin-bottom:6px;
+}
+
+.big{
+font-size:18px;
+font-weight:700;
+margin-top:8px;
+}
+
+.footerBtns{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+.action{
+border:none;
+padding:8px 14px;
+border-radius:8px;
+background:#6366f1;
+color:white;
+cursor:pointer;
+}
+
+.analyze{
+margin-top:10px;
+font-size:13px;
+opacity:.9;
 }
 
 </style>
@@ -84,76 +154,324 @@ opacity:0.6;
 
 <div class="container">
 
-<h1>Power Calculator</h1>
+<div class="header">
 
-<label>Current Level</label>
-<input id="cl" type="number">
+<div>
+<div class="title">Power Calculator</div>
+<button class="homeBtn" onclick="goHome()">Home</button>
+</div>
 
-<label>Target Level</label>
-<input id="tl" type="number">
-
-<label>Current Aptitude</label>
-<input id="ca" type="number">
-
-<label>Target Aptitude</label>
-<input id="ta" type="number">
-
-<label>Current Multiplier</label>
-<input id="cm" type="number" step="0.01">
-
-<label>Target Multiplier</label>
-<input id="tm" type="number" step="0.01">
-
-<button onclick="calc()">Calculate</button>
-
-<div class="result">
-
-<div>Current Base: <span id="cb">-</span></div>
-<div>Target Base: <span id="tb">-</span></div>
-
-<br>
-
-<div>Current Power: <span id="cp">-</span></div>
-<div>Target Power: <span id="tp">-</span></div>
-
-<br>
-
-<div><b>Gain:</b> <span id="gain">-</span></div>
+<div class="dev">
+dev by @thinking.j17<br>
+cozyneko guild S12
+</div>
 
 </div>
 
-<div class="dev">dev by elf</div>
+<div class="card">
+
+<div class="cardTitle">Account</div>
+
+<div class="row">
+<div class="label">Total Fellow Power</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('totalPower',-100000000)">-</button>
+<input id="totalPower" value="0">
+<button class="stepBtn" onclick="step('totalPower',100000000)">+</button>
+</div>
+</div>
+
+<div class="row">
+<div class="label">Total Aptitude</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('aptitude',-100)">-</button>
+<input id="aptitude" value="0">
+<button class="stepBtn" onclick="step('aptitude',100)">+</button>
+</div>
+</div>
+
+<div class="row">
+<div class="label">Total Power Bonus %</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('bonus',-10)">-</button>
+<input id="bonus" value="0">
+<button class="stepBtn" onclick="step('bonus',10)">+</button>
+</div>
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="cardTitle">Upgrade Simulation</div>
+
+<div class="row">
+<div class="label">Aptitude Gain</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('aptGain',-10)">-</button>
+<input id="aptGain" value="0">
+<button class="stepBtn" onclick="step('aptGain',10)">+</button>
+</div>
+</div>
+
+<div class="row">
+<div class="label">Power % Gain</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('percentGain',-1)">-</button>
+<input id="percentGain" value="0">
+<button class="stepBtn" onclick="step('percentGain',1)">+</button>
+</div>
+</div>
+
+<div class="row">
+<div class="label">Flat Power Gain</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('flatGain',-100000)">-</button>
+<input id="flatGain" value="0">
+<button class="stepBtn" onclick="step('flatGain',100000)">+</button>
+</div>
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="cardTitle">Power Items</div>
+
+<div class="row">
+<div class="label">Basic Elixir</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('basic',-1)">-</button>
+<input id="basic" value="0">
+<button class="stepBtn" onclick="step('basic',1)">+</button>
+</div>
+</div>
+
+<div class="row">
+<div class="label">Advanced Elixir</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('adv',-1)">-</button>
+<input id="adv" value="0">
+<button class="stepBtn" onclick="step('adv',1)">+</button>
+</div>
+</div>
+
+<div class="row">
+<div class="label">Type Potions</div>
+<div class="controls">
+<button class="stepBtn" onclick="step('pot',-10)">-</button>
+<input id="pot" value="0">
+<button class="stepBtn" onclick="step('pot',10)">+</button>
+</div>
+</div>
+
+</div>
+
+<div class="result" id="result">
+
+<div class="resultRow">
+<div>Aptitude Gain</div>
+<div id="rApt">0</div>
+</div>
+
+<div class="resultRow">
+<div>Percent Gain</div>
+<div id="rPercent">0</div>
+</div>
+
+<div class="resultRow">
+<div>Flat Gain</div>
+<div id="rFlat">0</div>
+</div>
+
+<div class="resultRow">
+<div>Item Gain</div>
+<div id="rItem">0</div>
+</div>
+
+<div class="resultRow big">
+<div>Total Gain</div>
+<div id="rTotal">0</div>
+</div>
+
+<div class="analyze" id="analyze"></div>
+
+</div>
+
+<div class="footerBtns">
+
+<button class="action" onclick="resetData()">Reset</button>
+
+<button class="action" onclick="copyResult()">Copy</button>
+
+</div>
 
 </div>
 
 <script>
 
-function calc(){
+const inputs=document.querySelectorAll("input")
 
-let cl = parseFloat(document.getElementById("cl").value)||0
-let tl = parseFloat(document.getElementById("tl").value)||0
-let ca = parseFloat(document.getElementById("ca").value)||0
-let ta = parseFloat(document.getElementById("ta").value)||0
-let cm = parseFloat(document.getElementById("cm").value)||0
-let tm = parseFloat(document.getElementById("tm").value)||0
+inputs.forEach(i=>{
+i.addEventListener("input",()=>{
+if(i.value<0)i.value=0
+save()
+calc()
+})
+})
 
-let currentBase = ca * 0.00136 * Math.exp(0.003245 * cl)
-let targetBase = ta * 0.00136 * Math.exp(0.003245 * tl)
+function step(id,val){
 
-let currentPower = currentBase * cm
-let targetPower = targetBase * tm
+let el=document.getElementById(id)
 
-let gain = targetPower - currentPower
+let v=parseFloat(el.value||0)+val
 
-document.getElementById("cb").innerText = currentBase.toFixed(3)
-document.getElementById("tb").innerText = targetBase.toFixed(3)
+if(v<0)v=0
 
-document.getElementById("cp").innerText = currentPower.toFixed(3)
-document.getElementById("tp").innerText = targetPower.toFixed(3)
+el.value=v
 
-document.getElementById("gain").innerText = gain.toFixed(3)
+save()
+
+calc()
 
 }
+
+function calc(){
+
+let totalPower=val("totalPower")
+
+let bonus=val("bonus")
+
+let percentGain=val("percentGain")
+
+let aptGain=val("aptGain")
+
+let flat=val("flatGain")
+
+let basic=val("basic")
+
+let adv=val("adv")
+
+let pot=val("pot")
+
+let multiplier=1+(bonus+percentGain)/100
+
+let aptPower=aptGain*13000*multiplier
+
+let percentPower=(percentGain/100)*(totalPower+aptPower)
+
+let itemPower=basic*3000+adv*30000+pot*800
+
+let total=aptPower+percentPower+flat+itemPower
+
+set("rApt",aptPower)
+
+set("rPercent",percentPower)
+
+set("rFlat",flat)
+
+set("rItem",itemPower)
+
+set("rTotal",total)
+
+analyze(totalPower,bonus)
+
+}
+
+function analyze(power,bonus){
+
+let multi=1+bonus/100
+
+let aptValue=13000*multi
+
+let percentValue=power*0.01
+
+document.getElementById("analyze").innerText=
+
+"Value Insight: 1 Aptitude ≈ "+short(aptValue)+
+" | 1% Power ≈ "+short(percentValue)
+
+}
+
+function val(id){
+
+return parseFloat(document.getElementById(id).value||0)
+
+}
+
+function set(id,v){
+
+document.getElementById(id).innerText=short(v)
+
+}
+
+function short(n){
+
+if(n>=1e12)return (n/1e12).toFixed(2)+"T"
+
+if(n>=1e9)return (n/1e9).toFixed(2)+"B"
+
+if(n>=1e6)return (n/1e6).toFixed(2)+"M"
+
+return Math.floor(n).toLocaleString()
+
+}
+
+function save(){
+
+let data={}
+
+inputs.forEach(i=>data[i.id]=i.value)
+
+localStorage.setItem("powerCalc",JSON.stringify(data))
+
+}
+
+function load(){
+
+let data=localStorage.getItem("powerCalc")
+
+if(!data)return
+
+data=JSON.parse(data)
+
+inputs.forEach(i=>{
+
+if(data[i.id])i.value=data[i.id]
+
+})
+
+calc()
+
+}
+
+function resetData(){
+
+localStorage.removeItem("powerCalc")
+
+location.reload()
+
+}
+
+function copyResult(){
+
+navigator.clipboard.writeText(
+
+document.getElementById("result").innerText
+
+)
+
+alert("Copied")
+
+}
+
+function goHome(){
+
+window.location.href="/"
+
+}
+
+load()
 
 </script>
 
