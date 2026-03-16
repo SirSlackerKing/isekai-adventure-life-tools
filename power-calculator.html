@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<title>Isekai Adventure Life Power Calculator</title>
+<title>Isekai Adventure Life Power Buff Simulator</title>
 
 <style>
 
@@ -14,137 +13,154 @@
 box-sizing:border-box;
 font-family:Segoe UI;
 -webkit-tap-highlight-color:transparent;
-touch-action:manipulation;
-user-select:none;
 }
 
 body{
 margin:0;
-background:linear-gradient(180deg,#eef2ff,#e6f0ff);
+background:#1f2330;
+color:white;
 display:flex;
 justify-content:center;
-padding:20px;
 }
 
 .container{
-width:1000px;
-max-width:100%;
+width:1100px;
+padding:20px;
 }
 
-.header{
+.topbar{
 display:flex;
 justify-content:space-between;
-margin-bottom:10px;
+align-items:center;
+margin-bottom:20px;
 }
 
-.title{
-font-size:28px;
-font-weight:700;
-}
-
-.homeBtn{
-background:#6366f1;
-color:white;
+.home{
+background:#444;
 border:none;
 padding:8px 14px;
 border-radius:8px;
+color:white;
+font-weight:600;
 cursor:pointer;
 }
 
-.dev{
-font-size:12px;
-opacity:.6;
-text-align:right;
+.panel{
+background:#2a2f42;
+border-radius:12px;
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.4);
 }
 
-.card{
-background:white;
-border-radius:14px;
-padding:18px;
-margin-bottom:14px;
-box-shadow:0 6px 20px rgba(0,0,0,.06);
+h1,h2{
+margin-top:0;
 }
 
-.cardTitle{
-font-weight:700;
-margin-bottom:12px;
-font-size:16px;
+.desc{
+font-size:14px;
+color:#bbb;
+margin-bottom:15px;
 }
 
 .row{
 display:flex;
 align-items:center;
-margin-bottom:10px;
-gap:10px;
+margin:8px 0;
 }
 
 .label{
-flex:1;
-font-size:14px;
+width:160px;
+font-weight:600;
 }
 
-.controls{
+.inputbox{
 display:flex;
-align-items:center;
 gap:6px;
+align-items:center;
 }
 
 input{
-width:110px;
+width:130px;
 padding:6px;
-border-radius:6px;
-border:1px solid #ddd;
 text-align:center;
+border-radius:6px;
+border:none;
+background:#1c2030;
+color:white;
 }
 
-.stepBtn{
-width:30px;
-height:30px;
+button{
+cursor:pointer;
 border:none;
-background:#e5e7eb;
 border-radius:6px;
-font-weight:bold;
+padding:6px 10px;
+background:#5c7cff;
+color:white;
+font-weight:700;
+}
+
+button:active{
+transform:scale(0.92);
+}
+
+.progress{
+height:10px;
+background:#111;
+border-radius:5px;
+overflow:hidden;
+margin-top:3px;
+}
+
+.bar{
+height:100%;
+background:#5c7cff;
 }
 
 .result{
-background:#111827;
-color:white;
-border-radius:12px;
-padding:16px;
-font-size:14px;
-}
-
-.resultRow{
-display:flex;
-justify-content:space-between;
-margin-bottom:6px;
-}
-
-.big{
 font-size:18px;
 font-weight:700;
 margin-top:8px;
 }
 
-.footerBtns{
+.best{
+color:#7dff9a;
+font-weight:700;
+margin-top:10px;
+}
+
+.utility{
+margin-top:15px;
 display:flex;
 gap:10px;
-margin-top:10px;
 }
 
-.action{
-border:none;
-padding:8px 14px;
-border-radius:8px;
-background:#6366f1;
-color:white;
-cursor:pointer;
+.cardgrid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
 }
 
-.analyze{
-margin-top:10px;
-font-size:13px;
-opacity:.9;
+@media(max-width:800px){
+
+.container{
+width:100%;
+}
+
+.cardgrid{
+grid-template-columns:1fr;
+}
+
+.row{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.label{
+width:auto;
+margin-bottom:4px;
+}
+
 }
 
 </style>
@@ -154,155 +170,73 @@ opacity:.9;
 
 <div class="container">
 
-<div class="header">
-
-<div>
-<div class="title">Power Calculator</div>
-<button class="homeBtn" onclick="goHome()">Home</button>
+<div class="topbar">
+<h1>Power Buff Simulator</h1>
+<button class="home" onclick="location.href='index.html'">Home</button>
 </div>
 
-<div class="dev">
-dev by @thinking.j17<br>
-cozyneko guild S12
-</div>
+<div class="panel">
 
-</div>
-
-<div class="card">
-
-<div class="cardTitle">Account</div>
-
-<div class="row">
-<div class="label">Total Fellow Power</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('totalPower',-100000000)">-</button>
-<input id="totalPower" value="0">
-<button class="stepBtn" onclick="step('totalPower',100000000)">+</button>
-</div>
-</div>
-
-<div class="row">
-<div class="label">Total Aptitude</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('aptitude',-100)">-</button>
-<input id="aptitude" value="0">
-<button class="stepBtn" onclick="step('aptitude',100)">+</button>
-</div>
-</div>
-
-<div class="row">
-<div class="label">Total Power Bonus %</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('bonus',-10)">-</button>
-<input id="bonus" value="0">
-<button class="stepBtn" onclick="step('bonus',10)">+</button>
-</div>
+<div class="desc">
+Estimate how much power your account gains from buffs.
+You only need rough numbers (B or T).
 </div>
 
 </div>
 
-<div class="card">
+<div class="cardgrid">
 
-<div class="cardTitle">Upgrade Simulation</div>
+<div class="panel">
 
-<div class="row">
-<div class="label">Aptitude Gain</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('aptGain',-10)">-</button>
-<input id="aptGain" value="0">
-<button class="stepBtn" onclick="step('aptGain',10)">+</button>
-</div>
+<h2>Setup Type Power</h2>
+
+<div class="desc">
+Estimate total power of each Type.
 </div>
 
-<div class="row">
-<div class="label">Power % Gain</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('percentGain',-1)">-</button>
-<input id="percentGain" value="0">
-<button class="stepBtn" onclick="step('percentGain',1)">+</button>
-</div>
+<div id="typeInputs"></div>
+
 </div>
 
-<div class="row">
-<div class="label">Flat Power Gain</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('flatGain',-100000)">-</button>
-<input id="flatGain" value="0">
-<button class="stepBtn" onclick="step('flatGain',100000)">+</button>
+<div class="panel">
+
+<h2>Setup Rank Power</h2>
+
+<div class="desc">
+Estimate power by Rank.
+SSR and SSR+ are combined.
 </div>
+
+<div id="rankInputs"></div>
+
 </div>
 
 </div>
 
-<div class="card">
+<div class="panel">
 
-<div class="cardTitle">Power Items</div>
+<h2>Buff Simulation</h2>
 
-<div class="row">
-<div class="label">Basic Elixir</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('basic',-1)">-</button>
-<input id="basic" value="0">
-<button class="stepBtn" onclick="step('basic',1)">+</button>
-</div>
-</div>
-
-<div class="row">
-<div class="label">Advanced Elixir</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('adv',-1)">-</button>
-<input id="adv" value="0">
-<button class="stepBtn" onclick="step('adv',1)">+</button>
-</div>
-</div>
-
-<div class="row">
-<div class="label">Type Potions</div>
-<div class="controls">
-<button class="stepBtn" onclick="step('pot',-10)">-</button>
-<input id="pot" value="0">
-<button class="stepBtn" onclick="step('pot',10)">+</button>
-</div>
-</div>
+<div id="buffInputs"></div>
 
 </div>
 
-<div class="result" id="result">
+<div class="panel">
 
-<div class="resultRow">
-<div>Aptitude Gain</div>
-<div id="rApt">0</div>
+<h2>Result</h2>
+
+<div id="totalPower" class="result"></div>
+<div id="gainPower" class="result"></div>
+<div id="newPower" class="result"></div>
+
+<div id="bestBuff" class="best"></div>
+
+<div id="distribution"></div>
+
+<div class="utility">
+<button onclick="copyResult()">Copy Result</button>
+<button onclick="resetAll()">Reset</button>
 </div>
-
-<div class="resultRow">
-<div>Percent Gain</div>
-<div id="rPercent">0</div>
-</div>
-
-<div class="resultRow">
-<div>Flat Gain</div>
-<div id="rFlat">0</div>
-</div>
-
-<div class="resultRow">
-<div>Item Gain</div>
-<div id="rItem">0</div>
-</div>
-
-<div class="resultRow big">
-<div>Total Gain</div>
-<div id="rTotal">0</div>
-</div>
-
-<div class="analyze" id="analyze"></div>
-
-</div>
-
-<div class="footerBtns">
-
-<button class="action" onclick="resetData()">Reset</button>
-
-<button class="action" onclick="copyResult()">Copy</button>
 
 </div>
 
@@ -310,168 +244,259 @@ cozyneko guild S12
 
 <script>
 
-const inputs=document.querySelectorAll("input")
+const types=["Inspiring","Brave","Diligent","Erudition","Freedom"];
+const ranks=["SR","SSR+SSR","UR"];
 
-inputs.forEach(i=>{
-i.addEventListener("input",()=>{
-if(i.value<0)i.value=0
-save()
-calc()
-})
-})
+let typeInputs=[];
+let rankInputs=[];
+let buffTypeInputs=[];
+let buffRankInputs=[];
 
-function step(id,val){
+function formatNumber(n){
+return n.toLocaleString();
+}
 
-let el=document.getElementById(id)
+function parsePower(v){
 
-let v=parseFloat(el.value||0)+val
+if(!v) return 0;
 
-if(v<0)v=0
+v=v.toUpperCase().replace(/,/g,"");
 
-el.value=v
+if(v.includes("T")) return parseFloat(v)*1e12;
+if(v.includes("B")) return parseFloat(v)*1e9;
 
-save()
-
-calc()
+return parseFloat(v)||0;
 
 }
 
-function calc(){
+function formatPower(v){
 
-let totalPower=val("totalPower")
+if(v>=1e12) return (v/1e12).toFixed(2)+"T";
+if(v>=1e9) return (v/1e9).toFixed(2)+"B";
 
-let bonus=val("bonus")
-
-let percentGain=val("percentGain")
-
-let aptGain=val("aptGain")
-
-let flat=val("flatGain")
-
-let basic=val("basic")
-
-let adv=val("adv")
-
-let pot=val("pot")
-
-let multiplier=1+(bonus+percentGain)/100
-
-let aptPower=aptGain*13000*multiplier
-
-let percentPower=(percentGain/100)*(totalPower+aptPower)
-
-let itemPower=basic*3000+adv*30000+pot*800
-
-let total=aptPower+percentPower+flat+itemPower
-
-set("rApt",aptPower)
-
-set("rPercent",percentPower)
-
-set("rFlat",flat)
-
-set("rItem",itemPower)
-
-set("rTotal",total)
-
-analyze(totalPower,bonus)
+return formatNumber(v);
 
 }
 
-function analyze(power,bonus){
+function createRow(name,parent,isPercent=false){
 
-let multi=1+bonus/100
+let row=document.createElement("div");
+row.className="row";
 
-let aptValue=13000*multi
+let label=document.createElement("div");
+label.className="label";
+label.innerText=name;
 
-let percentValue=power*0.01
+let box=document.createElement("div");
+box.className="inputbox";
 
-document.getElementById("analyze").innerText=
+let minus=document.createElement("button");
+minus.innerText="-";
 
-"Value Insight: 1 Aptitude ≈ "+short(aptValue)+
-" | 1% Power ≈ "+short(percentValue)
+let plus=document.createElement("button");
+plus.innerText="+";
 
-}
+let input=document.createElement("input");
+input.value="0";
 
-function val(id){
+minus.onclick=()=>{
+let val=parsePower(input.value);
+val-=isPercent?1:1e9;
+if(val<0) val=0;
+input.value=isPercent?val:formatPower(val);
+saveData();
+calculate();
+};
 
-return parseFloat(document.getElementById(id).value||0)
+plus.onclick=()=>{
+let val=parsePower(input.value);
+val+=isPercent?1:1e9;
+input.value=isPercent?val:formatPower(val);
+saveData();
+calculate();
+};
 
-}
+input.oninput=()=>{
+saveData();
+calculate();
+};
 
-function set(id,v){
+box.appendChild(minus);
+box.appendChild(input);
+box.appendChild(plus);
 
-document.getElementById(id).innerText=short(v)
+row.appendChild(label);
+row.appendChild(box);
 
-}
+parent.appendChild(row);
 
-function short(n){
-
-if(n>=1e12)return (n/1e12).toFixed(2)+"T"
-
-if(n>=1e9)return (n/1e9).toFixed(2)+"B"
-
-if(n>=1e6)return (n/1e6).toFixed(2)+"M"
-
-return Math.floor(n).toLocaleString()
-
-}
-
-function save(){
-
-let data={}
-
-inputs.forEach(i=>data[i.id]=i.value)
-
-localStorage.setItem("powerCalc",JSON.stringify(data))
-
-}
-
-function load(){
-
-let data=localStorage.getItem("powerCalc")
-
-if(!data)return
-
-data=JSON.parse(data)
-
-inputs.forEach(i=>{
-
-if(data[i.id])i.value=data[i.id]
-
-})
-
-calc()
+return input;
 
 }
 
-function resetData(){
+function init(){
 
-localStorage.removeItem("powerCalc")
+let typeDiv=document.getElementById("typeInputs");
+types.forEach(t=>typeInputs.push(createRow(t,typeDiv)));
 
-location.reload()
+let rankDiv=document.getElementById("rankInputs");
+ranks.forEach(r=>rankInputs.push(createRow(r,rankDiv)));
+
+let buffDiv=document.getElementById("buffInputs");
+
+buffDiv.innerHTML+="<h3>Type Buff</h3>";
+
+types.forEach(t=>buffTypeInputs.push(createRow(t+" %",buffDiv,true)));
+
+buffDiv.innerHTML+="<h3>Rank Buff</h3>";
+
+ranks.forEach(r=>buffRankInputs.push(createRow(r+" %",buffDiv,true)));
+
+loadData();
+
+calculate();
+
+}
+
+function calculate(){
+
+let typeSum=0;
+let rankSum=0;
+
+let typeValues=typeInputs.map(i=>{
+let v=parsePower(i.value);
+typeSum+=v;
+return v;
+});
+
+let rankValues=rankInputs.map(i=>{
+let v=parsePower(i.value);
+rankSum+=v;
+return v;
+});
+
+let totalPower=(typeSum && rankSum)?(typeSum+rankSum)/2:(typeSum||rankSum);
+
+let gain=0;
+
+buffTypeInputs.forEach((b,i)=>{
+let buff=parseFloat(b.value)||0;
+let share=typeValues[i]/typeSum||0;
+gain+=totalPower*share*(buff/100);
+});
+
+buffRankInputs.forEach((b,i)=>{
+let buff=parseFloat(b.value)||0;
+let share=rankValues[i]/rankSum||0;
+gain+=totalPower*share*(buff/100);
+});
+
+let newPower=totalPower+gain;
+
+document.getElementById("totalPower").innerText="Estimated Power: "+formatPower(totalPower);
+document.getElementById("gainPower").innerText="Power Gain: "+formatPower(gain);
+document.getElementById("newPower").innerText="New Power: "+formatPower(newPower);
+
+detectBestBuff(totalPower,typeValues,typeSum,rankValues,rankSum);
+
+renderDistribution(typeValues,typeSum);
+
+}
+
+function detectBestBuff(total,typeVals,typeSum,rankVals,rankSum){
+
+let bestName="";
+let bestGain=0;
+
+types.forEach((t,i)=>{
+let gain=total*(typeVals[i]/typeSum||0)*0.01;
+if(gain>bestGain){
+bestGain=gain;
+bestName=t+" Buff";
+}
+});
+
+ranks.forEach((r,i)=>{
+let gain=total*(rankVals[i]/rankSum||0)*0.01;
+if(gain>bestGain){
+bestGain=gain;
+bestName=r+" Buff";
+}
+});
+
+document.getElementById("bestBuff").innerText=
+"Best Buff (per +1%): "+bestName+" → "+formatPower(bestGain);
+
+}
+
+function renderDistribution(vals,sum){
+
+let div=document.getElementById("distribution");
+
+div.innerHTML="<h3>Type Distribution</h3>";
+
+vals.forEach((v,i)=>{
+
+let share=sum?((v/sum)*100):0;
+
+div.innerHTML+=`
+<div>${types[i]} (${share.toFixed(1)}%)</div>
+<div class="progress"><div class="bar" style="width:${share}%"></div></div>
+`;
+
+});
+
+}
+
+function saveData(){
+
+let data={
+types:typeInputs.map(i=>i.value),
+ranks:rankInputs.map(i=>i.value),
+typeBuff:buffTypeInputs.map(i=>i.value),
+rankBuff:buffRankInputs.map(i=>i.value)
+};
+
+localStorage.setItem("isekaiPowerCalc",JSON.stringify(data));
+
+}
+
+function loadData(){
+
+let data=localStorage.getItem("isekaiPowerCalc");
+
+if(!data) return;
+
+data=JSON.parse(data);
+
+data.types?.forEach((v,i)=>typeInputs[i].value=v);
+data.ranks?.forEach((v,i)=>rankInputs[i].value=v);
+data.typeBuff?.forEach((v,i)=>buffTypeInputs[i].value=v);
+data.rankBuff?.forEach((v,i)=>buffRankInputs[i].value=v);
+
+}
+
+function resetAll(){
+
+localStorage.removeItem("isekaiPowerCalc");
+location.reload();
 
 }
 
 function copyResult(){
 
-navigator.clipboard.writeText(
+let text=
+document.getElementById("totalPower").innerText+"\n"+
+document.getElementById("gainPower").innerText+"\n"+
+document.getElementById("newPower").innerText;
 
-document.getElementById("result").innerText
+navigator.clipboard.writeText(text);
 
-)
-
-alert("Copied")
-
-}
-
-function goHome(){
-
-window.location.href="/"
+alert("Copied!");
 
 }
 
-load()
+init();
 
 </script>
 
