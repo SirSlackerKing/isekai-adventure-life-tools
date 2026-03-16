@@ -178,7 +178,7 @@ margin-bottom:4px;
 <div class="panel">
 
 <div class="desc">
-Estimate how much power your account gains from buffs.
+Estimate how much power your account gains from buffs.  
 You only need rough numbers (B or T).
 </div>
 
@@ -203,8 +203,7 @@ Estimate total power of each Type.
 <h2>Setup Rank Power</h2>
 
 <div class="desc">
-Estimate power by Rank.
-SSR and SSR+ are combined.
+Estimate power by Rank. SSR and SSR+ are combined.
 </div>
 
 <div id="rankInputs"></div>
@@ -245,12 +244,13 @@ SSR and SSR+ are combined.
 <script>
 
 const types=["Inspiring","Brave","Diligent","Erudition","Freedom"];
-const ranks=["SR","SSR+SSR","UR"];
+const ranks=["SR","SSR&SSR+","UR"];
 
 let typeInputs=[];
 let rankInputs=[];
 let buffTypeInputs=[];
 let buffRankInputs=[];
+let allBuffInput;
 
 function formatNumber(n){
 return n.toLocaleString();
@@ -267,6 +267,10 @@ if(v.includes("B")) return parseFloat(v)*1e9;
 
 return parseFloat(v)||0;
 
+}
+
+function parsePercent(v){
+return parseFloat(v)||0;
 }
 
 function formatPower(v){
@@ -300,7 +304,7 @@ let input=document.createElement("input");
 input.value="0";
 
 minus.onclick=()=>{
-let val=parsePower(input.value);
+let val=isPercent?parsePercent(input.value):parsePower(input.value);
 val-=isPercent?1:1e9;
 if(val<0) val=0;
 input.value=isPercent?val:formatPower(val);
@@ -309,7 +313,7 @@ calculate();
 };
 
 plus.onclick=()=>{
-let val=parsePower(input.value);
+let val=isPercent?parsePercent(input.value):parsePower(input.value);
 val+=isPercent?1:1e9;
 input.value=isPercent?val:formatPower(val);
 saveData();
@@ -345,15 +349,15 @@ ranks.forEach(r=>rankInputs.push(createRow(r,rankDiv)));
 let buffDiv=document.getElementById("buffInputs");
 
 buffDiv.innerHTML+="<h3>Type Buff</h3>";
-
 types.forEach(t=>buffTypeInputs.push(createRow(t+" %",buffDiv,true)));
 
 buffDiv.innerHTML+="<h3>Rank Buff</h3>";
-
 ranks.forEach(r=>buffRankInputs.push(createRow(r+" %",buffDiv,true)));
 
-loadData();
+buffDiv.innerHTML+="<h3>All Power Buff</h3>";
+allBuffInput=createRow("All Power %",buffDiv,true);
 
+loadData();
 calculate();
 
 }
@@ -380,22 +384,25 @@ let totalPower=(typeSum && rankSum)?(typeSum+rankSum)/2:(typeSum||rankSum);
 let gain=0;
 
 buffTypeInputs.forEach((b,i)=>{
-let buff=parseFloat(b.value)||0;
+let buff=parsePercent(b.value);
 let share=typeValues[i]/typeSum||0;
 gain+=totalPower*share*(buff/100);
 });
 
 buffRankInputs.forEach((b,i)=>{
-let buff=parseFloat(b.value)||0;
+let buff=parsePercent(b.value);
 let share=rankValues[i]/rankSum||0;
 gain+=totalPower*share*(buff/100);
 });
 
+let allBuff=parsePercent(allBuffInput.value);
+gain+=totalPower*(allBuff/100);
+
 let newPower=totalPower+gain;
 
-document.getElementById("totalPower").innerText="Estimated Power: "+formatPower(totalPower);
-document.getElementById("gainPower").innerText="Power Gain: "+formatPower(gain);
-document.getElementById("newPower").innerText="New Power: "+formatPower(newPower);
+document.getElementById("totalPower").innerText="Estimated Account Power: "+formatPower(totalPower);
+document.getElementById("gainPower").innerText="Estimated Power Increase: "+formatPower(gain);
+document.getElementById("newPower").innerText="Estimated New Power: "+formatPower(newPower);
 
 detectBestBuff(totalPower,typeValues,typeSum,rankValues,rankSum);
 
@@ -423,6 +430,11 @@ bestGain=gain;
 bestName=r+" Buff";
 }
 });
+
+if(total*0.01>bestGain){
+bestGain=total*0.01;
+bestName="All Power Buff";
+}
 
 document.getElementById("bestBuff").innerText=
 "Best Buff (per +1%): "+bestName+" → "+formatPower(bestGain);
@@ -454,7 +466,8 @@ let data={
 types:typeInputs.map(i=>i.value),
 ranks:rankInputs.map(i=>i.value),
 typeBuff:buffTypeInputs.map(i=>i.value),
-rankBuff:buffRankInputs.map(i=>i.value)
+rankBuff:buffRankInputs.map(i=>i.value),
+allBuff:allBuffInput.value
 };
 
 localStorage.setItem("isekaiPowerCalc",JSON.stringify(data));
@@ -473,6 +486,7 @@ data.types?.forEach((v,i)=>typeInputs[i].value=v);
 data.ranks?.forEach((v,i)=>rankInputs[i].value=v);
 data.typeBuff?.forEach((v,i)=>buffTypeInputs[i].value=v);
 data.rankBuff?.forEach((v,i)=>buffRankInputs[i].value=v);
+if(data.allBuff) allBuffInput.value=data.allBuff;
 
 }
 
