@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 
 <title>Isekai Adventure Life Power Buff Simulator</title>
 
@@ -47,20 +47,20 @@ cursor:pointer;
 
 .panel{
 background:#2a2f42;
-border-radius:12px;
-padding:20px;
+border-radius:14px;
+padding:18px;
 margin-bottom:20px;
-box-shadow:0 5px 15px rgba(0,0,0,0.4);
+box-shadow:0 6px 20px rgba(0,0,0,0.4);
 }
 
-h1,h2{
+h1,h2,h3{
 margin-top:0;
 }
 
 .desc{
-font-size:14px;
-color:#bbb;
-margin-bottom:15px;
+font-size:13px;
+color:#aaa;
+margin-bottom:10px;
 }
 
 .row{
@@ -70,7 +70,7 @@ margin:8px 0;
 }
 
 .label{
-width:160px;
+width:170px;
 font-weight:600;
 }
 
@@ -81,13 +81,14 @@ align-items:center;
 }
 
 input{
-width:130px;
+width:120px;
 padding:6px;
 text-align:center;
 border-radius:6px;
 border:none;
-background:#1c2030;
+background:#181c28;
 color:white;
+font-weight:600;
 }
 
 button{
@@ -98,10 +99,29 @@ padding:6px 10px;
 background:#5c7cff;
 color:white;
 font-weight:700;
+font-size:14px;
 }
 
 button:active{
 transform:scale(0.92);
+}
+
+.cardgrid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:16px;
+}
+
+.result{
+font-size:18px;
+font-weight:700;
+margin:6px 0;
+}
+
+.best{
+margin-top:10px;
+color:#7dff9a;
+font-weight:700;
 }
 
 .progress{
@@ -109,7 +129,7 @@ height:10px;
 background:#111;
 border-radius:5px;
 overflow:hidden;
-margin-top:3px;
+margin-bottom:6px;
 }
 
 .bar{
@@ -117,31 +137,13 @@ height:100%;
 background:#5c7cff;
 }
 
-.result{
-font-size:18px;
-font-weight:700;
-margin-top:8px;
-}
-
-.best{
-color:#7dff9a;
-font-weight:700;
-margin-top:10px;
-}
-
 .utility{
-margin-top:15px;
+margin-top:12px;
 display:flex;
 gap:10px;
 }
 
-.cardgrid{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:15px;
-}
-
-@media(max-width:800px){
+@media(max-width:850px){
 
 .container{
 width:100%;
@@ -176,38 +178,24 @@ margin-bottom:4px;
 </div>
 
 <div class="panel">
-
 <div class="desc">
-Estimate how much power your account gains from buffs.  
-You only need rough numbers (B or T).
+Estimate account power and simulate buffs.  
+Input rough values (B or T) based on your characters.
 </div>
-
 </div>
 
 <div class="cardgrid">
 
 <div class="panel">
-
 <h2>Setup Type Power</h2>
-
-<div class="desc">
-Estimate total power of each Type.
-</div>
-
+<div class="desc">Estimate total power for each Type.</div>
 <div id="typeInputs"></div>
-
 </div>
 
 <div class="panel">
-
 <h2>Setup Rank Power</h2>
-
-<div class="desc">
-Estimate power by Rank. SSR and SSR+ are combined.
-</div>
-
+<div class="desc">Estimate power by Rank.</div>
 <div id="rankInputs"></div>
-
 </div>
 
 </div>
@@ -216,7 +204,14 @@ Estimate power by Rank. SSR and SSR+ are combined.
 
 <h2>Buff Simulation</h2>
 
-<div id="buffInputs"></div>
+<h3>Type Buff</h3>
+<div id="buffType"></div>
+
+<h3>Rank Buff</h3>
+<div id="buffRank"></div>
+
+<h3>All Power Buff</h3>
+<div id="buffAll"></div>
 
 </div>
 
@@ -230,6 +225,7 @@ Estimate power by Rank. SSR and SSR+ are combined.
 
 <div id="bestBuff" class="best"></div>
 
+<h3>Type Distribution</h3>
 <div id="distribution"></div>
 
 <div class="utility">
@@ -251,10 +247,6 @@ let rankInputs=[];
 let buffTypeInputs=[];
 let buffRankInputs=[];
 let allBuffInput;
-
-function formatNumber(n){
-return n.toLocaleString();
-}
 
 function parsePower(v){
 
@@ -278,7 +270,7 @@ function formatPower(v){
 if(v>=1e12) return (v/1e12).toFixed(2)+"T";
 if(v>=1e9) return (v/1e9).toFixed(2)+"B";
 
-return formatNumber(v);
+return v.toLocaleString();
 
 }
 
@@ -346,16 +338,14 @@ types.forEach(t=>typeInputs.push(createRow(t,typeDiv)));
 let rankDiv=document.getElementById("rankInputs");
 ranks.forEach(r=>rankInputs.push(createRow(r,rankDiv)));
 
-let buffDiv=document.getElementById("buffInputs");
+let buffTypeDiv=document.getElementById("buffType");
+types.forEach(t=>buffTypeInputs.push(createRow(t+" %",buffTypeDiv,true)));
 
-buffDiv.innerHTML+="<h3>Type Buff</h3>";
-types.forEach(t=>buffTypeInputs.push(createRow(t+" %",buffDiv,true)));
+let buffRankDiv=document.getElementById("buffRank");
+ranks.forEach(r=>buffRankInputs.push(createRow(r+" %",buffRankDiv,true)));
 
-buffDiv.innerHTML+="<h3>Rank Buff</h3>";
-ranks.forEach(r=>buffRankInputs.push(createRow(r+" %",buffDiv,true)));
-
-buffDiv.innerHTML+="<h3>All Power Buff</h3>";
-allBuffInput=createRow("All Power %",buffDiv,true);
+let buffAllDiv=document.getElementById("buffAll");
+allBuffInput=createRow("All Power %",buffAllDiv,true);
 
 loadData();
 calculate();
@@ -367,46 +357,45 @@ function calculate(){
 let typeSum=0;
 let rankSum=0;
 
-let typeValues=typeInputs.map(i=>{
+let typeVals=typeInputs.map(i=>{
 let v=parsePower(i.value);
 typeSum+=v;
 return v;
 });
 
-let rankValues=rankInputs.map(i=>{
+let rankVals=rankInputs.map(i=>{
 let v=parsePower(i.value);
 rankSum+=v;
 return v;
 });
 
-let totalPower=(typeSum && rankSum)?(typeSum+rankSum)/2:(typeSum||rankSum);
+let total=(typeSum && rankSum)?(typeSum+rankSum)/2:(typeSum||rankSum);
 
 let gain=0;
 
 buffTypeInputs.forEach((b,i)=>{
 let buff=parsePercent(b.value);
-let share=typeValues[i]/typeSum||0;
-gain+=totalPower*share*(buff/100);
+let share=typeVals[i]/typeSum||0;
+gain+=total*share*(buff/100);
 });
 
 buffRankInputs.forEach((b,i)=>{
 let buff=parsePercent(b.value);
-let share=rankValues[i]/rankSum||0;
-gain+=totalPower*share*(buff/100);
+let share=rankVals[i]/rankSum||0;
+gain+=total*share*(buff/100);
 });
 
 let allBuff=parsePercent(allBuffInput.value);
-gain+=totalPower*(allBuff/100);
+gain+=total*(allBuff/100);
 
-let newPower=totalPower+gain;
+let newPower=total+gain;
 
-document.getElementById("totalPower").innerText="Estimated Account Power: "+formatPower(totalPower);
+document.getElementById("totalPower").innerText="Estimated Account Power: "+formatPower(total);
 document.getElementById("gainPower").innerText="Estimated Power Increase: "+formatPower(gain);
 document.getElementById("newPower").innerText="Estimated New Power: "+formatPower(newPower);
 
-detectBestBuff(totalPower,typeValues,typeSum,rankValues,rankSum);
-
-renderDistribution(typeValues,typeSum);
+detectBestBuff(total,typeVals,typeSum,rankVals,rankSum);
+renderDistribution(typeVals,typeSum);
 
 }
 
@@ -444,8 +433,7 @@ document.getElementById("bestBuff").innerText=
 function renderDistribution(vals,sum){
 
 let div=document.getElementById("distribution");
-
-div.innerHTML="<h3>Type Distribution</h3>";
+div.innerHTML="";
 
 vals.forEach((v,i)=>{
 
@@ -477,7 +465,6 @@ localStorage.setItem("isekaiPowerCalc",JSON.stringify(data));
 function loadData(){
 
 let data=localStorage.getItem("isekaiPowerCalc");
-
 if(!data) return;
 
 data=JSON.parse(data);
@@ -505,8 +492,7 @@ document.getElementById("gainPower").innerText+"\n"+
 document.getElementById("newPower").innerText;
 
 navigator.clipboard.writeText(text);
-
-alert("Copied!");
+alert("Copied");
 
 }
 
