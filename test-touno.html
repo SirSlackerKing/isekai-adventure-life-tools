@@ -4,254 +4,243 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<title>Touno Island Tools</title>
+<title>Touno Island Calculator</title>
 
 <style>
-*{box-sizing:border-box;font-family:Segoe UI;}
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+}
+
 body{
 margin:0;
-background:#0f172a;
-color:#fff;
+background:#eef2ff;
 display:flex;
 justify-content:center;
-touch-action:manipulation;
 }
-.container{width:100%;max-width:900px;padding:16px;}
+
+.container{
+width:900px;
+padding:20px;
+}
 
 .card{
-background:#1e293b;
+background:white;
 border-radius:16px;
-padding:16px;
-margin-bottom:16px;
-box-shadow:0 4px 20px rgba(0,0,0,0.3);
+padding:20px;
+margin-bottom:20px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
 }
 
-h2{margin:0 0 10px;}
+h2{
+margin-top:0;
+}
 
-.input-group{
+.row{
 display:flex;
+gap:10px;
 align-items:center;
-gap:8px;
 margin-bottom:10px;
 }
 
-.input-group input{
-flex:1;
+input{
+width:100%;
 padding:10px;
-border-radius:10px;
-border:none;
+border-radius:8px;
+border:1px solid #ccc;
 text-align:center;
 font-size:16px;
 }
 
-.step-btn{
-width:36px;
-height:36px;
+button{
+padding:10px 14px;
 border:none;
 border-radius:10px;
 background:#6366f1;
 color:white;
-font-size:18px;
-cursor:pointer;
-user-select:none;
-touch-action:manipulation;
-}
-
-.step-btn:active{
-transform:scale(0.95);
-}
-
-.btn{
-padding:12px;
-border:none;
-border-radius:12px;
-background:#38bdf8;
-color:black;
-width:100%;
 font-size:16px;
-margin-top:10px;
+cursor:pointer;
+touch-action: manipulation;
 }
 
-.result{
-background:#020617;
-padding:12px;
-border-radius:10px;
-margin-top:10px;
-white-space:pre-line;
-font-size:14px;
+button:active{
+transform:scale(0.95);
 }
 
 .small{
 font-size:12px;
-color:#94a3b8;
-margin-top:8px;
-line-height:1.5;
+opacity:0.7;
 }
+
+.result{
+background:#f1f5f9;
+padding:15px;
+border-radius:10px;
+margin-top:10px;
+}
+
+.pack{
+margin-bottom:15px;
+}
+
+.limit{
+font-size:12px;
+color:#666;
+}
+
 </style>
 </head>
 
 <body>
+
 <div class="container">
 
-<!-- TIME -->
 <div class="card">
 <h2>⏳ Remaining Time</h2>
 
-<div class="input-group">
-<button class="step-btn" onmousedown="hold(this,'hours',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'hours',-1)" ontouchend="stopHold()">-</button>
-<input id="hours" type="number" value="0">
-<button class="step-btn" onmousedown="hold(this,'hours',1)" onmouseup="stopHold()" ontouchstart="hold(this,'hours',1)" ontouchend="stopHold()">+</button>
+<div class="row">
+<button onmousedown="hold(this, 'hours', -1)" onmouseup="stop()">-</button>
+<input id="hours" value="24">
+<button onmousedown="hold(this, 'hours', 1)" onmouseup="stop()">+</button>
 
 <span>Hours</span>
 </div>
 
-<div class="input-group">
-<button class="step-btn" onmousedown="hold(this,'minutes',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'minutes',-1)" ontouchend="stopHold()">-</button>
-<input id="minutes" type="number" value="0">
-<button class="step-btn" onmousedown="hold(this,'minutes',1)" onmouseup="stopHold()" ontouchstart="hold(this,'minutes',1)" ontouchend="stopHold()">+</button>
+<div class="row">
+<button onmousedown="hold(this, 'minutes', -1)" onmouseup="stop()">-</button>
+<input id="minutes" value="0">
+<button onmousedown="hold(this, 'minutes', 1)" onmouseup="stop()">+</button>
 
 <span>Minutes</span>
 </div>
+
+<div class="result" id="timeResult"></div>
 </div>
 
-<!-- STAMP -->
 <div class="card">
-<h2>🎯 Stamp Point</h2>
-<input id="progress" type="number" placeholder="Current Stamp Point">
+<h2>⚡ Player Setup</h2>
+
+<input id="currentStroll" placeholder="Current Stroll Point" value="0">
+<br><br>
+<input id="currentStamp" placeholder="Current Stamp Point" value="0">
+<br><br>
+<input id="fellows" placeholder="Operating Fellows (optional)" value="0">
 </div>
 
-<!-- SPEED -->
 <div class="card">
-<h2>⚡ Operating Fellows</h2>
-<input id="speed" type="number" placeholder="Stamp Point per minute">
+<h2>🍡 Sakuramochi</h2>
+
+<input id="mochi" value="0">
+
+<div class="result" id="mochiResult"></div>
 </div>
 
-<!-- STAMINA -->
 <div class="card">
-<h2>🚶 Stroll & Stamina</h2>
+<h2>💎 Crystal Packs</h2>
 
-<input id="stamina" type="number" placeholder="Total Stamina">
+<div id="packInfo"></div>
 
-<input id="cost" type="number" placeholder="Stamina Cost per 1 Stroll (e.g. 10)">
+<div class="pack">
+199 Pack
+<input id="p199" value="0">
+<div class="limit" id="l199"></div>
 </div>
 
-<!-- PACK -->
+<div class="pack">
+988 Pack
+<input id="p988" value="0">
+<div class="limit" id="l988"></div>
+</div>
+
+<div class="pack">
+1988 Pack
+<input id="p1988" value="0">
+<div class="limit" id="l1988"></div>
+</div>
+
+</div>
+
 <div class="card">
-<h2>🎁 Crystal Pack</h2>
+<h2>🎯 Target Score</h2>
 
-<div class="input-group">
-<button class="step-btn" onmousedown="hold(this,'p199',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'p199',-1)" ontouchend="stopHold()">-</button>
-<input id="p199" type="number" value="0">
-<button class="step-btn" onmousedown="hold(this,'p199',1)" onmouseup="stopHold()" ontouchstart="hold(this,'p199',1)" ontouchend="stopHold()">+</button>
-<span>199</span>
+<input id="target" value="7500">
+
+<div class="result" id="targetResult"></div>
 </div>
-
-<div class="input-group">
-<button class="step-btn" onmousedown="hold(this,'p988',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'p988',-1)" ontouchend="stopHold()">-</button>
-<input id="p988" type="number" value="0">
-<button class="step-btn" onmousedown="hold(this,'p988',1)" onmouseup="stopHold()" ontouchstart="hold(this,'p988',1)" ontouchend="stopHold()">+</button>
-<span>988</span>
-</div>
-
-<div class="input-group">
-<button class="step-btn" onmousedown="hold(this,'p1988',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'p1988',-1)" ontouchend="stopHold()">-</button>
-<input id="p1988" type="number" value="0">
-<button class="step-btn" onmousedown="hold(this,'p1988',1)" onmouseup="stopHold()" ontouchstart="hold(this,'p1988',1)" ontouchend="stopHold()">+</button>
-<span>1988</span>
-</div>
-
-<div class="small">
-* 199 = 6 Mochi | 988 = 12 Mochi | 1988 = 18 Mochi<br>
-* Each pack can be purchased 3 times per day
-</div>
-</div>
-
-<button class="btn" onclick="calculate()">Calculate</button>
-
-<div id="output" class="result"></div>
 
 </div>
 
 <script>
-function get(id){
-return parseFloat(document.getElementById(id).value)||0
+
+let interval;
+
+function hold(btn, id, delta){
+change(id, delta)
+interval = setInterval(()=>change(id, delta),150)
 }
 
-// HOLD BUTTON
-let interval=null
-function hold(btn,id,dir){
-change(id,dir)
-interval=setInterval(()=>change(id,dir),150)
-}
-function stopHold(){
+function stop(){
 clearInterval(interval)
 }
 
-function change(id,dir){
-let el=document.getElementById(id)
-let val=parseFloat(el.value)||0
-val+=dir
+function change(id, delta){
+let el = document.getElementById(id)
+let val = parseInt(el.value)||0
+val += delta
 if(val<0) val=0
-el.value=val
-calculate()
+el.value = val
+update()
 }
 
-// AUTO CALC
+function get(id){
+return parseInt(document.getElementById(id).value)||0
+}
+
+function update(){
+
+let h = get("hours")
+let m = get("minutes")
+
+let totalHours = h + m/60
+let days = Math.ceil(totalHours/24)
+
+let maxPack = days * 3
+
+document.getElementById("l199").innerText = "Max: "+maxPack
+document.getElementById("l988").innerText = "Max: "+maxPack
+document.getElementById("l1988").innerText = "Max: "+maxPack
+
+document.getElementById("timeResult").innerHTML =
+"Estimated Buy Days: "+days
+
+// Mochi
+let mochi = get("mochi")
+let stamina = mochi * 5
+let stamp = stamina * 200
+
+document.getElementById("mochiResult").innerHTML =
+"+ "+stamina+" Stroll<br>+ "+stamp+" Stamp Point"
+
+// Target
+let current = get("currentStamp")
+let target = get("target")
+
+let need = target - current
+if(need<0) need=0
+
+let strollNeed = Math.ceil(need/200)
+
+document.getElementById("targetResult").innerHTML =
+"Need: "+need+" Stamp Point<br>≈ "+strollNeed+" Stroll"
+
+}
+
 document.querySelectorAll("input").forEach(i=>{
-i.addEventListener("input",calculate)
+i.addEventListener("input", update)
 })
 
-function calculate(){
+update()
 
-let hours=get("hours")
-let minutes=get("minutes")
-let totalMinutes = hours*60 + minutes
-
-let speed=get("speed")
-let pointsFromSpeed = speed * totalMinutes
-
-let stamina=get("stamina")
-let cost=get("cost") || 10
-
-let strolls = Math.floor(stamina / cost)
-let pointsFromStroll = strolls * 200
-
-let progress=get("progress")
-
-let totalPoints = pointsFromSpeed + pointsFromStroll + progress
-
-let coins = Math.floor(totalPoints / 200000) * 10
-
-let remainder = totalPoints % 200000
-let need = remainder===0 ? 0 : 200000 - remainder
-
-let p199=get("p199")
-let p988=get("p988")
-let p1988=get("p1988")
-
-let totalMochi = p199*6 + p988*12 + p1988*18
-
-document.getElementById("output").innerText = `
-🎯 Total Stamp Point: ${Math.floor(totalPoints).toLocaleString()}
-
-🪙 Sakura Coin: ${coins}
-📈 Next 10 Coins in: ${need.toLocaleString()} points
-
-⚡ From Operating Fellows: ${Math.floor(pointsFromSpeed).toLocaleString()}
-🚶 From Stroll & Stamina: ${pointsFromStroll.toLocaleString()}
-
-🎁 Mochi: ${totalMochi}
-
-------------------------
-Notes:
-- Uses minimum 200 points per stroll
-- Actual stroll may give 200–250
-- Random buffs are NOT included
-- Assumes regular claiming
-`
-}
-
-calculate()
 </script>
 
 </body>
