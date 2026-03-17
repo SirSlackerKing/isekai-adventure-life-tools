@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<title>Touno Island Planner</title>
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+-webkit-tap-highlight-color: transparent;
+}
+
+body{
+margin:0;
+background:linear-gradient(180deg,#eef3ff,#dce7ff);
+display:flex;
+justify-content:center;
+}
+
+.container{
+width:1000px;
+max-width:95%;
+padding:20px;
+}
+
+.title{
+text-align:center;
+font-size:26px;
+font-weight:700;
+color:#3b4ba8;
+}
+
+.card{
+background:white;
+border-radius:16px;
+padding:16px;
+margin-bottom:14px;
+box-shadow:0 6px 20px rgba(0,0,0,0.15);
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+}
+
+input{
+width:100%;
+padding:10px;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:14px;
+}
+
+.pack{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:10px;
+}
+
+.controls{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.btn{
+width:34px;
+height:34px;
+border:none;
+border-radius:8px;
+background:#3b4ba8;
+color:white;
+font-size:16px;
+}
+
+.btn:active{
+transform:scale(0.95);
+}
+
+.result{
+margin:6px 0;
+}
+
+.highlight{
+font-weight:bold;
+color:#3b4ba8;
+}
+
+.progressBar{
+width:100%;
+height:12px;
+background:#ddd;
+border-radius:10px;
+overflow:hidden;
+}
+
+.progressFill{
+height:100%;
+background:linear-gradient(90deg,#4facfe,#00f2fe);
+width:0%;
+}
+
+.actions{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+.actionBtn{
+flex:1;
+padding:10px;
+border:none;
+border-radius:10px;
+background:#3b4ba8;
+color:white;
+font-weight:600;
+}
+
+@media(max-width:700px){
+.grid{
+grid-template-columns:1fr;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="title">Touno Island Planner</div>
+
+<div class="card">
+<b>⏳ Time</b>
+<div class="grid">
+<input id="days" placeholder="Days">
+<input id="hours" placeholder="Hours">
+<input id="minutes" placeholder="Minutes">
+</div>
+</div>
+
+<div class="card">
+<b>📊 Base</b>
+<div class="grid">
+<input id="stamina" placeholder="Stamina">
+<input id="mochi" placeholder="Mochi">
+<input id="target" placeholder="Target Score">
+</div>
+</div>
+
+<div class="card">
+<b>🏆 Ranking Mode</b>
+<div class="grid">
+<input id="coinPer" placeholder="Coin / Stroll">
+<input id="currentCoin" placeholder="Current Coin">
+<input id="targetCoin" placeholder="Target Coin">
+</div>
+</div>
+
+<div class="card">
+<b>💎 Packs</b>
+
+<div class="pack">
+<span>188</span>
+<div class="controls">
+<button class="btn hold" data-id="p1" data-val="-1">-</button>
+<div id="p1">0</div>
+<button class="btn hold" data-id="p1" data-val="1">+</button>
+</div>
+</div>
+
+<div class="pack">
+<span>988</span>
+<div class="controls">
+<button class="btn hold" data-id="p2" data-val="-1">-</button>
+<div id="p2">0</div>
+<button class="btn hold" data-id="p2" data-val="1">+</button>
+</div>
+</div>
+
+<div class="pack">
+<span>1988</span>
+<div class="controls">
+<button class="btn hold" data-id="p3" data-val="-1">-</button>
+<div id="p3">0</div>
+<button class="btn hold" data-id="p3" data-val="1">+</button>
+</div>
+</div>
+
+</div>
+
+<div class="card">
+<b>📈 Result</b>
+
+<div class="result">Stamina: <span id="totalStamina"></span></div>
+<div class="result">Stroll: <span id="stroll"></span></div>
+<div class="result">Score: <span id="score"></span></div>
+<div class="result">Coin: <span id="coin"></span></div>
+
+<div class="progressBar">
+<div id="bar" class="progressFill"></div>
+</div>
+
+<div id="recommend"></div>
+
+<div class="actions">
+<button class="actionBtn" onclick="resetAll()">Reset</button>
+<button class="actionBtn" onclick="copyResult()">Copy</button>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let packs={p1:0,p2:0,p3:0}
+
+// HOLD BUTTON
+document.querySelectorAll(".hold").forEach(btn=>{
+let interval
+let fn=()=>{
+changePack(btn.dataset.id, parseInt(btn.dataset.val))
+}
+
+btn.addEventListener("mousedown",()=>{
+fn()
+interval=setInterval(fn,120)
+})
+btn.addEventListener("mouseup",()=>clearInterval(interval))
+btn.addEventListener("mouseleave",()=>clearInterval(interval))
+
+btn.addEventListener("touchstart",(e)=>{
+e.preventDefault()
+fn()
+interval=setInterval(fn,120)
+})
+btn.addEventListener("touchend",()=>clearInterval(interval))
+})
+
+// change pack
+function changePack(id,val){
+let days=+daysInput.value||0
+let max=days*3
+
+packs[id]+=val
+if(packs[id]<0)packs[id]=0
+if(packs[id]>max)packs[id]=max
+
+document.getElementById(id).innerText=packs[id]
+save()
+calc()
+}
+
+// inputs
+let inputs=document.querySelectorAll("input")
+let daysInput=document.getElementById("days")
+
+inputs.forEach(i=>{
+i.addEventListener("input",()=>{
+save()
+calc()
+})
+})
+
+// calc
+function calc(){
+
+let d=+days.value||0
+let h=+hours.value||0
+let m=+minutes.value||0
+
+let stamina=+staminaInput.value||0
+let mochi=+mochiInput.value||0
+let target=+targetInput.value||0
+
+let coinPer=+coinPerInput.value||0
+let currentCoin=+currentCoinInput.value||0
+let targetCoin=+targetCoinInput.value||0
+
+let regen=Math.floor((d*1440+h*60+m)/20)-1
+if(regen<0)regen=0
+
+let packMochi=packs.p1*6+packs.p2*12+packs.p3*18
+
+let totalStamina=stamina+regen+(mochi+packMochi)*5
+let stroll=totalStamina
+let score=stroll*5
+
+let coin=currentCoin + (stroll*coinPer)
+
+// UI
+totalStaminaEl.innerText=totalStamina
+strollEl.innerText=stroll
+scoreEl.innerText=score
+coinEl.innerText=Math.floor(coin)
+
+// progress
+let percent=0
+if(target>0) percent=Math.min(score/target*100,100)
+bar.style.width=percent+"%"
+
+// recommend
+let text=""
+
+if(target>0 && score<target){
+let need=Math.ceil((target-score)/5)
+text+="Need "+need+" stroll\n"
+}
+
+if(targetCoin>0 && coin<targetCoin){
+let needCoin=targetCoin-coin
+let needStroll=Math.ceil(needCoin/coinPer)
+text+="Need "+needStroll+" stroll for rank"
+}
+
+recommend.innerText=text
+
+}
+
+// refs
+let staminaInput=stamina
+let mochiInput=mochi
+let targetInput=target
+
+let coinPerInput=coinPer
+let currentCoinInput=currentCoin
+let targetCoinInput=targetCoin
+
+let totalStaminaEl=totalStamina
+let strollEl=stroll
+let scoreEl=score
+let coinEl=coin
+let bar=document.getElementById("bar")
+
+// save/load
+function save(){
+localStorage.setItem("tounoData", JSON.stringify({
+days:days.value,
+hours:hours.value,
+minutes:minutes.value,
+stamina:stamina.value,
+mochi:mochi.value,
+target:target.value,
+coinPer:coinPer.value,
+currentCoin:currentCoin.value,
+targetCoin:targetCoin.value,
+packs:packs
+}))
+}
+
+function load(){
+let data=JSON.parse(localStorage.getItem("tounoData"))
+if(!data)return
+
+for(let k in data){
+if(document.getElementById(k)){
+document.getElementById(k).value=data[k]
+}
+}
+
+if(data.packs){
+packs=data.packs
+for(let k in packs){
+document.getElementById(k).innerText=packs[k]
+}
+}
+
+calc()
+}
+
+// reset
+function resetAll(){
+localStorage.clear()
+location.reload()
+}
+
+// copy
+function copyResult(){
+let text=
+"Stamina:"+totalStaminaEl.innerText+
+"\nStroll:"+strollEl.innerText+
+"\nScore:"+scoreEl.innerText+
+"\nCoin:"+coinEl.innerText
+
+navigator.clipboard.writeText(text)
+alert("Copied!")
+}
+
+load()
+
+</script>
+
+</body>
+</html>
