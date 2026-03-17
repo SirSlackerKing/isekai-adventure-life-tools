@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Touno Island Calculator</title>
 
@@ -11,11 +11,7 @@
 body{margin:0;background:#eef2ff;}
 .container{max-width:1000px;margin:auto;padding:15px;}
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
 
 .card{
 background:white;
@@ -28,39 +24,41 @@ h3{margin:0 0 10px 0;}
 
 label{font-size:13px;opacity:.7;}
 
-.row{display:flex;gap:5px;margin-bottom:8px;}
+.row{display:flex;gap:6px;margin-bottom:8px;}
 
 input{
 flex:1;
-padding:8px;
+padding:10px;
+font-size:16px;
 border-radius:8px;
 border:1px solid #ccc;
 text-align:center;
 }
 
 button{
-padding:6px 10px;
+padding:10px;
+font-size:16px;
 border:none;
 border-radius:8px;
 background:#6366f1;
 color:white;
 cursor:pointer;
-touch-action: manipulation;
+touch-action:manipulation;
 }
 
 .secondary{background:#64748b;}
 
-.result{
-background:#f1f5f9;
-padding:10px;
-border-radius:8px;
-margin-top:8px;
-font-size:14px;
+.big{
+font-size:32px;
+font-weight:bold;
+text-align:center;
+margin:10px 0;
 }
 
-.big{
-font-size:22px;
-font-weight:bold;
+.status{
+text-align:center;
+font-weight:600;
+margin-bottom:5px;
 }
 
 .progress{
@@ -68,13 +66,21 @@ height:12px;
 background:#e5e7eb;
 border-radius:6px;
 overflow:hidden;
-margin-top:8px;
+margin:8px 0;
 }
 
 .bar{
 height:100%;
 background:#22c55e;
 width:0%;
+}
+
+.result{
+background:#f1f5f9;
+padding:10px;
+border-radius:8px;
+margin-top:8px;
+font-size:14px;
 }
 
 .small{font-size:12px;opacity:.7;}
@@ -91,7 +97,7 @@ width:0%;
 
 <!-- TIME -->
 <div class="card">
-<h3>⏳ Remaining Time</h3>
+<h3>⏳ Time</h3>
 
 <label>Hours</label>
 <div class="row">
@@ -108,28 +114,22 @@ width:0%;
 </div>
 
 <div class="result" id="timeBox"></div>
-
-<div class="small">
-* Stamina regenerates every 20 minutes<br>
-* Last stamina may not be usable<br>
-* Subtracts 1 stamina to avoid overestimate
-</div>
 </div>
 
 <!-- PLAYER -->
 <div class="card">
-<h3>⚡ Player Setup</h3>
+<h3>⚡ Player</h3>
 
 <label>Current Stamp Point</label>
 <input id="stamp">
 
-<label>Current Stamina</label>
+<label title="1 Stamina = 200 Stamp Point">Current Stamina</label>
 <input id="stamina">
 </div>
 
 <!-- MOCHI -->
 <div class="card">
-<h3>🍡 Sakuramochi in Storage</h3>
+<h3>🍡 Sakuramochi</h3>
 
 <div class="row">
 <button onmousedown="hold('mochi',-1)" onmouseup="stop()">-</button>
@@ -144,44 +144,46 @@ width:0%;
 <div class="card">
 <h3>🎯 Target Sakura Coin</h3>
 <input id="target">
-<div class="result" id="targetBox"></div>
 </div>
 
 </div>
 
 <!-- PACK -->
 <div class="card">
+
 <h3>💎 Crystal Packs</h3>
 
 <div class="row">
-199 Pack (6 Sakuramochi)
+199 Pack
 <button onmousedown="hold('p1',-1,true)" onmouseup="stop()">-</button>
 <input id="p1">
 <button onmousedown="hold('p1',1,true)" onmouseup="stop()">+</button>
 </div>
 
 <div class="row">
-988 Pack (12 Sakuramochi)
+988 Pack
 <button onmousedown="hold('p2',-1,true)" onmouseup="stop()">-</button>
 <input id="p2">
 <button onmousedown="hold('p2',1,true)" onmouseup="stop()">+</button>
 </div>
 
 <div class="row">
-1988 Pack (18 Sakuramochi)
+1988 Pack
 <button onmousedown="hold('p3',-1,true)" onmouseup="stop()">-</button>
 <input id="p3">
 <button onmousedown="hold('p3',1,true)" onmouseup="stop()">+</button>
 </div>
 
-<div class="result big" id="coinBox"></div>
+<!-- HERO RESULT -->
+<div class="big" id="coinBox"></div>
+<div class="status" id="statusBox"></div>
 
 <div class="progress"><div class="bar" id="bar"></div></div>
 
 <div class="result" id="detailBox"></div>
 
 <div class="actions">
-<button onclick="copy()">Copy Result</button>
+<button onclick="copy()">Copy</button>
 <button class="secondary" onclick="resetAll()">Reset</button>
 </div>
 
@@ -234,44 +236,48 @@ function update(){
 
 save()
 
-let h=get("h"),m=get("m")
-let totalMin=h*60+m
+// TIME
+let totalMin=get("h")*60+get("m")
 let regen=Math.floor(totalMin/20)-1
 if(regen<0)regen=0
+timeBox.innerHTML="Regen: "+regen+" Stamina"
 
-timeBox.innerHTML=
-"Remaining Minutes: "+totalMin+"<br>"+
-"Regenerate Stamina: "+regen
-
-// Mochi
-let mochi=get("mochi")
-let mochiSta=mochi*5
+// MOCHI
+let mochiSta=get("mochi")*5
 mochiBox.innerHTML="+ "+mochiSta+" Stamina"
 
-// Pack
-let packMochi=get("p1")*6+get("p2")*12+get("p3")*18
-let packSta=packMochi*5
+// PACK
+let packSta=(get("p1")*6+get("p2")*12+get("p3")*18)*5
 
-// Total
+// TOTAL
 let totalSta=get("stamina")+regen+mochiSta+packSta
 let totalStamp=get("stamp")+(totalSta*200)
 
-// Exchange
+// EXCHANGE
 let exchange=Math.floor(totalStamp/200000)
 let coin=exchange*10
 let remain=totalStamp%200000
 
-// Next
+// NEXT
 let needStamp=200000-remain
 let needSta=Math.ceil(needStamp/200)
 
-// Target
+// TARGET
 let target=get("target")
 let needCoin=target-coin
 if(needCoin<0)needCoin=0
 
+// STATUS
+let status=coin>=target?"✅ Target Reached":"❌ Not Enough"
+
+// PROGRESS
+let percent=target>0?(coin/target)*100:0
+if(percent>100)percent=100
+bar.style.width=percent+"%"
+
 // UI
-coinBox.innerHTML="Sakura Coin: "+coin
+coinBox.innerHTML=coin+" Sakura Coin"
+statusBox.innerHTML=status
 
 detailBox.innerHTML=
 "Total Stamina: "+totalSta+"<br>"+
@@ -280,16 +286,29 @@ detailBox.innerHTML=
 "Exchange Count: "+exchange+"<br>"+
 "Remaining Stamp Point: "+remain+"<br><br>"+
 
-"Next Exchange Need:<br>"+
-needStamp+" Stamp Point (~"+needSta+" Stamina)<br><br>"+
+"Next Exchange:<br>"+
+remain+" / 200,000 ("+Math.floor((remain/200000)*100)+"%)<br>"+
+"Need "+needStamp+" Stamp Point (~"+needSta+" Stamina)<br><br>"+
 
 "Target: "+target+" Sakura Coin<br>"+
-"Need: "+needCoin+" Sakura Coin"
+"Need: "+needCoin+" Sakura Coin<br>"+
+"Progress: "+coin+" / "+target+" ("+percent.toFixed(2)+"%)"
 
-// progress
-let percent= target>0 ? (coin/target)*100 : 0
-if(percent>100)percent=100
-bar.style.width=percent+"%"
+// OVER
+if(coin>target){
+detailBox.innerHTML+="<br><br>Over Target: +"+(coin-target)+" Sakura Coin"
+}
+
+// REVERSE CALC
+let needTotalCoin=target-coin
+if(needTotalCoin>0){
+let needSets=Math.ceil(needTotalCoin/10)
+let needStampTotal=needSets*200000-remain
+let needStaTotal=Math.ceil(needStampTotal/200)
+
+detailBox.innerHTML+="<br><br><b>Reverse Needed:</b><br>"+
+needStampTotal+" Stamp Point (~"+needStaTotal+" Stamina)"
+}
 
 }
 
