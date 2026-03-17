@@ -7,86 +7,68 @@
 <title>Touno Island Calculator</title>
 
 <style>
-*{
-box-sizing:border-box;
-font-family:Segoe UI;
-}
+*{box-sizing:border-box;font-family:Segoe UI;}
+body{margin:0;background:#eef2ff;}
+.container{max-width:1000px;margin:auto;padding:15px;}
 
-body{
-margin:0;
-background:#eef2ff;
-display:flex;
-justify-content:center;
-}
-
-.container{
-width:900px;
-padding:20px;
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
 }
 
 .card{
 background:white;
-border-radius:16px;
-padding:20px;
-margin-bottom:20px;
-box-shadow:0 6px 20px rgba(0,0,0,0.08);
+border-radius:14px;
+padding:15px;
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
 }
 
-h2{
-margin-top:0;
+h3{margin:0 0 10px 0;}
+
+.input-group{margin-bottom:10px;}
+
+label{
+font-size:13px;
+opacity:.8;
+display:block;
+margin-bottom:4px;
 }
 
 .row{
 display:flex;
-gap:10px;
+gap:5px;
 align-items:center;
-margin-bottom:10px;
 }
 
 input{
-width:100%;
-padding:10px;
+flex:1;
+padding:8px;
 border-radius:8px;
 border:1px solid #ccc;
 text-align:center;
-font-size:16px;
 }
 
 button{
-padding:10px 14px;
+padding:6px 10px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 background:#6366f1;
 color:white;
-font-size:16px;
 cursor:pointer;
 touch-action: manipulation;
 }
 
-button:active{
-transform:scale(0.95);
-}
-
-.small{
-font-size:12px;
-opacity:0.7;
-}
-
 .result{
 background:#f1f5f9;
-padding:15px;
-border-radius:10px;
-margin-top:10px;
+padding:10px;
+border-radius:8px;
+font-size:14px;
 }
 
-.pack{
-margin-bottom:15px;
-}
+.small{font-size:12px;opacity:.7;}
 
-.limit{
-font-size:12px;
-color:#666;
-}
+.pack{margin-bottom:10px;}
 
 </style>
 </head>
@@ -95,77 +77,118 @@ color:#666;
 
 <div class="container">
 
+<div class="grid">
+
+<!-- Remaining Time -->
 <div class="card">
-<h2>⏳ Remaining Time</h2>
+<h3>⏳ Remaining Time</h3>
 
+<div class="input-group">
+<label>Hours</label>
 <div class="row">
-<button onmousedown="hold(this, 'hours', -1)" onmouseup="stop()">-</button>
+<button onmousedown="hold('hours',-1)" onmouseup="stop()">-</button>
 <input id="hours" value="24">
-<button onmousedown="hold(this, 'hours', 1)" onmouseup="stop()">+</button>
-
-<span>Hours</span>
+<button onmousedown="hold('hours',1)" onmouseup="stop()">+</button>
+</div>
 </div>
 
+<div class="input-group">
+<label>Minutes</label>
 <div class="row">
-<button onmousedown="hold(this, 'minutes', -1)" onmouseup="stop()">-</button>
+<button onmousedown="hold('minutes',-1)" onmouseup="stop()">-</button>
 <input id="minutes" value="0">
-<button onmousedown="hold(this, 'minutes', 1)" onmouseup="stop()">+</button>
-
-<span>Minutes</span>
+<button onmousedown="hold('minutes',1)" onmouseup="stop()">+</button>
+</div>
 </div>
 
 <div class="result" id="timeResult"></div>
+
+<div class="small">
+* Stamina regenerates every 20 minutes.<br>
+The last stamina may regenerate exactly when the event ends and cannot be used.<br>
+This calculator subtracts 1 stamina to avoid overestimating.
 </div>
 
-<div class="card">
-<h2>⚡ Player Setup</h2>
-
-<input id="currentStroll" placeholder="Current Stroll Point" value="0">
-<br><br>
-<input id="currentStamp" placeholder="Current Stamp Point" value="0">
-<br><br>
-<input id="fellows" placeholder="Operating Fellows (optional)" value="0">
 </div>
 
+<!-- Player Setup -->
 <div class="card">
-<h2>🍡 Sakuramochi</h2>
+<h3>⚡ Player Setup</h3>
 
+<div class="input-group">
+<label>Current Sakura Coin (Stamp Point)</label>
+<input id="currentStamp" value="0">
+</div>
+
+<div class="input-group">
+<label>Current Stroll & Stamina (1 = 1 Stroll)</label>
+<input id="currentStamina" value="0">
+</div>
+
+</div>
+
+<!-- Sakuramochi -->
+<div class="card">
+<h3>🍡 Sakuramochi in Storage</h3>
+
+<div class="row">
+<button onmousedown="hold('mochi',-1)" onmouseup="stop()">-</button>
 <input id="mochi" value="0">
+<button onmousedown="hold('mochi',1)" onmouseup="stop()">+</button>
+</div>
 
 <div class="result" id="mochiResult"></div>
 </div>
 
+<!-- Target -->
 <div class="card">
-<h2>💎 Crystal Packs</h2>
-
-<div id="packInfo"></div>
-
-<div class="pack">
-199 Pack
-<input id="p199" value="0">
-<div class="limit" id="l199"></div>
-</div>
-
-<div class="pack">
-988 Pack
-<input id="p988" value="0">
-<div class="limit" id="l988"></div>
-</div>
-
-<div class="pack">
-1988 Pack
-<input id="p1988" value="0">
-<div class="limit" id="l1988"></div>
-</div>
-
-</div>
-
-<div class="card">
-<h2>🎯 Target Score</h2>
-
+<h3>🎯 Target Sakura Coin</h3>
 <input id="target" value="7500">
-
 <div class="result" id="targetResult"></div>
+</div>
+
+</div>
+
+<!-- Crystal Packs -->
+<div class="card">
+<h3>💎 Crystal Packs</h3>
+
+<div class="pack">
+<b>199 Pack = 6 Sakuramochi</b>
+<div class="row">
+<button onmousedown="hold('p199',-1,true)" onmouseup="stop()">-</button>
+<input id="p199" value="0">
+<button onmousedown="hold('p199',1,true)" onmouseup="stop()">+</button>
+</div>
+<div id="l199" class="small"></div>
+</div>
+
+<div class="pack">
+<b>988 Pack = 12 Sakuramochi</b>
+<div class="row">
+<button onmousedown="hold('p988',-1,true)" onmouseup="stop()">-</button>
+<input id="p988" value="0">
+<button onmousedown="hold('p988',1,true)" onmouseup="stop()">+</button>
+</div>
+<div id="l988" class="small"></div>
+</div>
+
+<div class="pack">
+<b>1988 Pack = 18 Sakuramochi</b>
+<div class="row">
+<button onmousedown="hold('p1988',-1,true)" onmouseup="stop()">-</button>
+<input id="p1988" value="0">
+<button onmousedown="hold('p1988',1,true)" onmouseup="stop()">+</button>
+</div>
+<div id="l1988" class="small"></div>
+</div>
+
+</div>
+
+<!-- Kagura -->
+<div class="card">
+<h3>🦊 Kagura Dance (Coming Soon)</h3>
+<div class="small">Formula not finalized yet.</div>
 </div>
 
 </div>
@@ -174,69 +197,100 @@ color:#666;
 
 let interval;
 
-function hold(btn, id, delta){
-change(id, delta)
-interval = setInterval(()=>change(id, delta),150)
+function hold(id, delta, isPack=false){
+change(id, delta, isPack)
+interval=setInterval(()=>change(id, delta, isPack),120)
 }
 
-function stop(){
-clearInterval(interval)
-}
+function stop(){clearInterval(interval)}
 
-function change(id, delta){
-let el = document.getElementById(id)
-let val = parseInt(el.value)||0
-val += delta
+function get(id){return parseInt(document.getElementById(id).value)||0}
+
+function change(id, delta, isPack){
+let el=document.getElementById(id)
+let val=get(id)+delta
+
 if(val<0) val=0
-el.value = val
+
+if(isPack){
+let max=currentMaxPack()
+if(val>max) val=max
+}
+
+el.value=val
 update()
 }
 
-function get(id){
-return parseInt(document.getElementById(id).value)||0
+function currentMaxPack(){
+let h=get("hours")
+let m=get("minutes")
+let total=h+(m/60)
+let days=Math.ceil(total/24)
+return days*3
 }
 
 function update(){
 
-let h = get("hours")
-let m = get("minutes")
+let h=get("hours")
+let m=get("minutes")
 
-let totalHours = h + m/60
-let days = Math.ceil(totalHours/24)
+let totalMin=h*60+m
+let regen=Math.floor(totalMin/20)-1
+if(regen<0) regen=0
 
-let maxPack = days * 3
+document.getElementById("timeResult").innerHTML=
+"Remaining Minutes: "+totalMin+"<br>"+
+"Regenerate Stamina: "+regen
 
-document.getElementById("l199").innerText = "Max: "+maxPack
-document.getElementById("l988").innerText = "Max: "+maxPack
-document.getElementById("l1988").innerText = "Max: "+maxPack
+let max=currentMaxPack()
 
-document.getElementById("timeResult").innerHTML =
-"Estimated Buy Days: "+days
+document.getElementById("l199").innerText="Max: "+max
+document.getElementById("l988").innerText="Max: "+max
+document.getElementById("l1988").innerText="Max: "+max
 
 // Mochi
-let mochi = get("mochi")
-let stamina = mochi * 5
-let stamp = stamina * 200
+let mochi=get("mochi")
+let staminaMochi=mochi*5
+let coinMochi=staminaMochi*200
 
-document.getElementById("mochiResult").innerHTML =
-"+ "+stamina+" Stroll<br>+ "+stamp+" Stamp Point"
+document.getElementById("mochiResult").innerHTML=
+"+ "+staminaMochi+" Stroll<br>+ "+coinMochi+" Sakura Coin"
+
+// Pack → Mochi
+let p199=get("p199")*6
+let p988=get("p988")*12
+let p1988=get("p1988")*18
+
+let packMochi=p199+p988+p1988
+let packStamina=packMochi*5
+
+// Total
+let totalStamina=
+get("currentStamina")+
+regen+
+staminaMochi+
+packStamina
+
+let totalCoin=
+get("currentStamp")+
+(totalStamina*200)
 
 // Target
-let current = get("currentStamp")
-let target = get("target")
-
-let need = target - current
+let target=get("target")
+let need=target-totalCoin
 if(need<0) need=0
 
-let strollNeed = Math.ceil(need/200)
+let strollNeed=Math.ceil(need/200)
 
-document.getElementById("targetResult").innerHTML =
-"Need: "+need+" Stamp Point<br>≈ "+strollNeed+" Stroll"
+document.getElementById("targetResult").innerHTML=
+"Total Sakura Coin: "+totalCoin+"<br>"+
+"Need: "+need+"<br>"+
+"≈ "+strollNeed+" Stroll"
 
 }
 
 document.querySelectorAll("input").forEach(i=>{
-i.addEventListener("input", update)
+i.addEventListener("input",update)
 })
 
 update()
