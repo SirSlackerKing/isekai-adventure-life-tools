@@ -28,18 +28,9 @@ h3{margin:0 0 10px 0;}
 
 .input-group{margin-bottom:10px;}
 
-label{
-font-size:13px;
-opacity:.8;
-display:block;
-margin-bottom:4px;
-}
+label{font-size:13px;opacity:.8;display:block;margin-bottom:4px;}
 
-.row{
-display:flex;
-gap:5px;
-align-items:center;
-}
+.row{display:flex;gap:5px;align-items:center;}
 
 input{
 flex:1;
@@ -59,17 +50,34 @@ cursor:pointer;
 touch-action: manipulation;
 }
 
+button.secondary{
+background:#64748b;
+}
+
 .result{
 background:#f1f5f9;
 padding:10px;
 border-radius:8px;
 font-size:14px;
+margin-top:8px;
+}
+
+.highlight{
+background:#e0f2fe;
+padding:10px;
+border-radius:10px;
+margin-top:10px;
+font-weight:600;
 }
 
 .small{font-size:12px;opacity:.7;}
-
 .pack{margin-bottom:10px;}
 
+.actions{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
 </style>
 </head>
 
@@ -83,57 +91,47 @@ font-size:14px;
 <div class="card">
 <h3>⏳ Remaining Time</h3>
 
-<div class="input-group">
 <label>Hours</label>
 <div class="row">
 <button onmousedown="hold('hours',-1)" onmouseup="stop()">-</button>
-<input id="hours" value="24">
+<input id="hours">
 <button onmousedown="hold('hours',1)" onmouseup="stop()">+</button>
 </div>
-</div>
 
-<div class="input-group">
 <label>Minutes</label>
 <div class="row">
 <button onmousedown="hold('minutes',-1)" onmouseup="stop()">-</button>
-<input id="minutes" value="0">
+<input id="minutes">
 <button onmousedown="hold('minutes',1)" onmouseup="stop()">+</button>
-</div>
 </div>
 
 <div class="result" id="timeResult"></div>
 
 <div class="small">
 * Stamina regenerates every 20 minutes.<br>
-The last stamina may regenerate exactly when the event ends and cannot be used.<br>
-This calculator subtracts 1 stamina to avoid overestimating.
+Last regen may be unusable.<br>
+Subtracts 1 stamina to avoid overestimate.
+</div>
 </div>
 
-</div>
-
-<!-- Player Setup -->
+<!-- Player -->
 <div class="card">
 <h3>⚡ Player Setup</h3>
 
-<div class="input-group">
-<label>Current Sakura Coin (Stamp Point)</label>
-<input id="currentStamp" value="0">
+<label>Current Sakura Coin</label>
+<input id="currentStamp">
+
+<label>Current Stroll & Stamina (1 = 1)</label>
+<input id="currentStamina">
 </div>
 
-<div class="input-group">
-<label>Current Stroll & Stamina (1 = 1 Stroll)</label>
-<input id="currentStamina" value="0">
-</div>
-
-</div>
-
-<!-- Sakuramochi -->
+<!-- Mochi -->
 <div class="card">
 <h3>🍡 Sakuramochi in Storage</h3>
 
 <div class="row">
 <button onmousedown="hold('mochi',-1)" onmouseup="stop()">-</button>
-<input id="mochi" value="0">
+<input id="mochi">
 <button onmousedown="hold('mochi',1)" onmouseup="stop()">+</button>
 </div>
 
@@ -143,13 +141,13 @@ This calculator subtracts 1 stamina to avoid overestimating.
 <!-- Target -->
 <div class="card">
 <h3>🎯 Target Sakura Coin</h3>
-<input id="target" value="7500">
+<input id="target">
 <div class="result" id="targetResult"></div>
 </div>
 
 </div>
 
-<!-- Crystal Packs -->
+<!-- Packs -->
 <div class="card">
 <h3>💎 Crystal Packs</h3>
 
@@ -157,7 +155,7 @@ This calculator subtracts 1 stamina to avoid overestimating.
 <b>199 Pack = 6 Sakuramochi</b>
 <div class="row">
 <button onmousedown="hold('p199',-1,true)" onmouseup="stop()">-</button>
-<input id="p199" value="0">
+<input id="p199">
 <button onmousedown="hold('p199',1,true)" onmouseup="stop()">+</button>
 </div>
 <div id="l199" class="small"></div>
@@ -167,7 +165,7 @@ This calculator subtracts 1 stamina to avoid overestimating.
 <b>988 Pack = 12 Sakuramochi</b>
 <div class="row">
 <button onmousedown="hold('p988',-1,true)" onmouseup="stop()">-</button>
-<input id="p988" value="0">
+<input id="p988">
 <button onmousedown="hold('p988',1,true)" onmouseup="stop()">+</button>
 </div>
 <div id="l988" class="small"></div>
@@ -177,10 +175,17 @@ This calculator subtracts 1 stamina to avoid overestimating.
 <b>1988 Pack = 18 Sakuramochi</b>
 <div class="row">
 <button onmousedown="hold('p1988',-1,true)" onmouseup="stop()">-</button>
-<input id="p1988" value="0">
+<input id="p1988">
 <button onmousedown="hold('p1988',1,true)" onmouseup="stop()">+</button>
 </div>
 <div id="l1988" class="small"></div>
+</div>
+
+<div class="highlight" id="summary"></div>
+
+<div class="actions">
+<button onclick="copyResult()">Copy Result</button>
+<button class="secondary" onclick="resetAll()">Reset</button>
 </div>
 
 </div>
@@ -188,52 +193,65 @@ This calculator subtracts 1 stamina to avoid overestimating.
 <!-- Kagura -->
 <div class="card">
 <h3>🦊 Kagura Dance (Coming Soon)</h3>
-<div class="small">Formula not finalized yet.</div>
+<div class="small">Waiting for final formula.</div>
 </div>
 
 </div>
 
 <script>
-
 let interval;
 
-function hold(id, delta, isPack=false){
-change(id, delta, isPack)
-interval=setInterval(()=>change(id, delta, isPack),120)
+const inputs = [
+"hours","minutes","currentStamp","currentStamina",
+"mochi","target","p199","p988","p1988"
+]
+
+// Load
+inputs.forEach(id=>{
+let v = localStorage.getItem(id)
+if(v!==null) document.getElementById(id).value = v
+})
+
+// Save
+function save(){
+inputs.forEach(id=>{
+localStorage.setItem(id, document.getElementById(id).value)
+})
+}
+
+function hold(id,delta,isPack=false){
+change(id,delta,isPack)
+interval=setInterval(()=>change(id,delta,isPack),120)
 }
 
 function stop(){clearInterval(interval)}
 
 function get(id){return parseInt(document.getElementById(id).value)||0}
 
-function change(id, delta, isPack){
-let el=document.getElementById(id)
+function change(id,delta,isPack){
 let val=get(id)+delta
-
 if(val<0) val=0
 
 if(isPack){
-let max=currentMaxPack()
+let max=maxPack()
 if(val>max) val=max
 }
 
-el.value=val
+document.getElementById(id).value=val
 update()
 }
 
-function currentMaxPack(){
-let h=get("hours")
-let m=get("minutes")
-let total=h+(m/60)
-let days=Math.ceil(total/24)
+function maxPack(){
+let h=get("hours"), m=get("minutes")
+let days=Math.ceil((h+m/60)/24)
 return days*3
 }
 
 function update(){
 
-let h=get("hours")
-let m=get("minutes")
+save()
 
+let h=get("hours"), m=get("minutes")
 let totalMin=h*60+m
 let regen=Math.floor(totalMin/20)-1
 if(regen<0) regen=0
@@ -242,51 +260,52 @@ document.getElementById("timeResult").innerHTML=
 "Remaining Minutes: "+totalMin+"<br>"+
 "Regenerate Stamina: "+regen
 
-let max=currentMaxPack()
-
-document.getElementById("l199").innerText="Max: "+max
-document.getElementById("l988").innerText="Max: "+max
-document.getElementById("l1988").innerText="Max: "+max
+let max=maxPack()
+l199.innerText="Max: "+max
+l988.innerText="Max: "+max
+l1988.innerText="Max: "+max
 
 // Mochi
 let mochi=get("mochi")
 let staminaMochi=mochi*5
 let coinMochi=staminaMochi*200
+mochiResult.innerHTML="+ "+staminaMochi+" Stroll<br>+ "+coinMochi+" Coin"
 
-document.getElementById("mochiResult").innerHTML=
-"+ "+staminaMochi+" Stroll<br>+ "+coinMochi+" Sakura Coin"
-
-// Pack → Mochi
-let p199=get("p199")*6
-let p988=get("p988")*12
-let p1988=get("p1988")*18
-
-let packMochi=p199+p988+p1988
+// Pack
+let packMochi=get("p199")*6 + get("p988")*12 + get("p1988")*18
 let packStamina=packMochi*5
 
 // Total
-let totalStamina=
-get("currentStamina")+
-regen+
-staminaMochi+
-packStamina
-
-let totalCoin=
-get("currentStamp")+
-(totalStamina*200)
+let totalStamina=get("currentStamina")+regen+staminaMochi+packStamina
+let totalCoin=get("currentStamp")+(totalStamina*200)
 
 // Target
 let target=get("target")
 let need=target-totalCoin
 if(need<0) need=0
-
 let strollNeed=Math.ceil(need/200)
 
-document.getElementById("targetResult").innerHTML=
-"Total Sakura Coin: "+totalCoin+"<br>"+
+targetResult.innerHTML=
+"Total: "+totalCoin+"<br>"+
 "Need: "+need+"<br>"+
 "≈ "+strollNeed+" Stroll"
 
+// Summary
+summary.innerHTML=
+"Total Stamina: "+totalStamina+"<br>"+
+"Total Sakura Coin: "+totalCoin
+
+}
+
+function copyResult(){
+let text = summary.innerText
+navigator.clipboard.writeText(text)
+alert("Copied!")
+}
+
+function resetAll(){
+localStorage.clear()
+location.reload()
 }
 
 document.querySelectorAll("input").forEach(i=>{
@@ -294,7 +313,6 @@ i.addEventListener("input",update)
 })
 
 update()
-
 </script>
 
 </body>
