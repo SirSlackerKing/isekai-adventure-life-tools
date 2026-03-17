@@ -2,14 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <title>Touno Island Tools</title>
 
 <style>
 *{box-sizing:border-box;font-family:Segoe UI;}
-body{margin:0;background:#0f172a;color:#fff;display:flex;justify-content:center;}
+body{
+margin:0;
+background:#0f172a;
+color:#fff;
+display:flex;
+justify-content:center;
+touch-action:manipulation;
+}
 .container{width:100%;max-width:900px;padding:16px;}
+
 .card{
 background:#1e293b;
 border-radius:16px;
@@ -17,32 +25,68 @@ padding:16px;
 margin-bottom:16px;
 box-shadow:0 4px 20px rgba(0,0,0,0.3);
 }
-h2{margin-top:0;}
-input{
-width:100%;
-padding:10px;
-margin:6px 0;
-border-radius:10px;
-border:none;
-outline:none;
+
+h2{margin:0 0 10px;}
+
+.input-group{
+display:flex;
+align-items:center;
+gap:8px;
+margin-bottom:10px;
 }
-.row{display:flex;gap:10px;}
-.row input{flex:1;}
-button{
+
+.input-group input{
+flex:1;
 padding:10px;
+border-radius:10px;
+border:none;
+text-align:center;
+font-size:16px;
+}
+
+.step-btn{
+width:36px;
+height:36px;
 border:none;
 border-radius:10px;
+background:#6366f1;
+color:white;
+font-size:18px;
 cursor:pointer;
+user-select:none;
+touch-action:manipulation;
 }
-.btn{background:#38bdf8;color:black;width:100%;}
+
+.step-btn:active{
+transform:scale(0.95);
+}
+
+.btn{
+padding:12px;
+border:none;
+border-radius:12px;
+background:#38bdf8;
+color:black;
+width:100%;
+font-size:16px;
+margin-top:10px;
+}
+
 .result{
 background:#020617;
 padding:12px;
 border-radius:10px;
 margin-top:10px;
 white-space:pre-line;
+font-size:14px;
 }
-.small{font-size:12px;color:#94a3b8;margin-top:8px;}
+
+.small{
+font-size:12px;
+color:#94a3b8;
+margin-top:8px;
+line-height:1.5;
+}
 </style>
 </head>
 
@@ -51,47 +95,74 @@ white-space:pre-line;
 
 <!-- TIME -->
 <div class="card">
-<h2>⏳ Time</h2>
-<div class="row">
-<input id="days" type="number" placeholder="Days">
-<input id="hours" type="number" placeholder="Hours">
-<input id="minutes" type="number" placeholder="Minutes">
+<h2>⏳ Remaining Time</h2>
+
+<div class="input-group">
+<button class="step-btn" onmousedown="hold(this,'hours',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'hours',-1)" ontouchend="stopHold()">-</button>
+<input id="hours" type="number" value="0">
+<button class="step-btn" onmousedown="hold(this,'hours',1)" onmouseup="stopHold()" ontouchstart="hold(this,'hours',1)" ontouchend="stopHold()">+</button>
+
+<span>Hours</span>
+</div>
+
+<div class="input-group">
+<button class="step-btn" onmousedown="hold(this,'minutes',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'minutes',-1)" ontouchend="stopHold()">-</button>
+<input id="minutes" type="number" value="0">
+<button class="step-btn" onmousedown="hold(this,'minutes',1)" onmouseup="stopHold()" ontouchstart="hold(this,'minutes',1)" ontouchend="stopHold()">+</button>
+
+<span>Minutes</span>
 </div>
 </div>
 
-<!-- PROGRESS -->
+<!-- STAMP -->
 <div class="card">
-<h2>📊 Current Progress</h2>
-<input id="progress" type="number" placeholder="Stroll + Stamina (points)">
+<h2>🎯 Stamp Point</h2>
+<input id="progress" type="number" placeholder="Current Stamp Point">
 </div>
 
 <!-- SPEED -->
 <div class="card">
 <h2>⚡ Operating Fellows</h2>
-<input id="speed" type="number" placeholder="Points per minute">
+<input id="speed" type="number" placeholder="Stamp Point per minute">
 </div>
 
 <!-- STAMINA -->
 <div class="card">
-<h2>🚶 Stamina Usage</h2>
+<h2>🚶 Stroll & Stamina</h2>
+
 <input id="stamina" type="number" placeholder="Total Stamina">
-<input id="cost" type="number" placeholder="Stamina per stroll (default 10)">
+
+<input id="cost" type="number" placeholder="Stamina Cost per 1 Stroll (e.g. 10)">
 </div>
 
 <!-- PACK -->
 <div class="card">
-<h2>🎁 Pack</h2>
+<h2>🎁 Crystal Pack</h2>
 
-<div class="row">
+<div class="input-group">
+<button class="step-btn" onmousedown="hold(this,'p199',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'p199',-1)" ontouchend="stopHold()">-</button>
 <input id="p199" type="number" value="0">
+<button class="step-btn" onmousedown="hold(this,'p199',1)" onmouseup="stopHold()" ontouchstart="hold(this,'p199',1)" ontouchend="stopHold()">+</button>
+<span>199</span>
+</div>
+
+<div class="input-group">
+<button class="step-btn" onmousedown="hold(this,'p988',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'p988',-1)" ontouchend="stopHold()">-</button>
 <input id="p988" type="number" value="0">
+<button class="step-btn" onmousedown="hold(this,'p988',1)" onmouseup="stopHold()" ontouchstart="hold(this,'p988',1)" ontouchend="stopHold()">+</button>
+<span>988</span>
+</div>
+
+<div class="input-group">
+<button class="step-btn" onmousedown="hold(this,'p1988',-1)" onmouseup="stopHold()" ontouchstart="hold(this,'p1988',-1)" ontouchend="stopHold()">-</button>
 <input id="p1988" type="number" value="0">
+<button class="step-btn" onmousedown="hold(this,'p1988',1)" onmouseup="stopHold()" ontouchstart="hold(this,'p1988',1)" ontouchend="stopHold()">+</button>
+<span>1988</span>
 </div>
 
 <div class="small">
-* Each pack can be purchased 3 times per day<br>
-* Purchase limit increases based on remaining time<br>
-* 199 = 6 Mochi | 988 = 12 Mochi | 1988 = 18 Mochi
+* 199 = 6 Mochi | 988 = 12 Mochi | 1988 = 18 Mochi<br>
+* Each pack can be purchased 3 times per day
 </div>
 </div>
 
@@ -106,86 +177,80 @@ function get(id){
 return parseFloat(document.getElementById(id).value)||0
 }
 
-// auto calculate ตอนพิมพ์
+// HOLD BUTTON
+let interval=null
+function hold(btn,id,dir){
+change(id,dir)
+interval=setInterval(()=>change(id,dir),150)
+}
+function stopHold(){
+clearInterval(interval)
+}
+
+function change(id,dir){
+let el=document.getElementById(id)
+let val=parseFloat(el.value)||0
+val+=dir
+if(val<0) val=0
+el.value=val
+calculate()
+}
+
+// AUTO CALC
 document.querySelectorAll("input").forEach(i=>{
 i.addEventListener("input",calculate)
 })
 
 function calculate(){
 
-// TIME
-let days=get("days")
 let hours=get("hours")
 let minutes=get("minutes")
+let totalMinutes = hours*60 + minutes
 
-let totalMinutes = days*1440 + hours*60 + minutes
-
-// SPEED (AFK)
 let speed=get("speed")
 let pointsFromSpeed = speed * totalMinutes
 
-// STAMINA → STROLL
 let stamina=get("stamina")
 let cost=get("cost") || 10
 
 let strolls = Math.floor(stamina / cost)
 let pointsFromStroll = strolls * 200
 
-// CURRENT PROGRESS
 let progress=get("progress")
 
-// TOTAL POINTS
 let totalPoints = pointsFromSpeed + pointsFromStroll + progress
 
-// COIN
 let coins = Math.floor(totalPoints / 200000) * 10
 
 let remainder = totalPoints % 200000
-let need = 200000 - remainder
-if(remainder===0) need = 0
+let need = remainder===0 ? 0 : 200000 - remainder
 
-// POINTS / DAY
-let pointsPerDay = speed * 1440
-
-// PACK MOCHI
 let p199=get("p199")
 let p988=get("p988")
 let p1988=get("p1988")
 
 let totalMochi = p199*6 + p988*12 + p1988*18
 
-// OUTPUT
-let text = `
-⏳ Total Minutes: ${totalMinutes.toLocaleString()}
-
-📊 Current Progress: ${progress.toLocaleString()}
-
-⚡ From Operating Fellows: ${Math.floor(pointsFromSpeed).toLocaleString()}
-🚶 From Stamina: ${pointsFromStroll.toLocaleString()} (${strolls.toLocaleString()} strolls)
-
-📅 Points per day (AFK): ${Math.floor(pointsPerDay).toLocaleString()}
-
-🎯 Total Points: ${Math.floor(totalPoints).toLocaleString()}
+document.getElementById("output").innerText = `
+🎯 Total Stamp Point: ${Math.floor(totalPoints).toLocaleString()}
 
 🪙 Sakura Coin: ${coins}
+📈 Next 10 Coins in: ${need.toLocaleString()} points
 
-📈 Points to next 10 coins: ${need.toLocaleString()}
+⚡ From Operating Fellows: ${Math.floor(pointsFromSpeed).toLocaleString()}
+🚶 From Stroll & Stamina: ${pointsFromStroll.toLocaleString()}
 
-🎁 Total Mochi: ${totalMochi}
+🎁 Mochi: ${totalMochi}
 
 ------------------------
 Notes:
 - Uses minimum 200 points per stroll
-- Each stroll may give 200–250 points
-- Assumes you claim regularly
-- Random buffs (extra stamina / points) are NOT included
-- Actual result may be higher
+- Actual stroll may give 200–250
+- Random buffs are NOT included
+- Assumes regular claiming
 `
-
-document.getElementById("output").innerText=text
 }
 
-// run ครั้งแรก
 calculate()
 </script>
 
