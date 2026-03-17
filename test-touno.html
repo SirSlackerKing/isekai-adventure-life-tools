@@ -62,7 +62,7 @@ white-space:pre-line;
 <!-- PROGRESS -->
 <div class="card">
 <h2>📊 Current Progress</h2>
-<input id="progress" type="number" placeholder="Stroll + Stamina">
+<input id="progress" type="number" placeholder="Stroll + Stamina (points)">
 </div>
 
 <!-- SPEED -->
@@ -75,7 +75,7 @@ white-space:pre-line;
 <div class="card">
 <h2>🚶 Stamina Usage</h2>
 <input id="stamina" type="number" placeholder="Total Stamina">
-<input id="cost" type="number" placeholder="Stamina per stroll (e.g. 10)">
+<input id="cost" type="number" placeholder="Stamina per stroll (default 10)">
 </div>
 
 <!-- PACK -->
@@ -106,6 +106,11 @@ function get(id){
 return parseFloat(document.getElementById(id).value)||0
 }
 
+// auto calculate ตอนพิมพ์
+document.querySelectorAll("input").forEach(i=>{
+i.addEventListener("input",calculate)
+})
+
 function calculate(){
 
 // TIME
@@ -115,7 +120,7 @@ let minutes=get("minutes")
 
 let totalMinutes = days*1440 + hours*60 + minutes
 
-// SPEED POINTS
+// SPEED (AFK)
 let speed=get("speed")
 let pointsFromSpeed = speed * totalMinutes
 
@@ -126,8 +131,11 @@ let cost=get("cost") || 10
 let strolls = Math.floor(stamina / cost)
 let pointsFromStroll = strolls * 200
 
+// CURRENT PROGRESS
+let progress=get("progress")
+
 // TOTAL POINTS
-let totalPoints = pointsFromSpeed + pointsFromStroll
+let totalPoints = pointsFromSpeed + pointsFromStroll + progress
 
 // COIN
 let coins = Math.floor(totalPoints / 200000) * 10
@@ -135,6 +143,9 @@ let coins = Math.floor(totalPoints / 200000) * 10
 let remainder = totalPoints % 200000
 let need = 200000 - remainder
 if(remainder===0) need = 0
+
+// POINTS / DAY
+let pointsPerDay = speed * 1440
 
 // PACK MOCHI
 let p199=get("p199")
@@ -147,8 +158,12 @@ let totalMochi = p199*6 + p988*12 + p1988*18
 let text = `
 ⏳ Total Minutes: ${totalMinutes.toLocaleString()}
 
+📊 Current Progress: ${progress.toLocaleString()}
+
 ⚡ From Operating Fellows: ${Math.floor(pointsFromSpeed).toLocaleString()}
-🚶 From Stamina: ${pointsFromStroll.toLocaleString()}
+🚶 From Stamina: ${pointsFromStroll.toLocaleString()} (${strolls.toLocaleString()} strolls)
+
+📅 Points per day (AFK): ${Math.floor(pointsPerDay).toLocaleString()}
 
 🎯 Total Points: ${Math.floor(totalPoints).toLocaleString()}
 
@@ -161,13 +176,17 @@ let text = `
 ------------------------
 Notes:
 - Uses minimum 200 points per stroll
+- Each stroll may give 200–250 points
 - Assumes you claim regularly
-- Random buffs are NOT included
+- Random buffs (extra stamina / points) are NOT included
 - Actual result may be higher
 `
 
 document.getElementById("output").innerText=text
 }
+
+// run ครั้งแรก
+calculate()
 </script>
 
 </body>
