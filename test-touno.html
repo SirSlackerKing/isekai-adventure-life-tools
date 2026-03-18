@@ -27,10 +27,23 @@ padding:12px;
 
 /* HEADER */
 .header{
-position:relative;
-text-align:left;
+display:flex;
+flex-direction:column;
+align-items:center;
 margin-bottom:14px;
 padding-top:10px;
+}
+
+.header-top{
+width:100%;
+text-align:center;
+}
+
+.header-bottom{
+width:100%;
+display:flex;
+justify-content:flex-start;
+margin-top:6px;
 }
 
 .actionBtn{
@@ -395,14 +408,18 @@ border-radius:8px;
 
 <div class="header">
 
+<div class="header-top">
 <h1>Touno Island Calculator</h1>
 <div class="small">Dev by @thinking.j17 | cozyneko guild S12</div>
-<div style="display:flex;justify-content:flex-start;gap:10px;margin-bottom:10px;">
+</div>
 
-<button class="actionBtn homeBtn"
+<div class="header-bottom">
+<button class="actionBtn"
 onclick="location.href='index.html'">
 🏠 Home
 </button>
+</div>
+
 </div>
 
 <!-- TIME -->
