@@ -1,144 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-
-<title>Touno Island Calculator V4</title>
-
 <style>
-*{
-box-sizing:border-box;
-font-family:Segoe UI;
-}
-
 body{
+font-family:Segoe UI;
 margin:0;
 background:#eef2ff;
-color:#111;
 }
 
 .container{
-max-width:1100px;
+max-width:600px;
 margin:auto;
 padding:15px;
-}
-
-h2{
-margin:0 0 10px 0;
-}
-
-.section{
-margin-bottom:18px;
 }
 
 .card{
 background:white;
 border-radius:14px;
 padding:15px;
-box-shadow:0 6px 20px rgba(0,0,0,0.08);
+margin-bottom:15px;
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
 }
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
+h2{
+margin:0 0 10px 0;
 }
 
-label{
-font-size:13px;
-opacity:.7;
+.big{
+font-size:32px;
+text-align:center;
+font-weight:bold;
 }
 
 .row{
 display:flex;
-gap:6px;
+gap:5px;
 margin-bottom:8px;
 }
 
 input{
 flex:1;
 padding:10px;
-font-size:16px;
-border-radius:8px;
-border:1px solid #ccc;
 text-align:center;
+font-size:16px;
 }
 
 button{
 padding:10px;
-font-size:16px;
 border:none;
 border-radius:8px;
 background:#6366f1;
 color:white;
-cursor:pointer;
 touch-action:manipulation;
 }
 
-.secondary{
-background:#64748b;
-}
-
-.big{
-font-size:30px;
-font-weight:bold;
-text-align:center;
-margin:10px 0;
-}
-
-.highlight{
-font-size:20px;
-font-weight:bold;
-text-align:center;
-margin:6px 0;
-}
-
-.flow{
-text-align:center;
-font-size:14px;
-margin:6px 0;
-opacity:.8;
-}
-
 .progress{
-height:12px;
-background:#e5e7eb;
-border-radius:6px;
+height:10px;
+background:#ddd;
+border-radius:5px;
 overflow:hidden;
-margin:10px 0;
 }
 
 .bar{
 height:100%;
 background:#22c55e;
 width:0%;
-}
-
-.result{
-background:#f1f5f9;
-padding:10px;
-border-radius:8px;
-margin-top:10px;
-font-size:14px;
-}
-
-.actions{
-display:flex;
-gap:10px;
-margin-top:10px;
-}
-
-.desc{
-font-size:12px;
-opacity:.7;
-margin-bottom:8px;
-}
-
-@media(max-width:768px){
-.grid{
-grid-template-columns:1fr;
-}
 }
 </style>
 </head>
@@ -147,126 +74,51 @@ grid-template-columns:1fr;
 
 <div class="container">
 
-<!-- RESULT (TOP PRIORITY) -->
-<div class="section card">
-<h2>🪙 Total Sakura Coin</h2>
-<div class="desc">ผลลัพธ์สุดท้ายจากการคำนวณทั้งหมด</div>
-
-<div class="big" id="coinBox">0</div>
+<!-- RESULT -->
+<div class="card">
+<h2>🪙 Your Coin</h2>
+<div class="big" id="coin">0</div>
 
 <div class="progress"><div class="bar" id="bar"></div></div>
-<div class="highlight" id="progressText"></div>
+<div id="progressText" style="text-align:center;"></div>
 </div>
 
-<div class="grid">
-
-<!-- INPUT ZONE -->
+<!-- STEP 1 -->
 <div class="card">
-<h2>📥 Resource Input</h2>
-<div class="desc">ทรัพยากรทั้งหมดที่คุณมีในปัจจุบัน</div>
+<h2>① Your Resources</h2>
 
-<label>Current Stamp Point</label>
-<input id="stamp">
-
-<label>Current Stamina</label>
+Stamina
 <input id="stamina">
 
-<hr>
+Stamp
+<input id="stamp">
 
-<h3>⏳ Time (Stamina Regen)</h3>
-<div class="desc">ทุก 20 นาที = +1 Stamina</div>
+Time (min)
+<input id="time">
 
-<div class="row">
-<button onmousedown="hold('h',-1)" onmouseup="stop()">-</button>
-<input id="h" placeholder="Hours">
-<button onmousedown="hold('h',1)" onmouseup="stop()">+</button>
-</div>
-
-<div class="row">
-<button onmousedown="hold('m',-1)" onmouseup="stop()">-</button>
-<input id="m" placeholder="Minutes">
-<button onmousedown="hold('m',1)" onmouseup="stop()">+</button>
-</div>
-
-<div class="result" id="timeBox"></div>
-
-<hr>
-
-<h3>🍡 Sakuramochi</h3>
-<div class="desc">1 Mochi = 5 Stamina</div>
-
-<div class="row">
-<button onmousedown="hold('mochi',-1)" onmouseup="stop()">-</button>
+Mochi
 <input id="mochi">
-<button onmousedown="hold('mochi',1)" onmouseup="stop()">+</button>
+
+Pack
+<input id="pack">
 </div>
 
-<div class="result" id="mochiBox"></div>
-
-<hr>
-
-<h3>💎 Crystal Packs</h3>
-<div class="desc">ซื้อได้ 3 ครั้ง / วัน</div>
-
-<div class="row">
-199 Pack
-<button onmousedown="hold('p1',-1,true)" onmouseup="stop()">-</button>
-<input id="p1">
-<button onmousedown="hold('p1',1,true)" onmouseup="stop()">+</button>
-</div>
-
-<div class="row">
-988 Pack
-<button onmousedown="hold('p2',-1,true)" onmouseup="stop()">-</button>
-<input id="p2">
-<button onmousedown="hold('p2',1,true)" onmouseup="stop()">+</button>
-</div>
-
-<div class="row">
-1988 Pack
-<button onmousedown="hold('p3',-1,true)" onmouseup="stop()">-</button>
-<input id="p3">
-<button onmousedown="hold('p3',1,true)" onmouseup="stop()">+</button>
-</div>
-
-</div>
-
-<!-- CONVERSION + PROGRESSION -->
+<!-- STEP 2 -->
 <div class="card">
-<h2>🔄 Conversion Flow</h2>
-<div class="desc">แสดงการแปลงค่าจาก Stamina → Stamp → Coin</div>
+<h2>② Conversion</h2>
 
-<div class="flow" id="flowBox"></div>
+<div id="flow"></div>
 
-<div class="highlight" id="staBox"></div>
-<div class="highlight" id="stampBox"></div>
+</div>
 
-<hr>
+<!-- STEP 3 -->
+<div class="card">
+<h2>③ Target</h2>
 
-<h2>🎯 Progress</h2>
-
-<label>Target Sakura Coin</label>
+Target Coin
 <input id="target">
 
-<div class="result" id="progressBox"></div>
-
-</div>
-
-</div>
-
-<!-- DECISION -->
-<div class="section card">
-<h2>🔥 Decision & Recommendation</h2>
-<div class="desc">คำแนะนำว่าควรทำอะไรต่อเพื่อให้ถึงเป้าหมาย</div>
-
-<div class="highlight" id="statusBox"></div>
-
-<div class="result" id="decisionBox"></div>
-
-<div class="actions">
-<button onclick="copy()">Copy</button>
-<button class="secondary" onclick="resetAll()">Reset</button>
-</div>
+<div id="need"></div>
 
 </div>
 
@@ -274,129 +126,50 @@ grid-template-columns:1fr;
 
 <script>
 
-let keys=["h","m","stamp","stamina","mochi","target","p1","p2","p3"]
-
-keys.forEach(k=>{
-let v=localStorage.getItem(k)
-if(v!==null) document.getElementById(k).value=v
-})
-
-function save(){
-keys.forEach(k=>{
-localStorage.setItem(k,document.getElementById(k).value)
-})
-}
-
-let t
-
-function hold(id,d,isPack){
-change(id,d,isPack)
-t=setInterval(()=>change(id,d,isPack),120)
-}
-function stop(){clearInterval(t)}
-
 function get(id){return parseInt(document.getElementById(id).value)||0}
-
-function maxPack(){
-let h=get("h"),m=get("m")
-return Math.ceil((h+m/60)/24)*3
-}
-
-function change(id,d,isPack){
-let v=get(id)+d
-if(v<0)v=0
-if(isPack){
-let max=maxPack()
-if(v>max)v=max
-}
-document.getElementById(id).value=v
-update()
-}
 
 function update(){
 
-save()
+let stamina=get("stamina")
+let stamp=get("stamp")
+let time=get("time")
+let mochi=get("mochi")
+let pack=get("pack")
 
-let totalMin=get("h")*60+get("m")
-let regen=Math.floor(totalMin/20)-1
-if(regen<0)regen=0
+let regen=Math.floor(time/20)
+let mochiSta=mochi*5
+let packSta=pack*30
 
-timeBox.innerHTML="Regen: +"+regen+" Stamina"
+let totalSta=stamina+regen+mochiSta+packSta
+let totalStamp=stamp+totalSta*200
 
-let mochiSta=get("mochi")*5
-mochiBox.innerHTML="+ "+mochiSta+" Stamina"
-
-let packSta=(get("p1")*6+get("p2")*12+get("p3")*18)*5
-
-let totalSta=get("stamina")+regen+mochiSta+packSta
-let totalStamp=get("stamp")+(totalSta*200)
-
-let exchange=Math.floor(totalStamp/200000)
-let coin=exchange*10
-let remain=totalStamp%200000
+let coin=Math.floor(totalStamp/200000)*10
 
 let target=get("target")
 
-// FLOW
-flowBox.innerHTML=
-totalSta+" Stamina → "+
-totalStamp+" Stamp → "+
-coin+" Coin"
+coinEl.innerText=coin
 
-// MAIN
-coinBox.innerHTML=coin
+flow.innerHTML=
+totalSta+" stamina → "+totalStamp+" stamp → "+coin+" coin"
 
-// PROGRESS
-let percent=target>0?(coin/target)*100:0
+let percent=target?coin/target*100:0
 if(percent>100)percent=100
+
 bar.style.width=percent+"%"
+progressText.innerText=coin+" / "+target
 
-progressText.innerHTML=
-coin+" / "+target+" ("+percent.toFixed(2)+"%)"
+let need=target-coin
+if(need<0)need=0
 
-progressBox.innerHTML=
-"Remaining Stamp: "+remain+" / 200,000<br>"+
-"Next Exchange Need: "+(200000-remain)+" Stamp"
-
-// STATUS
-let needCoin=target-coin
-if(needCoin<0)needCoin=0
-
-let status=coin>=target?"✅ Target Reached":"❌ Not Enough"
-statusBox.innerHTML=status
-
-// DECISION
-let decision=""
-
-if(coin>=target){
-decision="You already reached target."
-}else{
-let needSets=Math.ceil(needCoin/10)
-let needStampTotal=needSets*200000-remain
-let needStaTotal=Math.ceil(needStampTotal/200)
-
-decision=
-"Need "+needCoin+" Coin<br>"+
-"≈ "+needStampTotal+" Stamp<br>"+
-"≈ "+needStaTotal+" Stamina"
-}
-
-decisionBox.innerHTML=decision
-
-staBox.innerHTML="Total Stamina: "+totalSta
-stampBox.innerHTML="Total Stamp: "+totalStamp
+needEl.innerText="Need "+need+" coin"
 
 }
 
-function copy(){
-navigator.clipboard.writeText(decisionBox.innerText)
-alert("Copied")
-}
-
-function resetAll(){
-localStorage.clear()
-location.reload()
-}
+let coinEl=document.getElementById("coin")
+let flow=document.getElementById("flow")
+let bar=document.getElementById("bar")
+let progressText=document.getElementById("progressText")
+let needEl=document.getElementById("need")
 
 document.querySelectorAll("input").forEach(i=>{
 i.addEventListener("input",update)
