@@ -12,22 +12,6 @@ box-sizing:border-box;
 font-family:Segoe UI, system-ui, -apple-system;
 }
 
-.result{
-line-height:1.7;
-font-size:13.5px;
-}
-
-input:focus{
-outline:none;
-border:1px solid #6366f1;
-box-shadow:0 0 0 2px rgba(99,102,241,0.15);
-}
-  
-.result b{
-color:#4f46e5;
-font-weight:600;
-}
-  
 body{
 margin:0;
 background:#eef2ff;
@@ -60,18 +44,6 @@ border-radius:8px;
 background:#eef2ff;
 }
 
-.home{
-transition:all .15s ease;
-}
-
-.home:hover{
-background:#e0e7ff;
-}
-
-.home:active{
-transform:scale(0.95);
-}
-  
 h1{
 text-align:center;
 color:#3b4ba8;
@@ -90,8 +62,8 @@ font-size:20px;
 background:white;
 border-radius:16px;
 padding:16px;
-box-shadow:0 10px 30px rgba(0,0,0,0.12);
-border:1px solid #eef2ff;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+margin-bottom:14px;
 }
 
 /* TEXT */
@@ -551,8 +523,8 @@ border-radius:8px;
 <!-- ACTION -->
 <div class="card">
 <div class="actions">
-<button style="background:#4f46e5;">Copy Result</button>
-<button style="background:#e5e7eb;color:#111;">Reset</button>
+<button onclick="copy()">Copy Result</button>
+<button onclick="resetAll()">Reset</button>
 </div>
 </div>
 
