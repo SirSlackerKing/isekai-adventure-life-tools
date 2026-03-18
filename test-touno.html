@@ -559,12 +559,17 @@ coinBox.innerHTML=
 "Total Sakura Coin: "+totalCoin
 
 // KAGURA
-let score=get("base")*get("useCoin")
-kaguraBox.innerHTML="Faith: "+score
+let base=get("base") // หน่วย B
+let coin=get("useCoin")
+
+let score=base*coin // ยังเป็น B
+
+kaguraBox.innerHTML=
+base+" B × "+coin+" Coin = <b>"+formatBT(score)+"</b>"
 
 let needCoin=0
-if(get("targetPower")>0 && get("base")>0){
-needCoin=Math.ceil(get("targetPower")/get("base"))
+if(get("targetPower")>0 && base>0){
+needCoin=Math.ceil(get("targetPower")/base)
 }
 kaguraNeedBox.innerHTML="Needed Sakura Coin: "+needCoin
 
@@ -585,6 +590,14 @@ localStorage.clear()
 location.reload()
 }
 
+function formatBT(value){
+if(value >= 1000){
+return (value/1000).toFixed(3).replace(/\.?0+$/,"") + "T"
+}else{
+return value.toFixed(2).replace(/\.?0+$/,"") + "B"
+}
+}
+  
 document.querySelectorAll("input").forEach(i=>{
 i.addEventListener("input",update)
 })
