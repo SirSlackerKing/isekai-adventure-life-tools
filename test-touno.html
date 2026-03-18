@@ -7,50 +7,184 @@
 <title>Touno Island Calculator</title>
 
 <style>
-*{box-sizing:border-box;font-family:Segoe UI;}
-body{margin:0;background:#eef2ff;color:#111;}
-
-.container{max-width:900px;margin:auto;padding:15px;}
-
-h2{margin:0 0 10px 0;}
-.section{margin-bottom:18px;}
-
-.card{
-background:white;
-border-radius:14px;
-padding:15px;
-box-shadow:0 4px 15px rgba(0,0,0,0.08);
-margin-bottom:15px;
+*{
+box-sizing:border-box;
+font-family:Segoe UI, system-ui, -apple-system;
 }
 
-.row{display:flex;gap:6px;margin-bottom:8px;}
+body{
+margin:0;
+background:#eef2ff;
+color:#111;
+}
+
+/* CONTAINER */
+.container{
+max-width:720px;
+margin:auto;
+padding:12px;
+}
+
+/* HEADER */
+.header{
+text-align:center;
+margin-bottom:14px;
+}
+
+.home{
+font-size:14px;
+display:inline-block;
+margin-bottom:6px;
+cursor:pointer;
+color:#6366f1;
+}
+
+h2{
+margin:0 0 12px 0;
+font-size:20px;
+}
+
+/* CARD */
+.card{
+background:white;
+border-radius:16px;
+padding:16px;
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
+margin-bottom:14px;
+}
+
+/* TEXT */
+.small{
+font-size:12px;
+opacity:.65;
+line-height:1.5;
+}
+
+.big{
+font-size:28px;
+font-weight:bold;
+text-align:center;
+margin:14px 0;
+}
+
+/* FORM */
+label{
+display:block;
+font-size:13px;
+margin:10px 0 6px;
+opacity:.8;
+}
+
 input{
-flex:1;
-padding:10px;
+width:100%;
+padding:12px;
 font-size:16px;
-border-radius:8px;
-border:1px solid #ccc;
+border-radius:10px;
+border:1px solid #d1d5db;
 text-align:center;
 }
 
+/* ROW ( + - controls ) */
+.row{
+display:flex;
+align-items:center;
+gap:8px;
+margin-bottom:10px;
+}
+
+.row input{
+flex:1;
+}
+
+/* BUTTON */
 button{
-padding:10px;
-font-size:16px;
+min-width:44px;
+height:44px;
+padding:0 12px;
+font-size:18px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 background:#6366f1;
 color:white;
 cursor:pointer;
 touch-action:manipulation;
 }
 
-.small{font-size:12px;opacity:.7;}
-.big{font-size:26px;font-weight:bold;text-align:center;margin:10px 0;}
-.result{background:#f1f5f9;padding:10px;border-radius:8px;margin-top:10px;font-size:14px;}
-.actions{display:flex;gap:10px;margin-top:10px;}
+button:active{
+transform:scale(0.96);
+}
 
-.header{text-align:center;margin-bottom:10px;}
-.home{font-size:14px;display:inline-block;margin-bottom:5px;cursor:pointer;color:#6366f1;}
+/* RESULT BOX */
+.result{
+background:#f8fafc;
+padding:12px;
+border-radius:10px;
+margin-top:10px;
+font-size:14px;
+line-height:1.5;
+}
+
+/* ACTION BUTTONS */
+.actions{
+display:flex;
+gap:10px;
+margin-top:8px;
+}
+
+.actions button{
+flex:1;
+font-size:15px;
+}
+
+/* DIVIDER */
+hr{
+border:none;
+border-top:1px solid #eee;
+margin:14px 0;
+}
+
+/* PACK ROW LABEL ALIGN */
+.row{
+justify-content:space-between;
+}
+
+.row::before{
+content:attr(data-label);
+font-size:13px;
+opacity:.7;
+min-width:90px;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (max-width:480px){
+
+.container{
+padding:10px;
+}
+
+.card{
+padding:14px;
+}
+
+h2{
+font-size:18px;
+}
+
+.big{
+font-size:24px;
+}
+
+button{
+height:42px;
+font-size:16px;
+}
+
+input{
+font-size:16px;
+padding:11px;
+}
+
+}
 
 </style>
 </head>
