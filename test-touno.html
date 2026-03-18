@@ -18,12 +18,14 @@ background:#eef2ff;
 color:#111;
 }
 
+/* CONTAINER */
 .container{
 max-width:720px;
 margin:auto;
 padding:12px;
 }
 
+/* HEADER */
 .header{
 text-align:center;
 margin-bottom:14px;
@@ -42,6 +44,7 @@ margin:0 0 12px 0;
 font-size:20px;
 }
 
+/* CARD */
 .card{
 background:white;
 border-radius:16px;
@@ -50,6 +53,7 @@ box-shadow:0 6px 20px rgba(0,0,0,0.08);
 margin-bottom:14px;
 }
 
+/* TEXT */
 .small{
 font-size:12px;
 opacity:.65;
@@ -63,6 +67,7 @@ text-align:center;
 margin:14px 0;
 }
 
+/* FORM */
 label{
 display:block;
 font-size:13px;
@@ -70,6 +75,7 @@ margin:10px 0 6px;
 opacity:.8;
 }
 
+/* INPUT BASE */
 input{
 width:100%;
 padding:12px;
@@ -80,6 +86,7 @@ text-align:center;
 background:#fff;
 }
 
+/* ICON INPUT */
 .input-icon{
 display:flex;
 align-items:center;
@@ -108,6 +115,7 @@ font-size:15px;
 outline:none;
 }
 
+/* ROW */
 .row{
 display:flex;
 align-items:center;
@@ -119,10 +127,12 @@ margin-bottom:10px;
 flex:1;
 }
 
+/* TIME ROW (NEW) */
 .time-row{
 display:flex;
 align-items:center;
 gap:8px;
+justify-content:flex-start;
 }
 
 .time-box{
@@ -147,6 +157,7 @@ opacity:.7;
 margin-left:4px;
 }
 
+/* BUTTON */
 button{
 min-width:40px;
 height:40px;
@@ -168,17 +179,75 @@ transform:scale(0.96);
 .result{
 background:#f8fafc;
 padding:12px;
-border-radius:12px;
+border-radius:10px;
 margin-top:10px;
 font-size:14px;
 line-height:1.5;
 }
 
-/* ✅ ปรับ icon */
+/* ACTION */
+.actions{
+display:flex;
+gap:10px;
+margin-top:8px;
+}
+
+.actions button{
+flex:1;
+font-size:15px;
+}
+
+/* DIVIDER */
+hr{
+border:none;
+border-top:1px solid #eee;
+margin:14px 0;
+}
+
+/* MOBILE */
+@media (max-width:480px){
+
+.container{
+padding:10px;
+}
+
+.card{
+padding:14px;
+}
+
+h2{
+font-size:18px;
+}
+
+.big{
+font-size:24px;
+}
+
+button{
+height:38px;
+font-size:15px;
+}
+
+input{
+font-size:15px;
+padding:10px;
+}
+
+.time-box input{
+width:52px;
+}
+
+/* RESULT WITH ICON */
+.result-row{
+display:flex;
+gap:12px;
+align-items:flex-start;
+}
+
 .result-icon{
 width:42px;
 height:42px;
-border-radius:14px;
+border-radius:10px;
 background:#f1f5f9;
 display:flex;
 align-items:center;
@@ -192,61 +261,31 @@ height:26px;
 border-radius:8px;
 }
 
-.result-row{
-display:flex;
-gap:10px;
-align-items:flex-start;
-}
-
 .result-content{
 flex:1;
 }
 
-.actions{
-display:flex;
-gap:10px;
-margin-top:8px;
-}
-
-.actions button{
-flex:1;
-font-size:15px;
-}
-
-hr{
-border:none;
-border-top:1px solid #eee;
-margin:14px 0;
-}
-
-/* ✅ FIX B ไม่ตก */
+/* KAGURA INPUT SUFFIX */
 .input-suffix{
 display:flex;
 align-items:center;
+gap:6px;
 background:#f8fafc;
 border:1px solid #e5e7eb;
 border-radius:14px;
 padding:6px 10px;
-}
-
-.input-suffix input{
-border:none;
-background:transparent;
-flex:1;
-padding:10px 6px;
-font-size:15px;
-text-align:left;
-min-width:0;
+white-space:nowrap;
 }
 
 .input-suffix span{
-font-size:13px;
-opacity:.6;
 white-space:nowrap;
 }
 
 .input-suffix input:focus{
 outline:none;
+}
+
+  
 }
 
 </style>
@@ -262,7 +301,135 @@ outline:none;
 <div class="small">Dev by @thinking.j17 | cozyneko guild S12</div>
 </div>
 
-<!-- (โค้ดส่วนอื่นเหมือนเดิมทั้งหมด) -->
+<!-- TIME -->
+<div class="card">
+<h2>⏳ Event Remaining Time</h2>
+
+<div class="time-row">
+
+<div class="time-box">
+<button onmousedown="hold('h',-1)" onmouseup="stop()">-</button>
+<input id="h" placeholder="Hr">
+<button onmousedown="hold('h',1)" onmouseup="stop()">+</button>
+<span class="time-label">Hour</span>
+</div>
+
+<div class="time-box">
+<button onmousedown="hold('m',-1)" onmouseup="stop()">-</button>
+<input id="m" placeholder="Min">
+<button onmousedown="hold('m',1)" onmouseup="stop()">+</button>
+<span class="time-label">Min</span>
+</div>
+
+</div>
+
+<div class="result" id="timeBox"></div>
+
+<div class="small">
+* Stamina regenerates every 20 minutes.<br>
+* The last stamina may regenerate exactly when the event ends and cannot be used.<br>
+* This calculator subtracts 1 stamina to avoid overestimating.
+</div>
+</div>
+
+<!-- PLAYER -->
+<div class="card">
+<h2>👤 Player Setup</h2>
+
+<label>Current Sakura Coin</label>
+<div class="input-icon">
+<img src="images/sakuracoin.png">
+<input id="coinNow">
+</div>
+
+<label>Current Stroll & Stamina used</label>
+<div class="input-icon">
+<img src="images/strollpoint.png">
+<input id="usedSta">
+</div>
+
+<label>Current Stamp Point</label>
+<div class="input-icon">
+<img src="images/stampoint.png">
+<input id="stamp">
+</div>
+
+<hr>
+
+<label>Operation Fellows (Stamp Point / minute)</label>
+<div class="input-icon">
+<img src="images/mystroll.png">
+<input id="rate">
+</div>
+
+<hr>
+
+<label>Sakuramochi In Storage</label>
+<div class="input-icon">
+<img src="images/sakuramochi.png">
+<input id="mochi">
+</div>
+
+<div class="small">
+1 Sakuramochi = 5 Stamina or Stroll
+</div>
+
+</div>
+
+<!-- PACK -->
+<div class="card">
+<h2>💎 Crystal Packs</h2>
+
+<div class="row">Pack 199 = 6 Sakuramochi
+<button onmousedown="hold('p1',-1,true)" onmouseup="stop()">-</button>
+<input id="p1">
+<button onmousedown="hold('p1',1,true)" onmouseup="stop()">+</button>
+</div>
+
+<div class="row">Pack 988 = 12 Sakuramochi
+<button onmousedown="hold('p2',-1,true)" onmouseup="stop()">-</button>
+<input id="p2">
+<button onmousedown="hold('p2',1,true)" onmouseup="stop()">+</button>
+</div>
+
+<div class="row">Pack 1988 = 18 Sakuramochi
+<button onmousedown="hold('p3',-1,true)" onmouseup="stop()">-</button>
+<input id="p3">
+<button onmousedown="hold('p3',1,true)" onmouseup="stop()">+</button>
+</div>
+
+<div class="result" id="packLimitBox"></div>
+</div>
+
+<!-- RESULT -->
+<div class="card">
+<h2>📊 Result</h2>
+
+<div class="result">
+<div class="result-row">
+<div class="result-icon">
+<img src="images/strollpoint.png">
+</div>
+<div class="result-content" id="resourceBox"></div>
+</div>
+</div>
+
+<div class="result">
+<div class="result-row">
+<div class="result-icon">
+<img src="images/ranking-icon.png">
+</div>
+<div class="result-content" id="stampBox"></div>
+</div>
+
+<div class="small" style="margin-top:6px;">
+* 1 Stamina = at least 200 Stamp Point to avoid overestimate
+</div>
+
+</div>
+
+<div class="big" id="coinBox"></div>
+</div>
 
 <!-- KAGURA -->
 <div class="card">
@@ -272,7 +439,7 @@ outline:none;
 
 <label>Base Power</label>
 <div class="input-suffix">
-<input id="base" type="number" step="0.01">
+<input id="base">
 <span>B</span>
 </div>
 
@@ -287,26 +454,26 @@ outline:none;
 
 <label>Target Faith</label>
 <div class="input-suffix">
-<input id="targetPower" type="number" step="0.01">
+<input id="targetPower">
 <span>B</span>
 </div>
 
 <div class="result" id="kaguraNeedBox"></div>
 </div>
 
+<!-- ACTION -->
+<div class="card">
+<div class="actions">
+<button onclick="copy()">Copy Result</button>
+<button onclick="resetAll()">Reset</button>
+</div>
+</div>
+
+</div>
+
 <script>
 
-/* ✅ เพิ่ม format */
-function fmt(n){
-return Number(n).toLocaleString("en-US")
-}
-
-/* ✅ เปลี่ยน get เป็น float */
-function get(id){
-return parseFloat(document.getElementById(id).value)||0
-}
-
-/* === JS เดิมทั้งหมด === */
+/* === JS เดิม ไม่แตะ === */
 
 let keys=["h","m","coinNow","usedSta","stamp","rate","mochi","p1","p2","p3","base","useCoin","targetPower"]
 
@@ -327,6 +494,10 @@ change(id,d,isPack)
 t=setInterval(()=>change(id,d,isPack),120)
 }
 function stop(){clearInterval(t)}
+
+function get(id){
+return parseFloat(document.getElementById(id).value) || 0
+}
 
 function maxPack(){
 let h=get("h"),m=get("m")
@@ -354,10 +525,10 @@ let regen=Math.floor(totalMin/20)-1
 if(regen<0)regen=0
 
 timeBox.innerHTML=
-"Remaining Minutes: "+fmt(totalMin)+"<br>"+
-"Regen Stamina: "+fmt(regen)
+"Remaining Minutes: "+totalMin+"<br>"+
+"Regen Stamina: "+regen
 
-packLimitBox.innerHTML="Max per type: "+fmt(maxPack())
+packLimitBox.innerHTML="Max per type: "+maxPack()
 
 let mochiSta=get("mochi")*5
 let packSta=(get("p1")*6+get("p2")*12+get("p3")*18)*5
@@ -371,35 +542,44 @@ let newCoin=Math.floor(totalStamp/200000)*10
 let totalCoin=get("coinNow")+newCoin
 
 resourceBox.innerHTML=
-"Stroll & Stamina from Sakuramochi: "+fmt(mochiSta)+"<br>"+
-"Stroll & Stamina from Packs: "+fmt(packSta)+"<br>"+
-"Stroll & Stamina from Regen: "+fmt(regen)+"<br><br>"+
-"Total New Stroll & Stamina: "+fmt(totalNewSta)
+"Stroll & Stamina from Sakuramochi: "+formatNumber(mochiSta)+"<br>"+
+"Stroll & Stamina from Packs: "+formatNumber(packSta)+"<br>"+
+"Stroll & Stamina from Regen: "+formatNumber(regen)+"<br><br>"+
+"<b>Total New Stroll & Stamina: "+formatNumber(totalNewSta)+"</b>"
 
 stampBox.innerHTML=
-"Stamp Point from Stamina: "+fmt(newStampFromSta)+"<br>"+
-"Stamp Point from Operation Fellows: "+fmt(fellowStamp)+"<br><br>"+
-"Total Stamp Point: "+fmt(totalStamp)
+"Stamp Point from Stamina: "+formatNumber(newStampFromSta)+"<br>"+
+"Stamp Point from Operation Fellows: "+formatNumber(fellowStamp)+"<br><br>"+
+"<b>Total Stamp Point: "+formatNumber(totalStamp)+"</b>"
 
 coinBox.innerHTML=
-"New Sakura Coin: "+fmt(newCoin)+"<br>"+
-"Total Sakura Coin: "+fmt(totalCoin)
+"New Sakura Coin: "+formatNumber(newCoin)+"<br>"+
+"Total Sakura Coin: "+formatNumber(totalCoin)
 
-/* KAGURA FIX */
+function formatBT(value){
+if(value >= 1000){
+return (value/1000).toFixed(3).replace(/\.?0+$/,"") + "T"
+}else{
+return value.toFixed(2).replace(/\.?0+$/,"") + "B"
+}
+}
+
+// KAGURA
 let base=get("base")
 let coin=get("useCoin")
+
 let score=base*coin
 
 kaguraBox.innerHTML=
-fmt(base)+" B × "+fmt(coin)+" Coin = <b>"+formatBT(score)+"</b>"
+formatNumber(base)+" B × "+formatNumber(coin)+" Coin = <b>"+formatBT(score)+"</b>"
 
 let needCoin=0
 if(get("targetPower")>0 && base>0){
 needCoin=Math.ceil(get("targetPower")/base)
 }
 
-kaguraNeedBox.innerHTML="Needed Sakura Coin: "+fmt(needCoin)
-
+kaguraNeedBox.innerHTML=
+"Needed Sakura Coin: "+formatNumber(needCoin)
 }
 
 function copy(){
@@ -417,13 +597,6 @@ localStorage.clear()
 location.reload()
 }
 
-function formatBT(value){
-if(value >= 1000){
-return (value/1000).toFixed(3).replace(/\.?0+$/,"") + "T"
-}else{
-return value.toFixed(2).replace(/\.?0+$/,"") + "B"
-}
-}
   
 document.querySelectorAll("input").forEach(i=>{
 i.addEventListener("input",update)
@@ -431,6 +604,11 @@ i.addEventListener("input",update)
 
 update()
 
+function formatNumber(num){
+return num.toLocaleString("en-US")
+}
+
+  
 </script>
 
 </body>
