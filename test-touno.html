@@ -9,18 +9,20 @@
 <style>
 *{box-sizing:border-box;font-family:Segoe UI;}
 body{margin:0;background:#eef2ff;}
+.container{max-width:1000px;margin:auto;padding:15px;}
 
-.container{max-width:900px;margin:auto;padding:15px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
 
 .card{
 background:white;
-border-radius:16px;
+border-radius:14px;
 padding:15px;
-margin-bottom:12px;
-box-shadow:0 4px 12px rgba(0,0,0,0.08);
+box-shadow:0 4px 15px rgba(0,0,0,0.08);
 }
 
 h3{margin:0 0 10px 0;}
+
+label{font-size:13px;opacity:.7;}
 
 .row{display:flex;gap:6px;margin-bottom:8px;}
 
@@ -28,7 +30,7 @@ input{
 flex:1;
 padding:10px;
 font-size:16px;
-border-radius:10px;
+border-radius:8px;
 border:1px solid #ccc;
 text-align:center;
 }
@@ -37,62 +39,53 @@ button{
 padding:10px;
 font-size:16px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 background:#6366f1;
 color:white;
 cursor:pointer;
+touch-action:manipulation;
 }
 
 .secondary{background:#64748b;}
 
-.hero{
-background:linear-gradient(135deg,#6366f1,#22c55e);
-color:white;
-border-radius:16px;
-padding:20px;
-text-align:center;
-}
-
-.coin{
-font-size:42px;
+.big{
+font-size:32px;
 font-weight:bold;
+text-align:center;
+margin:10px 0;
 }
-
-.label{opacity:.85;}
 
 .status{
-margin-top:6px;
+text-align:center;
 font-weight:600;
+margin-bottom:5px;
 }
 
 .progress{
-height:10px;
-background:rgba(255,255,255,0.3);
-border-radius:5px;
+height:12px;
+background:#e5e7eb;
+border-radius:6px;
 overflow:hidden;
-margin-top:10px;
+margin:8px 0;
 }
 
 .bar{
 height:100%;
-background:white;
+background:#22c55e;
 width:0%;
 }
 
-.highlight{
-background:#ecfeff;
-border:1px solid #67e8f9;
+.result{
+background:#f1f5f9;
+padding:10px;
+border-radius:8px;
+margin-top:8px;
+font-size:14px;
 }
 
-.small{font-size:13px;opacity:.7;}
+.small{font-size:12px;opacity:.7;}
 
-.actions{
-display:flex;
-gap:10px;
-margin-top:10px;
-}
-
-.center{text-align:center;}
+.actions{display:flex;gap:10px;margin-top:10px;}
 </style>
 </head>
 
@@ -100,78 +93,98 @@ margin-top:10px;
 
 <div class="container">
 
-<!-- HERO -->
-<div class="hero">
-<div class="coin" id="coinBox">0</div>
-<div class="label">Sakura Coin</div>
-<div class="status" id="statusBox">—</div>
+<div class="grid">
 
-<div class="progress"><div class="bar" id="bar"></div></div>
-<div id="progressText"></div>
-
-<div class="actions center">
-<button onclick="copy()">Copy</button>
-<button class="secondary" onclick="resetAll()">Reset</button>
-</div>
-</div>
-
-<!-- NEXT ACTION -->
-<div class="card highlight" id="nextBox"></div>
-
-<!-- TARGET -->
-<div class="card" id="targetBox"></div>
-
-<!-- RESOURCE -->
-<div class="card small" id="resourceBox"></div>
-
-<!-- INPUT -->
+<!-- TIME -->
 <div class="card">
-
 <h3>⏳ Time</h3>
 
+<label>Hours</label>
 <div class="row">
-<button onclick="change('h',-1)">-</button>
+<button onmousedown="hold('h',-1)" onmouseup="stop()">-</button>
 <input id="h">
-<button onclick="change('h',1)">+</button>
+<button onmousedown="hold('h',1)" onmouseup="stop()">+</button>
 </div>
 
+<label>Minutes</label>
 <div class="row">
-<button onclick="change('m',-1)">-</button>
+<button onmousedown="hold('m',-1)" onmouseup="stop()">-</button>
 <input id="m">
-<button onclick="change('m',1)">+</button>
+<button onmousedown="hold('m',1)" onmouseup="stop()">+</button>
 </div>
 
-<div id="timeBox" class="small"></div>
+<div class="result" id="timeBox"></div>
+</div>
 
+<!-- PLAYER -->
+<div class="card">
 <h3>⚡ Player</h3>
-<input id="stamp" placeholder="Current Stamp Point">
-<input id="stamina" placeholder="Current Stamina">
 
-<h3>🍡 Sakuramochi</h3>
-<div class="row">
-<button onclick="change('mochi',-1)">-</button>
-<input id="mochi">
-<button onclick="change('mochi',1)">+</button>
+<label>Current Stamp Point</label>
+<input id="stamp">
+
+<label title="1 Stamina = 200 Stamp Point">Current Stamina</label>
+<input id="stamina">
 </div>
+
+<!-- MOCHI -->
+<div class="card">
+<h3>🍡 Sakuramochi</h3>
+
+<div class="row">
+<button onmousedown="hold('mochi',-1)" onmouseup="stop()">-</button>
+<input id="mochi">
+<button onmousedown="hold('mochi',1)" onmouseup="stop()">+</button>
+</div>
+
+<div class="result" id="mochiBox"></div>
+</div>
+
+<!-- TARGET -->
+<div class="card">
+<h3>🎯 Target Sakura Coin</h3>
+<input id="target">
+</div>
+
+</div>
+
+<!-- PACK -->
+<div class="card">
 
 <h3>💎 Crystal Packs</h3>
 
 <div class="row">
-<button onclick="change('p1',-1,true)">-</button>
+199 Pack
+<button onmousedown="hold('p1',-1,true)" onmouseup="stop()">-</button>
 <input id="p1">
-<button onclick="change('p1',1,true)">+</button>
+<button onmousedown="hold('p1',1,true)" onmouseup="stop()">+</button>
 </div>
 
 <div class="row">
-<button onclick="change('p2',-1,true)">-</button>
+988 Pack
+<button onmousedown="hold('p2',-1,true)" onmouseup="stop()">-</button>
 <input id="p2">
-<button onclick="change('p2',1,true)">+</button>
+<button onmousedown="hold('p2',1,true)" onmouseup="stop()">+</button>
 </div>
 
 <div class="row">
-<button onclick="change('p3',-1,true)">-</button>
+1988 Pack
+<button onmousedown="hold('p3',-1,true)" onmouseup="stop()">-</button>
 <input id="p3">
-<button onclick="change('p3',1,true)">+</button>
+<button onmousedown="hold('p3',1,true)" onmouseup="stop()">+</button>
+</div>
+
+<!-- HERO RESULT -->
+<div class="big" id="coinBox"></div>
+<div class="status" id="statusBox"></div>
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+
+<div class="result" id="detailBox"></div>
+
+<div class="actions">
+<button onclick="copy()">Copy</button>
+<button class="secondary" onclick="resetAll()">Reset</button>
 </div>
 
 </div>
@@ -180,7 +193,7 @@ margin-top:10px;
 
 <script>
 
-let keys=["h","m","stamp","stamina","mochi","p1","p2","p3","target"]
+let keys=["h","m","stamp","stamina","mochi","target","p1","p2","p3"]
 
 keys.forEach(k=>{
 let v=localStorage.getItem(k)
@@ -193,11 +206,28 @@ localStorage.setItem(k,document.getElementById(k).value)
 })
 }
 
+let t
+
+function hold(id,d,isPack){
+change(id,d,isPack)
+t=setInterval(()=>change(id,d,isPack),120)
+}
+function stop(){clearInterval(t)}
+
 function get(id){return parseInt(document.getElementById(id).value)||0}
+
+function maxPack(){
+let h=get("h"),m=get("m")
+return Math.ceil((h+m/60)/24)*3
+}
 
 function change(id,d,isPack){
 let v=get(id)+d
 if(v<0)v=0
+if(isPack){
+let max=maxPack()
+if(v>max)v=max
+}
 document.getElementById(id).value=v
 update()
 }
@@ -210,13 +240,16 @@ save()
 let totalMin=get("h")*60+get("m")
 let regen=Math.floor(totalMin/20)-1
 if(regen<0)regen=0
-
 timeBox.innerHTML="Regen: "+regen+" Stamina"
 
-// RESOURCE
+// MOCHI
 let mochiSta=get("mochi")*5
+mochiBox.innerHTML="+ "+mochiSta+" Stamina"
+
+// PACK
 let packSta=(get("p1")*6+get("p2")*12+get("p3")*18)*5
 
+// TOTAL
 let totalSta=get("stamina")+regen+mochiSta+packSta
 let totalStamp=get("stamp")+(totalSta*200)
 
@@ -225,76 +258,62 @@ let exchange=Math.floor(totalStamp/200000)
 let coin=exchange*10
 let remain=totalStamp%200000
 
-// TARGET
-let target=get("target")
-
-// STATUS
-let status="—"
-if(target>0){
-status=coin>=target?"✅ Target Reached":"❌ Not Enough"
-}
-
-statusBox.innerHTML=status
-
-// PROGRESS
-let percent=0
-if(target>0){
-percent=(coin/target)*100
-if(percent>100)percent=100
-}
-
-bar.style.width=percent+"%"
-progressText.innerHTML = target>0 
-? percent.toFixed(2)+"% Completed" 
-: "Set Target"
-
 // NEXT
 let needStamp=200000-remain
 let needSta=Math.ceil(needStamp/200)
 
-nextBox.innerHTML=
-"<b>Next Exchange</b><br>"+
-remain+" / 200,000 Stamp Point ("+Math.floor((remain/200000)*100)+"%)<br><br>"+
-"Need "+needStamp+" Stamp Point<br>"+
-"≈ "+needSta+" Stamina"
-
-// TARGET BOX
-if(target>0){
+// TARGET
+let target=get("target")
 let needCoin=target-coin
 if(needCoin<0)needCoin=0
 
-targetBox.innerHTML=
+// STATUS
+let status=coin>=target?"✅ Target Reached":"❌ Not Enough"
+
+// PROGRESS
+let percent=target>0?(coin/target)*100:0
+if(percent>100)percent=100
+bar.style.width=percent+"%"
+
+// UI
+coinBox.innerHTML=coin+" Sakura Coin"
+statusBox.innerHTML=status
+
+detailBox.innerHTML=
+"Total Stamina: "+totalSta+"<br>"+
+"Total Stamp Point: "+totalStamp+"<br><br>"+
+
+"Exchange Count: "+exchange+"<br>"+
+"Remaining Stamp Point: "+remain+"<br><br>"+
+
+"Next Exchange:<br>"+
+remain+" / 200,000 ("+Math.floor((remain/200000)*100)+"%)<br>"+
+"Need "+needStamp+" Stamp Point (~"+needSta+" Stamina)<br><br>"+
+
 "Target: "+target+" Sakura Coin<br>"+
-"Current: "+coin+"<br><br>"+
-"<b>Need: "+needCoin+" Sakura Coin</b>"
-}else{
-targetBox.innerHTML="Set Target Sakura Coin"
+"Need: "+needCoin+" Sakura Coin<br>"+
+"Progress: "+coin+" / "+target+" ("+percent.toFixed(2)+"%)"
+
+// OVER
+if(coin>target){
+detailBox.innerHTML+="<br><br>Over Target: +"+(coin-target)+" Sakura Coin"
 }
 
-// RESOURCE
-resourceBox.innerHTML=
-"Total Stamp Point: "+totalStamp+"<br>"+
-"Exchange Count: "+exchange+"<br>"+
-"Remaining Stamp Point: "+remain
+// REVERSE CALC
+let needTotalCoin=target-coin
+if(needTotalCoin>0){
+let needSets=Math.ceil(needTotalCoin/10)
+let needStampTotal=needSets*200000-remain
+let needStaTotal=Math.ceil(needStampTotal/200)
 
-// HERO
-coinBox.innerHTML=coin
+detailBox.innerHTML+="<br><br><b>Reverse Needed:</b><br>"+
+needStampTotal+" Stamp Point (~"+needStaTotal+" Stamina)"
+}
 
 }
 
 function copy(){
-let text =
-`[Touno Result]
-
-Sakura Coin: ${coinBox.innerText}
-
-${statusBox.innerText}
-
-${progressText.innerText}
-
-${nextBox.innerText}
-${targetBox.innerText}`
-
+let text=detailBox.innerText
 navigator.clipboard.writeText(text)
 alert("Copied")
 }
