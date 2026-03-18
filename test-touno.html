@@ -2,29 +2,59 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-<title>Touno Island Calculator</title>
+<title>Touno Island Calculator V4</title>
 
 <style>
-*{box-sizing:border-box;font-family:Segoe UI;}
-body{margin:0;background:#eef2ff;}
-.container{max-width:1000px;margin:auto;padding:15px;}
+*{
+box-sizing:border-box;
+font-family:Segoe UI;
+}
 
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+body{
+margin:0;
+background:#eef2ff;
+color:#111;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:15px;
+}
+
+h2{
+margin:0 0 10px 0;
+}
+
+.section{
+margin-bottom:18px;
+}
 
 .card{
 background:white;
 border-radius:14px;
 padding:15px;
-box-shadow:0 4px 15px rgba(0,0,0,0.08);
+box-shadow:0 6px 20px rgba(0,0,0,0.08);
 }
 
-h3{margin:0 0 10px 0;}
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:15px;
+}
 
-label{font-size:13px;opacity:.7;}
+label{
+font-size:13px;
+opacity:.7;
+}
 
-.row{display:flex;gap:6px;margin-bottom:8px;}
+.row{
+display:flex;
+gap:6px;
+margin-bottom:8px;
+}
 
 input{
 flex:1;
@@ -46,19 +76,29 @@ cursor:pointer;
 touch-action:manipulation;
 }
 
-.secondary{background:#64748b;}
+.secondary{
+background:#64748b;
+}
 
 .big{
-font-size:32px;
+font-size:30px;
 font-weight:bold;
 text-align:center;
 margin:10px 0;
 }
 
-.status{
+.highlight{
+font-size:20px;
+font-weight:bold;
 text-align:center;
-font-weight:600;
-margin-bottom:5px;
+margin:6px 0;
+}
+
+.flow{
+text-align:center;
+font-size:14px;
+margin:6px 0;
+opacity:.8;
 }
 
 .progress{
@@ -66,7 +106,7 @@ height:12px;
 background:#e5e7eb;
 border-radius:6px;
 overflow:hidden;
-margin:8px 0;
+margin:10px 0;
 }
 
 .bar{
@@ -79,13 +119,27 @@ width:0%;
 background:#f1f5f9;
 padding:10px;
 border-radius:8px;
-margin-top:8px;
+margin-top:10px;
 font-size:14px;
 }
 
-.small{font-size:12px;opacity:.7;}
+.actions{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
 
-.actions{display:flex;gap:10px;margin-top:10px;}
+.desc{
+font-size:12px;
+opacity:.7;
+margin-bottom:8px;
+}
+
+@media(max-width:768px){
+.grid{
+grid-template-columns:1fr;
+}
+}
 </style>
 </head>
 
@@ -93,43 +147,53 @@ font-size:14px;
 
 <div class="container">
 
+<!-- RESULT (TOP PRIORITY) -->
+<div class="section card">
+<h2>🪙 Total Sakura Coin</h2>
+<div class="desc">ผลลัพธ์สุดท้ายจากการคำนวณทั้งหมด</div>
+
+<div class="big" id="coinBox">0</div>
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="highlight" id="progressText"></div>
+</div>
+
 <div class="grid">
 
-<!-- TIME -->
+<!-- INPUT ZONE -->
 <div class="card">
-<h3>⏳ Time</h3>
-
-<label>Hours</label>
-<div class="row">
-<button onmousedown="hold('h',-1)" onmouseup="stop()">-</button>
-<input id="h">
-<button onmousedown="hold('h',1)" onmouseup="stop()">+</button>
-</div>
-
-<label>Minutes</label>
-<div class="row">
-<button onmousedown="hold('m',-1)" onmouseup="stop()">-</button>
-<input id="m">
-<button onmousedown="hold('m',1)" onmouseup="stop()">+</button>
-</div>
-
-<div class="result" id="timeBox"></div>
-</div>
-
-<!-- PLAYER -->
-<div class="card">
-<h3>⚡ Player</h3>
+<h2>📥 Resource Input</h2>
+<div class="desc">ทรัพยากรทั้งหมดที่คุณมีในปัจจุบัน</div>
 
 <label>Current Stamp Point</label>
 <input id="stamp">
 
-<label title="1 Stamina = 200 Stamp Point">Current Stamina</label>
+<label>Current Stamina</label>
 <input id="stamina">
+
+<hr>
+
+<h3>⏳ Time (Stamina Regen)</h3>
+<div class="desc">ทุก 20 นาที = +1 Stamina</div>
+
+<div class="row">
+<button onmousedown="hold('h',-1)" onmouseup="stop()">-</button>
+<input id="h" placeholder="Hours">
+<button onmousedown="hold('h',1)" onmouseup="stop()">+</button>
 </div>
 
-<!-- MOCHI -->
-<div class="card">
+<div class="row">
+<button onmousedown="hold('m',-1)" onmouseup="stop()">-</button>
+<input id="m" placeholder="Minutes">
+<button onmousedown="hold('m',1)" onmouseup="stop()">+</button>
+</div>
+
+<div class="result" id="timeBox"></div>
+
+<hr>
+
 <h3>🍡 Sakuramochi</h3>
+<div class="desc">1 Mochi = 5 Stamina</div>
 
 <div class="row">
 <button onmousedown="hold('mochi',-1)" onmouseup="stop()">-</button>
@@ -138,20 +202,11 @@ font-size:14px;
 </div>
 
 <div class="result" id="mochiBox"></div>
-</div>
 
-<!-- TARGET -->
-<div class="card">
-<h3>🎯 Target Sakura Coin</h3>
-<input id="target">
-</div>
-
-</div>
-
-<!-- PACK -->
-<div class="card">
+<hr>
 
 <h3>💎 Crystal Packs</h3>
+<div class="desc">ซื้อได้ 3 ครั้ง / วัน</div>
 
 <div class="row">
 199 Pack
@@ -174,13 +229,39 @@ font-size:14px;
 <button onmousedown="hold('p3',1,true)" onmouseup="stop()">+</button>
 </div>
 
-<!-- HERO RESULT -->
-<div class="big" id="coinBox"></div>
-<div class="status" id="statusBox"></div>
+</div>
 
-<div class="progress"><div class="bar" id="bar"></div></div>
+<!-- CONVERSION + PROGRESSION -->
+<div class="card">
+<h2>🔄 Conversion Flow</h2>
+<div class="desc">แสดงการแปลงค่าจาก Stamina → Stamp → Coin</div>
 
-<div class="result" id="detailBox"></div>
+<div class="flow" id="flowBox"></div>
+
+<div class="highlight" id="staBox"></div>
+<div class="highlight" id="stampBox"></div>
+
+<hr>
+
+<h2>🎯 Progress</h2>
+
+<label>Target Sakura Coin</label>
+<input id="target">
+
+<div class="result" id="progressBox"></div>
+
+</div>
+
+</div>
+
+<!-- DECISION -->
+<div class="section card">
+<h2>🔥 Decision & Recommendation</h2>
+<div class="desc">คำแนะนำว่าควรทำอะไรต่อเพื่อให้ถึงเป้าหมาย</div>
+
+<div class="highlight" id="statusBox"></div>
+
+<div class="result" id="decisionBox"></div>
 
 <div class="actions">
 <button onclick="copy()">Copy</button>
@@ -236,85 +317,79 @@ function update(){
 
 save()
 
-// TIME
 let totalMin=get("h")*60+get("m")
 let regen=Math.floor(totalMin/20)-1
 if(regen<0)regen=0
-timeBox.innerHTML="Regen: "+regen+" Stamina"
 
-// MOCHI
+timeBox.innerHTML="Regen: +"+regen+" Stamina"
+
 let mochiSta=get("mochi")*5
 mochiBox.innerHTML="+ "+mochiSta+" Stamina"
 
-// PACK
 let packSta=(get("p1")*6+get("p2")*12+get("p3")*18)*5
 
-// TOTAL
 let totalSta=get("stamina")+regen+mochiSta+packSta
 let totalStamp=get("stamp")+(totalSta*200)
 
-// EXCHANGE
 let exchange=Math.floor(totalStamp/200000)
 let coin=exchange*10
 let remain=totalStamp%200000
 
-// NEXT
-let needStamp=200000-remain
-let needSta=Math.ceil(needStamp/200)
-
-// TARGET
 let target=get("target")
-let needCoin=target-coin
-if(needCoin<0)needCoin=0
 
-// STATUS
-let status=coin>=target?"✅ Target Reached":"❌ Not Enough"
+// FLOW
+flowBox.innerHTML=
+totalSta+" Stamina → "+
+totalStamp+" Stamp → "+
+coin+" Coin"
+
+// MAIN
+coinBox.innerHTML=coin
 
 // PROGRESS
 let percent=target>0?(coin/target)*100:0
 if(percent>100)percent=100
 bar.style.width=percent+"%"
 
-// UI
-coinBox.innerHTML=coin+" Sakura Coin"
+progressText.innerHTML=
+coin+" / "+target+" ("+percent.toFixed(2)+"%)"
+
+progressBox.innerHTML=
+"Remaining Stamp: "+remain+" / 200,000<br>"+
+"Next Exchange Need: "+(200000-remain)+" Stamp"
+
+// STATUS
+let needCoin=target-coin
+if(needCoin<0)needCoin=0
+
+let status=coin>=target?"✅ Target Reached":"❌ Not Enough"
 statusBox.innerHTML=status
 
-detailBox.innerHTML=
-"Total Stamina: "+totalSta+"<br>"+
-"Total Stamp Point: "+totalStamp+"<br><br>"+
+// DECISION
+let decision=""
 
-"Exchange Count: "+exchange+"<br>"+
-"Remaining Stamp Point: "+remain+"<br><br>"+
-
-"Next Exchange:<br>"+
-remain+" / 200,000 ("+Math.floor((remain/200000)*100)+"%)<br>"+
-"Need "+needStamp+" Stamp Point (~"+needSta+" Stamina)<br><br>"+
-
-"Target: "+target+" Sakura Coin<br>"+
-"Need: "+needCoin+" Sakura Coin<br>"+
-"Progress: "+coin+" / "+target+" ("+percent.toFixed(2)+"%)"
-
-// OVER
-if(coin>target){
-detailBox.innerHTML+="<br><br>Over Target: +"+(coin-target)+" Sakura Coin"
-}
-
-// REVERSE CALC
-let needTotalCoin=target-coin
-if(needTotalCoin>0){
-let needSets=Math.ceil(needTotalCoin/10)
+if(coin>=target){
+decision="You already reached target."
+}else{
+let needSets=Math.ceil(needCoin/10)
 let needStampTotal=needSets*200000-remain
 let needStaTotal=Math.ceil(needStampTotal/200)
 
-detailBox.innerHTML+="<br><br><b>Reverse Needed:</b><br>"+
-needStampTotal+" Stamp Point (~"+needStaTotal+" Stamina)"
+decision=
+"Need "+needCoin+" Coin<br>"+
+"≈ "+needStampTotal+" Stamp<br>"+
+"≈ "+needStaTotal+" Stamina"
 }
+
+decisionBox.innerHTML=decision
+
+staBox.innerHTML="Total Stamina: "+totalSta
+stampBox.innerHTML="Total Stamp: "+totalStamp
 
 }
 
 function copy(){
-let text=detailBox.innerText
-navigator.clipboard.writeText(text)
+navigator.clipboard.writeText(decisionBox.innerText)
 alert("Copied")
 }
 
