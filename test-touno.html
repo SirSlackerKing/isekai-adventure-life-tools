@@ -30,18 +30,57 @@ padding:12px;
 position:relative;
 text-align:center;
 margin-bottom:14px;
+padding-top:10px;
 }
 
+.actionBtn{
+height:38px;
+padding:0 14px;
+font-size:14px;
+border:none;
+border-radius:999px;
+background:#6366f1;
+color:white;
+cursor:pointer;
+display:inline-flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+box-shadow:0 4px 10px rgba(0,0,0,0.1);
+}
+
+.actionBtn:active{
+transform:scale(0.96);
+}
+
+/* ปุ่ม Home */
+.homeBtn{
+position:absolute;
+left:0;
+top:0;
+background:white;
+color:#6366f1;
+border:1px solid #e5e7eb;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
+}
+  
 .home{
 position:absolute;
 left:0;
-top:28px;
-font-size:14px;
+top:0;
+font-size:13px;
 cursor:pointer;
 color:#6366f1;
 padding:6px 10px;
-border-radius:8px;
-background:#eef2ff;
+border-radius:999px;
+background:white;
+border:1px solid #e5e7eb;
+box-shadow:0 2px 6px rgba(0,0,0,0.08);
+transition:.2s;
+}
+
+.home:active{
+transform:scale(0.95);
 }
 
 h1{
@@ -356,7 +395,12 @@ border-radius:8px;
 
 <h1>Touno Island Calculator</h1>
 <div class="small">Dev by @thinking.j17 | cozyneko guild S12</div>
-<div class="home" onclick="location.href='index.html'">← Home</div>
+<div style="display:flex;justify-content:flex-start;gap:10px;margin-bottom:10px;">
+
+<button class="actionBtn homeBtn"
+onclick="location.href='index.html'">
+🏠 Home
+</button>
 </div>
 
 <!-- TIME -->
