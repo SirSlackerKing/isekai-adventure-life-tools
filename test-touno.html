@@ -237,6 +237,62 @@ padding:10px;
 width:52px;
 }
 
+/* RESULT WITH ICON */
+.result-row{
+display:flex;
+gap:12px;
+align-items:flex-start;
+}
+
+.result-icon{
+width:52px;
+height:52px;
+border-radius:12px;
+background:#f1f5f9;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-shrink:0;
+}
+
+.result-icon img{
+width:34px;
+height:34px;
+}
+
+.result-content{
+flex:1;
+}
+
+/* KAGURA INPUT SUFFIX */
+.input-suffix{
+display:flex;
+align-items:center;
+background:#f8fafc;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:6px 10px;
+}
+
+.input-suffix input{
+border:none;
+background:transparent;
+flex:1;
+padding:10px 6px;
+font-size:15px;
+text-align:left;
+}
+
+.input-suffix span{
+font-size:13px;
+opacity:.6;
+}
+
+.input-suffix input:focus{
+outline:none;
+}
+
+  
 }
 
 </style>
@@ -356,18 +412,43 @@ width:52px;
 <div class="card">
 <h2>📊 Result</h2>
 
-<div class="result" id="resourceBox"></div>
-<div class="result" id="stampBox"></div>
+<div class="result">
+<div class="result-row">
+<div class="result-icon">
+<img src="images/strollpoint.png">
+</div>
+<div class="result-content" id="resourceBox"></div>
+</div>
+</div>
+
+<div class="result">
+<div class="result-row">
+<div class="result-icon">
+<img src="images/ranking-icon.png">
+</div>
+<div class="result-content" id="stampBox"></div>
+</div>
+
+<div class="small" style="margin-top:6px;">
+* 1 Stamina = at least 200 Stamp Point to avoid overestimate
+</div>
+
+</div>
 
 <div class="big" id="coinBox"></div>
 </div>
 
 <!-- KAGURA -->
 <div class="card">
-<h2>💃 Kagura Dance</h2>
+<h2>💃 Kagura Dance Calculator</h2>
+
+<div class="small">Calculate your faith from coin</div>
 
 <label>Base Power</label>
+<div class="input-suffix">
 <input id="base">
+<span>B</span>
+</div>
 
 <label>Sakura Coin (use)</label>
 <input id="useCoin">
@@ -376,7 +457,9 @@ width:52px;
 
 <hr>
 
-<label>Target Power (optional)</label>
+<div class="small">Want to know how many coins you need for this faith?</div>
+
+<label>Target Faith</label>
 <input id="targetPower">
 
 <div class="result" id="kaguraNeedBox"></div>
@@ -475,8 +558,9 @@ coinBox.innerHTML=
 "New Sakura Coin: "+newCoin+"<br>"+
 "Total Sakura Coin: "+totalCoin
 
+// KAGURA
 let score=get("base")*get("useCoin")
-kaguraBox.innerHTML="Score: "+score
+kaguraBox.innerHTML="Faith: "+score
 
 let needCoin=0
 if(get("targetPower")>0 && get("base")>0){
