@@ -267,7 +267,7 @@ onclick="toggleDark()">
 Family
 
 <button onclick="change('family',-1)">-</button>
-<input id="family" value="40">
+<input type="number" min="0" id="family" value="40" oninput="calc()">
 <button onclick="change('family',1)">+</button>
 
 </div>
@@ -374,7 +374,7 @@ html+=`
 <div class="name">${i.name}</div>
 <div class="controls">
 <button onclick="change('${id}${index}',-1)">-</button>
-<input id="${id}${index}" value="0">
+<input type="number" min="0" id="${id}${index}" value="0" oninput="calc()">
 <button onclick="change('${id}${index}',1)">+</button>
 </div>
 </div>`
