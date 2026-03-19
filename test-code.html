@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Isekai Adventure Life Blessing Calculator</title>
+    <link rel="icon" href="images/images/blessing/profile_figure_unlock_upgrade.png">
+    <style>
+        .familyBox { display: flex; justify-content: center; align-items: center; gap: 14px; font-size: 22px; font-weight: 600; padding: 10px; }
+        .familyBox input { width: 60px; font-size: 20px; font-weight: 600; padding: 6px; }
+        .familyBox button { background: #6c8cff; border: none; color: white; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; }
+        
+        * { box-sizing: border-box; transition: 0.2s; }
+        body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(180deg, #eef3ff, #dce7ff); display: flex; justify-content: center; min-height: 100vh; }
+        body.dark { background: #1b1e2b; color: white; }
+        body.dark .section { background: #2a2f44; }
+        body.dark .card { background: #2f3550; }
+        body.dark input { background: #1f2436; color: white; }
+        body.dark .result { background: #2a2f44; }
+        body.dark .resultBox { background: #3a4060; }
+
+        .container { width: 1000px; max-width: 95%; padding: 20px; }
+        h1 { text-align: center; color: #3b4ba8; font-size: 28px; margin-bottom: 4px; }
+        body.dark h1 { color: #8ea1ff; }
+        .subtitle { text-align: center; font-size: 13px; color: #6b7280; margin-bottom: 20px; }
+
+        .section { background: white; border-radius: 16px; padding: 18px; margin-bottom: 18px; box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+        .card { background: #f6f8ff; border-radius: 12px; padding: 12px; text-align: center; }
+        .card img { width: 76px; height: 76px; object-fit: contain; border-radius: 12px; background: white; padding: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.15); margin-bottom: 8px; }
+        .name { font-size: 13px; min-height: 36px; margin-bottom: 8px; }
+
+        .controls { display: flex; justify-content: center; align-items: center; gap: 6px; }
+        .controls button { background: #6c8cff; border: none; color: white; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; }
+        input { width: 50px; text-align: center; border: 1px solid #ddd; border-radius: 6px; padding: 4px; }
+        
+        .result { background: white; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.08); display: flex; flex-direction: column; align-items: center; }
+        .resultRow { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+        .resultBox { background: #f4f7ff; padding: 14px 24px; border-radius: 12px; font-size: 14px; font-weight: 600; min-width: 100px; text-align: center; }
+        .resultBox div { font-size: 24px; margin-top: 4px; }
+        .resultBox.min { color: #3cb371; }
+        .resultBox.avg { color: #3b82f6; }
+        .resultBox.max { color: #ff8c42; }
+
+        .itemsUsed { margin-top: 14px; font-size: 14px; opacity: 0.8; }
+        .buttonRow { margin-top: 20px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+        .actionBtn { border: none; padding: 10px 18px; font-size: 14px; font-weight: 600; border-radius: 10px; cursor: pointer; color: white; }
+        .copyBtn { background: linear-gradient(135deg, #5dbb63, #3fa34d); }
+        .resetBtn { background: #ff6b6b; }
+        .shareBtn { background: #5865F2; }
+        .homeBtn { background: #555; }
+        .darkBtn { background: #222; }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <h1>Isekai Adventure Life Blessing Calculator</h1>
+    <div class="subtitle">v1.1 • Auto-Save Enabled | by @Thinking.j17</div>
+
+    <div style="display:flex; justify-content: space-between; margin-bottom: 15px;">
+        <button class="actionBtn homeBtn" onclick="location.href='index.html'">🏠 Home</button>
+        <button class="actionBtn darkBtn" onclick="toggleDark()">🌙 Toggle Mode</button>
+    </div>
+
+    <div class="section">
+        <div class="familyBox">
+            Family 
+            <button onclick="change('family', -1)">-</button>
+            <input type="number" min="0" id="family" value="40" oninput="calc()">
+            <button onclick="change('family', 1)">+</button>
+        </div>
+    </div>
+
+    <div class="section"><h2>Fixed Items</h2><div class="grid" id="fixedItems"></div></div>
+    <div class="section"><h2>Random Items</h2><div class="grid" id="randomItems"></div></div>
+    <div class="section"><h2>Bonus</h2><div class="grid" id="bonusItems"></div></div>
+
+    <div class="result">
+        <div class="resultRow">
+            <div class="resultBox min">Min<div id="min">0</div></div>
+            <div class="resultBox avg">Avg<div id="avg">0</div></div>
+            <div class="resultBox max">Max<div id="max">0</div></div>
+        </div>
+        <div class="itemsUsed">Items used: <span id="itemsUsed">0</span></div>
+        <div class="buttonRow">
+            <button class="actionBtn copyBtn" onclick="copyResult()">Copy Text</button>
+            <button class="actionBtn shareBtn" onclick="shareBuild()">Share Link</button>
+            <button class="actionBtn resetBtn" onclick="resetAll()">Reset All</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const fixedItems = [
+    { name: "Flower Necklace", img: "flower_necklace.png", value: 1 },
+    { name: "Jewel Necklace", img: "jewel_necklace.png", value: 1 },
+    { name: "Strange Pearl", img: "strange_pearl.png", value: 5 },
+    { name: "Hiemspresent Hat", img: "hiemspresent_hat.png", value: 5 }
+];
+
+const randomItems = [
+    { name: "Blessing Gachapon", img: "blessing_power_gachapon.png", min: 10, max: 30 },
+    { name: "Omamori", img: "omamori.png", min: 10, max: 30 },
+    { name: "Mandrake", img: "mandrake.png", min: 1, max: 3 },
+    { name: "Muddled Mushroom", img: "muddled_mushroom.png", min: 2, max: 5 },
+    { name: "Grassy Bunny", img: "grassy_bunny.png", min: 3, max: 6 },
+    { name: "Chirping Chick", img: "chirping_chick.png", min: 4, max: 10 },
+    { name: "Gorgeous Horse", img: "gorgeous_horse.png", min: 5, max: 16 },
+    { name: "Blooming Fox", img: "blooming_fox.png", min: 7, max: 24 },
+    { name: "Frozen Dragon", img: "frozen_dragon.png", min: 10, max: 32 },
+    { name: "Flaming Lion", img: "flaming_lion.png", min: 14, max: 48 }
+];
+
+const bonusItems = [
+    { name: "Family 2★ Unlock", img: "family_2star_skin.png", value: 150 },
+    { name: "Family 2★ Upgrade", img: "family_2star_skin.png", value: 200 },
+    { name: "Family 3★ Unlock", img: "family_3star_skin.png", value: 300 },
+    { name: "Family 3★ Upgrade", img: "family_3star_skin.png", value: 500 },
+    { name: "Family 4★ Unlock", img: "family_4star_skin.png", value: 500 },
+    { name: "Family 4★ Upgrade", img: "family_4star_skin.png", value: 1000 },
+    { name: "Fishing Antique", img: "fishing_antique.png", value: 20, family: true },
+    { name: "Inn Gift", img: "inn_gift.png", value: 2, family: true },
+    { name: "Profile Figure", img: "profile_figure_unlock_upgrade.png", value: 20, family: true }
+];
+
+function makeGrid(list, id) {
+    let html = "";
+    list.forEach((i, index) => {
+        html += `
+        <div class="card">
+            <img src="images/images/blessing/${i.img}">
+            <div class="name">${i.name}</div>
+            <div class="controls">
+                <button onclick="change('${id}${index}', -1)">-</button>
+                <input type="number" min="0" id="${id}${index}" value="0" oninput="calc()">
+                <button onclick="change('${id}${index}', 1)">+</button>
+            </div>
+        </div>`;
+    });
+    document.getElementById(id).innerHTML = html;
+}
+
+// 1. สร้าง Grid
+makeGrid(fixedItems, "fixedItems");
+makeGrid(randomItems, "randomItems");
+makeGrid(bonusItems, "bonusItems");
+
+// 2. โหลดค่าที่เซฟไว้
+loadState();
+
+// 3. คำนวณครั้งแรก
+calc();
+
+function change(id, a) {
+    let el = document.getElementById(id);
+    let v = parseInt(el.value || 0) + a;
+    if (v < 0) v = 0;
+    el.value = v;
+    calc();
+}
+
+function calc() {
+    let min = 0, max = 0, items = 0;
+    const familyVal = parseInt(document.getElementById("family").value || 0);
+
+    randomItems.forEach((i, idx) => {
+        let c = parseInt(document.getElementById("randomItems" + idx).value || 0);
+        min += c * i.min; max += c * i.max; items += c;
+    });
+
+    fixedItems.forEach((i, idx) => {
+        let c = parseInt(document.getElementById("fixedItems" + idx).value || 0);
+        min += c * i.value; max += c * i.value; items += c;
+    });
+
+    bonusItems.forEach((i, idx) => {
+        let c = parseInt(document.getElementById("bonusItems" + idx).value || 0);
+        let val = i.family ? i.value * familyVal : i.value;
+        min += c * val; max += c * val; items += c;
+    });
+
+    let avg = Math.floor((min + max) / 2);
+    document.getElementById("min").innerText = min.toLocaleString();
+    document.getElementById("avg").innerText = avg.toLocaleString();
+    document.getElementById("max").innerText = max.toLocaleString();
+    document.getElementById("itemsUsed").innerText = items.toLocaleString();
+
+    saveState();
+}
+
+function saveState() {
+    let data = {};
+    document.querySelectorAll("input").forEach(input => {
+        data[input.id] = input.value;
+    });
+    localStorage.setItem("blessing_save_data", JSON.stringify(data));
+}
+
+function loadState() {
+    let saved = localStorage.getItem("blessing_save_data");
+    if (!saved) return;
+    let data = JSON.parse(saved);
+    for (let id in data) {
+        let el = document.getElementById(id);
+        if (el) el.value = data[id];
+    }
+}
+
+function resetAll() {
+    if (confirm("ต้องการรีเซ็ตค่าทั้งหมดใช่หรือไม่?")) {
+        document.querySelectorAll("input").forEach(i => i.value = 0);
+        document.getElementById("family").value = 40;
+        calc();
+    }
+}
+
+function toggleDark() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("darkmode", document.body.classList.contains("dark"));
+}
+
+if (localStorage.getItem("darkmode") === "true") document.body.classList.add("dark");
+
+function copyResult() {
+    let text = `Isekai Adventure Life Blessing\nMin: ${document.getElementById("min").innerText}\nAvg: ${document.getElementById("avg").innerText}\nMax: ${document.getElementById("max").innerText}`;
+    navigator.clipboard.writeText(text).then(() => alert("Copied to clipboard!"));
+}
+
+function shareBuild() {
+    let data = [];
+    document.querySelectorAll("input").forEach(i => data.push(i.value));
+    let url = window.location.origin + window.location.pathname + "?build=" + btoa(data.join(","));
+    navigator.clipboard.writeText(url).then(() => alert("Share link copied!"));
+}
+</script>
+</body>
+</html>
