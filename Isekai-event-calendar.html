@@ -3,88 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guild Event Timeline</title>
+    <title>Guild Timeline - Isekai Tools</title>
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #1a1a1a;
-            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
             margin: 0;
             padding: 20px;
         }
         .calendar-container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            background: #2a2a2a;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
         }
         h2 {
             text-align: center;
-            color: #ffcc00;
-            font-size: 26px;
+            color: #fbbf24;
+            font-size: 28px;
             margin-bottom: 25px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-weight: 800;
         }
-        /* ปรับแต่งหน้าตาปฏิทินให้เข้ากับธีมเกม */
+        /* FullCalendar Custom Theme */
         .fc {
-            --fc-border-color: #3a3a3a;
-            --fc-page-bg-color: #2a2a2a;
-            --fc-neutral-bg-color: #222222;
-            --fc-list-event-hover-bg-color: #333333;
+            --fc-border-color: #334155;
+            --fc-page-bg-color: #1e293b;
+            --fc-neutral-bg-color: #0f172a;
+            --fc-list-event-hover-bg-color: #334155;
+            --fc-today-bg-color: rgba(56, 189, 248, 0.1);
         }
-        /* หัวข้อวันที่ด้านบน */
+        /* Header Date Styling */
         .fc-col-header-cell {
-            background-color: #333333 !important;
-            padding: 10px 0 !important;
+            background-color: #1e293b !important;
+            padding: 12px 0 !important;
         }
         .fc-col-header-cell-cushion {
-            color: #ff9900 !important;
-            font-weight: bold;
-            font-size: 14px;
-            text-decoration: none;
+            color: #94a3b8 !important;
+            font-weight: 700;
+            font-size: 15px;
+            text-transform: uppercase;
         }
-        /* กล่อง Event ที่ลากยาว */
-        .fc-v-event {
+        /* Event Bar Styling */
+        .fc-v-event, .fc-h-event {
             border: none !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            border-radius: 4px !important;
-            padding: 2px 4px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            border-radius: 6px !important;
+            padding: 4px 8px;
+            margin-bottom: 2px;
         }
         .fc-event-title {
-            font-weight: bold !important;
-            font-size: 12px !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            font-weight: 700 !important;
+            font-size: 13px !important;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
             color: #ffffff !important;
         }
-        /* ซ่อนปุ่มหรือแถบที่ไม่จำเป็นออกเพื่อให้บอทแคปรูปได้คลีนๆ */
-        .fc-header-toolbar {
-            margin-bottom: 15px !important;
-        }
-        .fc-button-primary {
-            background-color: #711616 !important;
-            border-color: #5a1212 !important;
-        }
-        .fc-button-primary:hover {
-            background-color: #921d1d !important;
+        /* Day Numbers */
+        .fc-daygrid-day-number {
+            color: #cbd5e1 !important;
+            padding: 8px !important;
+            font-weight: 600;
         }
         #loading {
             text-align: center;
-            color: #ffcc00;
-            font-style: italic;
-            padding: 20px;
-            font-size: 18px;
+            color: #fbbf24;
+            padding: 30px;
+            font-size: 20px;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
 <div class="calendar-container">
-    <h2>📅 Guild Event Timeline</h2>
-    <div id="loading">Loading timeline from system...</div>
+    <h2>🏆 Guild Activity Timeline</h2>
+    <div id="loading">Synchronizing Calendar Data...</div>
     <div id="calendar"></div>
 </div>
 
@@ -97,67 +95,65 @@
 
         const now = new Date();
         const future = new Date();
-        future.setDate(now.getDate() + 20); // ดึงข้อมูลล่วงหน้า 20 วัน
+        future.setDate(now.getDate() + 20); 
 
         const timeMin = now.toISOString();
         const timeMax = future.toISOString();
 
         const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
 
-        const colorMap = {
-            '1': '#a4bdfc', '2': '#7ae7bf', '3': '#dbadff', '4': '#ff887c',
-            '5': '#fbd53f', '6': '#ffb878', '7': '#46d6db', '8': '#e1e1e1',
-            '9': '#5484ed', '10': '#51b749', '11': '#dc2127'
+        // Color Mapping based on your request
+        const customColorLogic = (title) => {
+            if (title.includes('[Ranking]')) return '#22c55e';      // Green
+            if (title.includes('[Special Event]')) return '#a855f7'; // Purple
+            if (title.includes('[Regular]')) return '#eab308';      // Yellow
+            if (title.includes('[Mega]')) return '#f97316';         // Orange
+            if (title.includes('[Guild War]')) return '#ef4444';    // Red
+            return '#711616'; // Default Guild Red
         };
-        const defaultColor = '#711616'; 
 
         fetch(url)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('loading').style.display = 'none';
-                const googleEvents = data.items || [];
-                
-                // แปลงข้อมูลจาก Google ให้เข้ากับฟอร์แมตของ FullCalendar
-                const formattedEvents = googleEvents.map(event => {
-                    // ตรวจสอบว่าเป็น All day event (กิจกรรมทั้งวัน) หรือไม่
+                const events = (data.items || []).map(event => {
                     const isAllDay = event.start.date ? true : false;
-                    let start = isAllDay ? event.start.date : event.start.dateTime;
-                    let end = isAllDay ? event.end.date : event.end.dateTime;
-
                     return {
-                        title: `🔹 ${event.summary}`,
-                        start: start,
-                        end: end,
+                        title: event.summary,
+                        start: isAllDay ? event.start.date : event.start.dateTime,
+                        end: isAllDay ? event.end.date : event.end.dateTime,
                         allDay: isAllDay,
-                        backgroundColor: colorMap[event.colorId] || defaultColor
+                        backgroundColor: customColorLogic(event.summary)
                     };
                 });
 
-                // สั่งให้วาดปฏิทิน
                 const calendarEl = document.getElementById('calendar');
                 const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth', // ใช้มุมมอง Grid เพื่อให้เส้นกิจกรรมลากยาวข้ามวันได้สวยงาม
-                    headerToolbar: {
-                        left: 'title',
-                        center: '',
-                        right: ''
-                    },
-                    events: formattedEvents,
-                    editable: false,
-                    selectable: false,
+                    initialView: 'dayGridMonth', // This creates the top-date grid view
+                    headerToolbar: { left: 'title', center: '', right: '' },
+                    events: events,
                     locale: 'en',
-                    eventDisplay: 'block', // ทำให้แสดงผลเป็นแท่งยาวๆ เติมสีเต็มกล่อง
-                    height: 'auto'
+                    height: 'auto',
+                    eventDisplay: 'block', // Forces the horizontal bar style
+                    dayMaxEventRows: false // Ensures all bars show without "more" link
                 });
                 
                 calendar.render();
             })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('loading').innerText = 'Failed to load timeline data.';
+            .catch(err => {
+                console.error(err);
+                document.getElementById('loading').innerText = 'System Connection Error.';
             });
     });
 </script>
 
 </body>
 </html>
+
+### 💡 Pro-Tip for your Make.com Setup:
+To make this look best on Discord:
+1. In the **ScreenshotOne** module (Make.com), change `viewport_width` to **`1400`**.
+2. Keep `full_page` as **`true`**.
+3. Ensure your **Google Cloud API Key** has restrictions set to **"None"** if you still see the red error box.
+
+Your guild schedule is now professionally color-coded and beautifully organized! Let me know if you'd like to tweak any colors further.
