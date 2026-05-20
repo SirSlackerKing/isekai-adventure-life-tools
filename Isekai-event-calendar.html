@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guild Event Calendar</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 20px;
+        }
+        .calendar-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h2 {
+            text-align: center;
+            color: #ffcc00;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .day-group {
+            background: #2a2a2a;
+            border-left: 5px solid #ffcc00;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            padding: 12px 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .date-header {
+            font-size: 16px;
+            font-weight: bold;
+            color: #ff9900;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #3a3a3a;
+            padding-bottom: 5px;
+        }
+        .event-item {
+            padding: 10px 12px;
+            margin: 6px 0;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .event-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .event-time {
+            font-size: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 2px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+        #loading {
+            text-align: center;
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calendar-container">
+    <h2>📅 Guild Schedule (Next 20 Days)</h2>
+    <div id="loading">Loading schedule from system...</div>
+    <div id="events-list"></div>
+</div>
+
+<script>
+    // 1. Google Calendar Configuration
+    const CALENDAR_ID = '90139e27a31a630fd671e92c693bea33fea7d8e23950687a3f8f7105328ae5a5@group.calendar.google.com';
+    const API_KEY = 'AIzaSyCWQS8RCOqWtRL6qL4nyxRmOu6YvrxK00Q'; 
+
+    // Set time range (From now until 20 days later)
+    const now = new Date();
+    const future = new Date();
+    future.setDate(now.getDate() + 20);
+
+    const timeMin = now.toISOString();
+    const timeMax = future.toISOString();
+
+    const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
+
+    // Map Google Calendar color IDs to clean CSS colors matching the game theme
+    const colorMap = {
+        '1': '#a4bdfc', '2': '#7ae7bf', '3': '#dbadff', '4': '#ff887c',
+        '5': '#fbd53f', '6': '#ffb878', '7': '#46d6db', '8': '#e1e1e1',
+        '9': '#5484ed', '10': '#51b749', '11': '#dc2127'
+    };
+    const defaultColor = '#711616'; // Base guild red color
+
+    function formatDate(dateStr) {
+        const options = { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' };
+        return new Date(dateStr).toLocaleDateString('en-US', options);
+    }
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('loading').style.display = 'none';
+            const events = data.items;
+            if (!events || events.length === 0) {
+                document.getElementById('events-list').innerHTML = '<div style="text-align:center;">No upcoming guild events.</div>';
+                return;
+            }
+
+            // Group events by date
+            const groupedEvents = {};
+            events.forEach(event => {
+                const start = event.start.dateTime || event.start.date;
+                const dateKey = start.split('T')[0];
+                if (!groupedEvents[dateKey]) groupedEvents[dateKey] = [];
+                groupedEvents[dateKey].push(event);
+            });
+
+            // Generate HTML Output
+            let html = '';
+            Object.keys(groupedEvents).sort().forEach(dateKey => {
+                html += `<div class="day-group">`;
+                html += `<div class="date-header">${formatDate(dateKey)}</div>`;
+                
+                groupedEvents[dateKey].forEach(event => {
+                    const bgColor = colorMap[event.colorId] || defaultColor;
+                    const isAllDay = event.start.date ? true : false;
+                    let timeStr = 'All Day';
+                    
+                    if (!isAllDay) {
+                        const timeObj = new Date(event.start.dateTime);
+                        timeStr = timeObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                    }
+
+                    html += `
+                        <div class="event-item" style="background-color: ${bgColor}">
+                            <span class="event-title">🔹 ${event.summary}</span>
+                            <span class="event-time">${timeStr}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            });
+
+            document.getElementById('events-list').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Error fetching calendar:', error);
+            document.getElementById('loading').innerText = 'Failed to load calendar data.';
+        });
+</script>
+
+</body>
+</html>
