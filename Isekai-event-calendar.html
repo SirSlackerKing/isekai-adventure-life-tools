@@ -3,96 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isekai Event Timeline</title>
+    <title>Guild Schedule Tracker</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Quicksand', sans-serif;
-            background-color: #f8fafc; /* พื้นหลังสีสว่าง คลีน มินิมอล */
+            background-color: #f8fafc; /* พื้นหลังสีขาวคลีน สไตล์มินิมอล */
             color: #334155;
             margin: 0;
-            padding: 24px;
+            padding: 12px;
         }
         .calendar-container {
-            max-width: 1300px;
+            max-width: 800px; /* บีบขนาดให้พอดีกับการแคปรูปแนวตั้งของมือถือ */
             margin: 0 auto;
             background: #ffffff;
-            padding: 30px;
-            border-radius: 24px; /* โค้งมนนุ่มนวลแบบสไตล์เกม */
+            padding: 20px;
+            border-radius: 24px;
             box-shadow: 0 10px 30px rgba(148, 163, 184, 0.15);
             border: 2px solid #f1f5f9;
         }
         h2 {
             text-align: center;
-            color: #64748b;
-            font-size: 26px;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-            font-weight: 700;
+            color: #475569;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-weight: 800;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 8px;
         }
-        /* ลบเส้นขอบหนา ๆ ออกเพื่อให้ดู Minimal */
-        .fc {
-            --fc-border-color: #e2e8f0;
-            --fc-page-bg-color: #ffffff;
-            --fc-neutral-bg-color: #f8fafc;
-            --fc-today-bg-color: #eff6ff;
+        
+        /* ปรับแต่งส่วนหัววันที่ของแต่ละวัน */
+        .fc-list-day-cushion {
+            background-color: #f1f5f9 !important;
+            padding: 12px 16px !important;
         }
-        .fc-theme-standard td, .fc-theme-standard th {
-            border: 1px solid #e2e8f0 !important;
+        .fc-list-day-text, .fc-list-day-side-text {
+            color: #475569 !important;
+            font-weight: 800 !important;
+            font-size: 18px !important; /* ขยายวันที่ตัวใหญ่สะใจ */
+            text-decoration: none !important;
         }
-        /* หัวข้อวันด้านบน (Sun - Sat) */
-        .fc-col-header-cell {
-            background-color: #f8fafc !important;
-            padding: 12px 0 !important;
-            border: none !important;
+
+        /* ปรับแต่งแถบกิจกรรมในแต่ละวัน */
+        .fc-list-event {
+            background: transparent !important;
+            hover: none !important;
         }
-        .fc-col-header-cell-cushion {
-            color: #64748b !important;
-            font-weight: 700;
+        .fc-list-event-dot {
+            display: none !important; /* ซ่อนจุดกลมๆ เดิมของระบบ */
+        }
+        
+        /* ดีไซน์กล่องกิจกรรมใหม่ให้เหมือนแท่งในเกม */
+        .fc-list-event-title {
+            padding: 0 !important;
+        }
+        .custom-event-bar {
+            padding: 14px 18px;
+            border-radius: 14px; /* ความโค้งมนน่ารักสไตล์เกม */
+            font-weight: 800;
+            font-size: 18px; /* ปรับฟอนต์ชื่ออีเวนต์ให้ตัวใหญ่ ชัดเจนในมือถือ */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin: 4px 0;
+        }
+        
+        /* ช่วงเวลาของกิจกรรม */
+        .custom-event-time {
             font-size: 14px;
-            text-decoration: none !important;
-        }
-        /* ปรับแต่งแท่งกิจกรรมให้เป็นพาสเทลมินิมอล */
-        .fc-v-event, .fc-h-event {
-            border: none !important;
-            border-radius: 10px !important; /* ปรับให้กล่องมนน่ารัก */
-            padding: 6px 10px !important;
-            margin-bottom: 4px !important;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
-        }
-        /* ข้อความในแท่งกิจกรรม */
-        .fc-event-title {
-            font-weight: 700 !important;
-            font-size: 12px !important;
-            color: #475569 !important; /* ใช้สีตัวอักษรเข้มเขากับพาสเทล ไม่ใช้สีขาวล้วน */
-            text-shadow: none !important;
-        }
-        /* ตัวเลขวันที่ */
-        .fc-daygrid-day-number {
-            color: #94a3b8 !important;
-            padding: 10px !important;
+            background: rgba(0, 0, 0, 0.06);
+            padding: 4px 10px;
+            border-radius: 20px;
+            color: #475569;
             font-weight: 700;
-            font-size: 13px;
-            text-decoration: none !important;
         }
-        .fc-daygrid-day {
-            transition: background-color 0.2s;
+
+        /* ซ่อนเส้นตารางขอบเดิมของระบบลิสต์ */
+        .fc-theme-standard .fc-list {
+            border: none !important;
         }
-        .fc-daygrid-day:hover {
-            background-color: #f8fafc;
+        .fc-list-table th, .fc-list-table td {
+            border: none !important;
         }
+
         #loading {
             text-align: center;
             color: #94a3b8;
             padding: 40px;
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
         }
     </style>
@@ -100,8 +104,8 @@
 <body>
 
 <div class="calendar-container">
-    <h2>✨ Guild Schedule</h2>
-    <div id="loading">✨ Loading timeline... ✨</div>
+    <h2>✨ Isekai Event Calendar</h2>
+    <div id="loading">✨ Syncing Events... ✨</div>
     <div id="calendar"></div>
 </div>
 
@@ -114,21 +118,21 @@
 
         const now = new Date();
         const future = new Date();
-        future.setDate(now.getDate() + 20); 
+        future.setDate(now.getDate() + 20); // ดึงล่วงหน้า 20 วัน
 
         const timeMin = now.toISOString();
         const timeMax = future.toISOString();
 
         const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
 
-        // ระบบจับคู่สีพาสเทลตามคำขอของคุณ
+        // ระบบสีพาสเทลน่ารัก โดยปรับส้มและแดงให้เด่น เด้ง สดใสขึ้นตามสั่งครับ
         const customColorLogic = (title) => {
-            if (title.includes('[Ranking]')) return '#a7f3d0';      // พาสเทลเขียว
-            if (title.includes('[Special Event]')) return '#e9d5ff'; // พาสเทลม่วง
-            if (title.includes('[Regular]')) return '#fef08a';      // พาสเทลเหลือง
-            if (title.includes('[Mega]')) return '#ffedd5';         // พาสเทลส้ม
-            if (title.includes('[Guild War]')) return '#fecaca';    // พาสเทลแดง
-            return '#f5e6d3'; // พาสเทลน้ำตาลเบจสำหรับกิจกรรมทั่วไป
+            if (title.includes('[Ranking]')) return { bg: '#a7f3d0', text: '#065f46' };      // พาสเทลเขียวมิ้นท์
+            if (title.includes('[Special Event]')) return { bg: '#e9d5ff', text: '#6b21a8' }; // พาสเทลม่วงลาเวนเดอร์
+            if (title.includes('[Regular]')) return { bg: '#fef08a', text: '#854d0e' };      // พาสเทลเหลืองครีม
+            if (title.includes('[Mega]')) return { bg: '#ffb066', text: '#ffffff' };         // ส้มเด่นขึ้น (เน้นตัวหนังสือขาวให้อ่านง่าย)
+            if (title.includes('[Guild War]')) return { bg: '#ff7676', text: '#ffffff' };    // แดงเด่นขึ้น (เน้นตัวหนังสือขาวให้อ่านง่าย)
+            return { bg: '#f5e6d3', text: '#78350f' }; // พาสเทลน้ำตาลเบจ (ทั่วไป)
         };
 
         fetch(url)
@@ -137,24 +141,41 @@
                 document.getElementById('loading').style.display = 'none';
                 const events = (data.items || []).map(event => {
                     const isAllDay = event.start.date ? true : false;
+                    const colorStyle = customColorLogic(event.summary);
+                    
+                    // คำนวณเวลาแสดงผล
+                    let timeDisplay = 'All Day';
+                    if (!isAllDay) {
+                        const startObj = new Date(event.start.dateTime);
+                        timeDisplay = startObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    }
+
+                    // สร้างบล็อกความกว้างเต็มตามสไตล์ที่ปรับแต่งเอง
+                    const customHtml = `
+                        <div class="custom-event-bar" style="background-color: ${colorStyle.bg}; color: ${colorStyle.text};">
+                            <span>🔹 ${event.summary}</span>
+                            <span class="custom-event-time">${timeDisplay}</span>
+                        </div>
+                    `;
+
                     return {
-                        title: event.summary,
+                        title: customHtml, // ใส่โครงสร้างแท่งสีเข้าไปแทนข้อความดิบ
                         start: isAllDay ? event.start.date : event.start.dateTime,
                         end: isAllDay ? event.end.date : event.end.dateTime,
-                        allDay: isAllDay,
-                        backgroundColor: customColorLogic(event.summary)
+                        allDay: isAllDay
                     };
                 });
 
                 const calendarEl = document.getElementById('calendar');
                 const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth',
-                    headerToolbar: { left: 'title', center: '', right: '' },
+                    initialView: 'listMonth', // เปลี่ยนมาใช้มุมมอง List เพื่อเริ่มต้นที่ "วันนี้" และตัดวันเก่าๆ ทิ้งทันที!
+                    headerToolbar: { left: '', center: 'title', right: '' },
                     events: events,
                     locale: 'en',
                     height: 'auto',
-                    eventDisplay: 'block',
-                    dayMaxEventRows: false
+                    eventContent: function(arg) {
+                        return { html: arg.event.title }; // สั่งให้เรนเดอร์แท่งสีที่เราดีไซน์ไว้
+                    }
                 });
                 
                 calendar.render();
