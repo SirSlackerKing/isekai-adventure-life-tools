@@ -3,86 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guild Timeline - Isekai Tools</title>
+    <title>Isekai Event Timeline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0f172a;
-            color: #f8fafc;
+            font-family: 'Quicksand', sans-serif;
+            background-color: #f8fafc; /* พื้นหลังสีสว่าง คลีน มินิมอล */
+            color: #334155;
             margin: 0;
-            padding: 20px;
+            padding: 24px;
         }
         .calendar-container {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
-            background: #1e293b;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 24px; /* โค้งมนนุ่มนวลแบบสไตล์เกม */
+            box-shadow: 0 10px 30px rgba(148, 163, 184, 0.15);
+            border: 2px solid #f1f5f9;
         }
         h2 {
             text-align: center;
-            color: #fbbf24;
-            font-size: 28px;
+            color: #64748b;
+            font-size: 26px;
             margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 800;
+            letter-spacing: 1px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        /* FullCalendar Custom Theme */
+        /* ลบเส้นขอบหนา ๆ ออกเพื่อให้ดู Minimal */
         .fc {
-            --fc-border-color: #334155;
-            --fc-page-bg-color: #1e293b;
-            --fc-neutral-bg-color: #0f172a;
-            --fc-list-event-hover-bg-color: #334155;
-            --fc-today-bg-color: rgba(56, 189, 248, 0.1);
+            --fc-border-color: #e2e8f0;
+            --fc-page-bg-color: #ffffff;
+            --fc-neutral-bg-color: #f8fafc;
+            --fc-today-bg-color: #eff6ff;
         }
-        /* Header Date Styling */
+        .fc-theme-standard td, .fc-theme-standard th {
+            border: 1px solid #e2e8f0 !important;
+        }
+        /* หัวข้อวันด้านบน (Sun - Sat) */
         .fc-col-header-cell {
-            background-color: #1e293b !important;
+            background-color: #f8fafc !important;
             padding: 12px 0 !important;
+            border: none !important;
         }
         .fc-col-header-cell-cushion {
-            color: #94a3b8 !important;
+            color: #64748b !important;
             font-weight: 700;
-            font-size: 15px;
-            text-transform: uppercase;
+            font-size: 14px;
+            text-decoration: none !important;
         }
-        /* Event Bar Styling */
+        /* ปรับแต่งแท่งกิจกรรมให้เป็นพาสเทลมินิมอล */
         .fc-v-event, .fc-h-event {
             border: none !important;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-            border-radius: 6px !important;
-            padding: 4px 8px;
-            margin-bottom: 2px;
+            border-radius: 10px !important; /* ปรับให้กล่องมนน่ารัก */
+            padding: 6px 10px !important;
+            margin-bottom: 4px !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
         }
+        /* ข้อความในแท่งกิจกรรม */
         .fc-event-title {
             font-weight: 700 !important;
-            font-size: 13px !important;
-            text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
-            color: #ffffff !important;
+            font-size: 12px !important;
+            color: #475569 !important; /* ใช้สีตัวอักษรเข้มเขากับพาสเทล ไม่ใช้สีขาวล้วน */
+            text-shadow: none !important;
         }
-        /* Day Numbers */
+        /* ตัวเลขวันที่ */
         .fc-daygrid-day-number {
-            color: #cbd5e1 !important;
-            padding: 8px !important;
-            font-weight: 600;
+            color: #94a3b8 !important;
+            padding: 10px !important;
+            font-weight: 700;
+            font-size: 13px;
+            text-decoration: none !important;
+        }
+        .fc-daygrid-day {
+            transition: background-color 0.2s;
+        }
+        .fc-daygrid-day:hover {
+            background-color: #f8fafc;
         }
         #loading {
             text-align: center;
-            color: #fbbf24;
-            padding: 30px;
-            font-size: 20px;
-            font-weight: 600;
+            color: #94a3b8;
+            padding: 40px;
+            font-size: 18px;
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
 
 <div class="calendar-container">
-    <h2>🏆 Guild Activity Timeline</h2>
-    <div id="loading">Synchronizing Calendar Data...</div>
+    <h2>✨ Guild Schedule</h2>
+    <div id="loading">✨ Loading timeline... ✨</div>
     <div id="calendar"></div>
 </div>
 
@@ -102,14 +121,14 @@
 
         const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
 
-        // Color Mapping based on your request
+        // ระบบจับคู่สีพาสเทลตามคำขอของคุณ
         const customColorLogic = (title) => {
-            if (title.includes('[Ranking]')) return '#22c55e';      // Green
-            if (title.includes('[Special Event]')) return '#a855f7'; // Purple
-            if (title.includes('[Regular]')) return '#eab308';      // Yellow
-            if (title.includes('[Mega]')) return '#f97316';         // Orange
-            if (title.includes('[Guild War]')) return '#ef4444';    // Red
-            return '#711616'; // Default Guild Red
+            if (title.includes('[Ranking]')) return '#a7f3d0';      // พาสเทลเขียว
+            if (title.includes('[Special Event]')) return '#e9d5ff'; // พาสเทลม่วง
+            if (title.includes('[Regular]')) return '#fef08a';      // พาสเทลเหลือง
+            if (title.includes('[Mega]')) return '#ffedd5';         // พาสเทลส้ม
+            if (title.includes('[Guild War]')) return '#fecaca';    // พาสเทลแดง
+            return '#f5e6d3'; // พาสเทลน้ำตาลเบจสำหรับกิจกรรมทั่วไป
         };
 
         fetch(url)
@@ -129,20 +148,20 @@
 
                 const calendarEl = document.getElementById('calendar');
                 const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGridMonth', // This creates the top-date grid view
+                    initialView: 'dayGridMonth',
                     headerToolbar: { left: 'title', center: '', right: '' },
                     events: events,
                     locale: 'en',
                     height: 'auto',
-                    eventDisplay: 'block', // Forces the horizontal bar style
-                    dayMaxEventRows: false // Ensures all bars show without "more" link
+                    eventDisplay: 'block',
+                    dayMaxEventRows: false
                 });
                 
                 calendar.render();
             })
             .catch(err => {
                 console.error(err);
-                document.getElementById('loading').innerText = 'System Connection Error.';
+                document.getElementById('loading').innerText = 'Connection Error.';
             });
     });
 </script>
