@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isekai Event Calendar v7.0</title>
+    <title>Isekai Event Calendar v8.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&display=swap" rel="stylesheet">
@@ -60,6 +60,12 @@
             border: 2px solid #e2e8f0 !important;
         }
         
+        /* [v8.0 แก้ถูกจุด] สั่งให้ช่องตารางแต่ละวันขยายความสูงแนวตั้งเพิ่มขึ้น */
+        /* เพื่อให้รองรับแท่งกิจกรรมตัวใหญ่ได้สบายๆ โดยไม่เบียดหรือล้นทับกัน */
+        .fc-daygrid-day-frame {
+            min-height: 150px !important; 
+        }
+        
         /* วัน Sun - Sat */
         .fc-col-header-cell {
             background-color: #f8fafc !important;
@@ -72,25 +78,18 @@
             text-decoration: none !important;
         }
         
-        /* [v7.0] แก้ไขโครงสร้างการซ้อนทับ (Collision Bug) */
-        .fc-daygrid-event-harness {
-            margin: 4px 2px !important; /* เพิ่มช่องไฟแนวตั้งให้ระบบคำนวณหลบกันได้ถูก */
-            position: relative !important;
-        }
-
+        /* แท่งกิจกรรมอิงโครงสร้างเดิมของ v6.0 แต่เคลียร์ช่องไฟให้เสถียร */
         .fc-v-event, .fc-h-event {
             border: none !important;
             border-radius: 8px !important;
-            padding: 5px 10px !important; /* ปรับสมดุล padding เพื่อไม่ให้กล่องหนาเกินกรอบที่คำนวณไว้ */
             box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
-            display: block !important;
         }
         
-        /* [v7.0] บังคับแถวเดี่ยว ไม่ซ้อน ไม่ทะลุออกนอกกล่อง */
+        /* ตัวหนังสือบนแท่งกิจกรรม (ใหญ่ ชัดเจน แถวเดี่ยว ตัดท้ายด้วย ...) */
         .fc-event-title {
             font-weight: 800 !important;
             font-size: 16px !important; 
-            line-height: 1.2 !important;
+            line-height: 1.4 !important;
             white-space: nowrap !important; 
             overflow: hidden !important;
             text-overflow: ellipsis !important; 
@@ -125,7 +124,7 @@
     
     <div id="calendar"></div>
     
-    <div class="footer-credit">v7.0 • Dev by Thinking.j17 • CozyNeko Guild S12</div>
+    <div class="footer-credit">v8.0 • Dev by Thinking.j17 • CozyNeko Guild S12</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
@@ -137,7 +136,7 @@
 
         const now = new Date();
         const future = new Date();
-        future.setDate(now.getDate() + 35); 
+        future.setDate(now.getDate() + 35); // โชว์ล่วงหน้าครอบคลุม 30 วันในตาราง
 
         const timeMin = now.toISOString();
         const timeMax = future.toISOString();
@@ -173,13 +172,13 @@
                 const calendarEl = document.getElementById('calendar');
                 const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGrid',
-                    duration: { weeks: 5 }, 
+                    duration: { weeks: 5 }, // แสดงตารางต่อเนื่องข้ามเดือน เริ่มที่ปัจจุบันเสมอ
                     headerToolbar: false, 
                     events: events,
                     locale: 'en',
                     height: 'auto',
                     eventDisplay: 'block',
-                    dayMaxEventRows: false 
+                    dayMaxEventRows: false // แสดงทุกแถวกิจกรรม ห้ามซ่อน
                 });
                 
                 calendar.render();
