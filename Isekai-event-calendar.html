@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isekai Event Calendar v5.0</title>
+    <title>Isekai Event Calendar v6.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@700;800&display=swap" rel="stylesheet">
@@ -17,7 +17,7 @@
             padding: 10px;
         }
         .calendar-container {
-            max-width: 1200px; /* บีบความกว้างเล็กน้อยเพื่อให้ตอนแคปรูป ตัวหนังสือจะดูใหญ่ขึ้นเมื่อเทียบกับพื้นที่ */
+            max-width: 1250px;
             margin: 0 auto;
             background: #ffffff;
             padding: 30px;
@@ -26,7 +26,6 @@
             border: 3px solid #e2e8f0;
         }
         
-        /* หัวข้อ v5.0 ขยายใหญ่พิเศษ */
         .header-area {
             display: flex;
             justify-content: space-between;
@@ -35,7 +34,7 @@
         }
         h2 {
             color: #334155;
-            font-size: 42px; /* ขยายใหญ่มาก */
+            font-size: 38px;
             margin: 0;
             font-weight: 800;
             letter-spacing: -1px;
@@ -52,7 +51,7 @@
             border: 2px solid #e2e8f0;
         }
 
-        /* ตารางปฏิทิน v5.0 */
+        /* ตารางปฏิทิน */
         .fc {
             --fc-border-color: #cbd5e1;
             --fc-today-bg-color: #f0f9ff;
@@ -61,47 +60,52 @@
             border: 2px solid #e2e8f0 !important;
         }
         
-        /* วัน Sun - Sat ขยายใหญ่ */
+        /* วัน Sun - Sat */
         .fc-col-header-cell {
             background-color: #f8fafc !important;
-            padding: 18px 0 !important;
+            padding: 16px 0 !important;
         }
         .fc-col-header-cell-cushion {
             color: #475569 !important;
             font-weight: 800;
-            font-size: 24px; /* ใหญ่มาก */
+            font-size: 22px;
             text-decoration: none !important;
         }
         
-        /* แท่งกิจกรรม v5.0 อัดฉีดขนาดตัวอักษร */
+        /* [v6.0] ปรับแต่งแท่งกิจกรรมไม่ให้ซ้อนบรรทัดและลดการเบียด */
         .fc-v-event, .fc-h-event {
             border: none !important;
-            border-radius: 12px !important;
-            padding: 10px 15px !important; /* หนาขึ้น */
-            margin-bottom: 6px !important;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
-        }
-        .fc-event-title {
-            font-weight: 800 !important;
-            font-size: 20px !important; /* ขนาดนี้เห็นชัดแน่นอนใน Discord Preview */
-            line-height: 1.2 !important;
-            white-space: normal !important; /* ให้ขึ้นบรรทัดใหม่ได้ถ้าชื่อยาว */
+            border-radius: 8px !important;
+            padding: 6px 10px !important; /* ปรับพิกัดความหนาให้สมดุล */
+            margin-bottom: 4px !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.06) !important;
         }
         
-        /* เลขวันที่ขยายใหญ่ */
+        /* [v6.0] บังคับให้ชื่อยาวแค่บรรทัดเดียว ตัดจบสวยๆ ด้วย ... ไม่หดตัวเบียดกัน */
+        .fc-event-title {
+            font-weight: 800 !important;
+            font-size: 16px !important; /* ปรับขนาดสมดุล อ่านง่ายในดิสคอร์ด */
+            line-height: 1.2 !important;
+            white-space: nowrap !important; /* ห้ามขึ้นบรรทัดใหม่เด็ดขาด */
+            overflow: hidden !important;
+            text-overflow: ellipsis !important; /* เติม ... เมื่อตัวหนังสือยาวเกินช่อง */
+            display: block !important;
+        }
+        
+        /* ขยายเลขวันที่ */
         .fc-daygrid-day-number {
             color: #64748b !important;
-            padding: 15px !important;
+            padding: 12px !important;
             font-weight: 800;
-            font-size: 22px; 
+            font-size: 20px; 
             text-decoration: none !important;
         }
 
+        /* ดันให้แท่งกิจกรรมขยายชิดขอบซ้ายขวาเพิ่มพื้นที่จอด้านข้าง */
         .fc-daygrid-event-harness {
-            margin: 2px 4px !important;
+            margin: 2px 2px !important;
         }
 
-        /* เครดิต */
         .footer-credit {
             text-align: center;
             margin-top: 30px;
@@ -121,7 +125,7 @@
     
     <div id="calendar"></div>
     
-    <div class="footer-credit">v5.0 • Dev by Thinking.j17 • CozyNeko Guild S12</div>
+    <div class="footer-credit">v6.0 • Dev by Thinking.j17 • CozyNeko Guild S12</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
@@ -133,7 +137,7 @@
 
         const now = new Date();
         const future = new Date();
-        future.setDate(now.getDate() + 35); // ดึงข้อมูลล่วงหน้า 35 วัน (เพื่อให้ครอบคลุม 30 วันใน Grid)
+        future.setDate(now.getDate() + 35); // ดึงล่วงหน้า 35 วัน (ครอบคลุม 5 สัปดาห์ในปฏิทิน)
 
         const timeMin = now.toISOString();
         const timeMax = future.toISOString();
@@ -169,8 +173,8 @@
                 const calendarEl = document.getElementById('calendar');
                 const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGrid',
-                    duration: { weeks: 5 }, // [v5.0] โชว์ 5 สัปดาห์ (ประมาณ 35 วัน) เริ่มจากปัจจุบัน
-                    headerToolbar: false, // ปิด Header ระบบเพื่อความมินิมอล
+                    duration: { weeks: 5 }, // แสดง 5 สัปดาห์ (35 วัน) ต่อเนื่องข้ามเดือน เริ่มที่ปัจจุบันเสมอ
+                    headerToolbar: false, 
                     events: events,
                     locale: 'en',
                     height: 'auto',
