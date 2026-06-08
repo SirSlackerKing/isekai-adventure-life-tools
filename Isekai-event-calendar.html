@@ -146,14 +146,18 @@
         const CALENDAR_ID = '90139e27a31a630fd671e92c693bea33fea7d8e23950687a3f8f7105328ae5a5@group.calendar.google.com';
         const API_KEY = 'AIzaSyCWQS8RCOqWtRL6qL4nyxRmOu6YvrxK00Q'; 
 
+        // 🌟 แก้ไขจุดที่ 1: ตั้งค่าให้ดึงวันที่ปัจจุบันใหม่สดๆ และรีเซ็ตเวลาเป็น 00:00:00 น. เพื่อตัดปัญหาวันที่ค้างข้ามคืน
         const now = new Date();
-        const future = new Date();
-        future.setDate(now.getDate() + 35); 
+        now.setHours(0, 0, 0, 0); // บังคับเริ่มที่เที่ยงคืนของวันปัจจุบัน
+
+        const future = new Date(now);
+        future.setDate(now.getDate() + 35); // นับต่อไปอีก 35 วัน (5 สัปดาห์)
 
         const timeMin = now.toISOString();
         const timeMax = future.toISOString();
 
-        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime`;
+        // เพิ่มพารามิเตอร์ต้าน Cache ไปใน URL ของ Google Calendar API (ใส่สุ่มตัวเลขเวลาปัจจุบันเข้าไปท้าย URL)
+        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime&_nocache=${new Date().getTime()}`;
 
         // สเกลคู่สีให้อ่านง่าย สบายตาขึ้นเมื่อฟอนต์ขยายใหญ่
         const customColorLogic = (title) => {
@@ -185,6 +189,7 @@
                 const calendarEl = document.getElementById('calendar');
                 const calendar = new FullCalendar.Calendar(calendarEl, {
                     initialView: 'dayGrid',
+                    initialDate: now, // 🌟 แก้ไขจุดที่ 2: บังคับให้ FullCalendar เปิดมาที่วันปัจจุบัน (เที่ยงคืนวันนี้) เสมอ ไม่ใช้ค่าดีฟอลต์ค้างเว็บ
                     duration: { weeks: 5 }, 
                     headerToolbar: false, 
                     events: events,
@@ -199,6 +204,7 @@
             .catch(err => console.error(err));
     });
 </script>
+
 
 </body>
 </html>
