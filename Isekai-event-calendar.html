@@ -3,208 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isekai Event Calendar v9.0</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2 family=Quicksand:wght@700;800&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+    <title>Isekai Event Calendar v9.3</title>
+    
+    <!-- FullCalendar 6.1.11 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+
     <style>
+        /* --- การตั้งค่าธีมหลักของปฏิทิน (Cozy Game Theme) --- */
         body {
-            font-family: 'Quicksand', sans-serif;
-            background-color: #f8fafc; /* เปลี่ยนเป็นสีสว่างนุ่มนวลแบบ Cozy */
-            color: #1e293b;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: #f8fafc;
             margin: 0;
-            padding: 15px;
+            padding: 20px;
         }
+
         .calendar-container {
-            max-width: 1250px;
+            max-width: 1200px;
             margin: 0 auto;
             background: #ffffff;
-            padding: 35px;
-            border-radius: 32px;
-            box-shadow: 0 20px 50px rgba(148, 163, 184, 0.12);
-            border: 1px solid #e2e8f0;
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
         }
-        
-        .header-area {
+
+        .calendar-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-        }
-        h2 {
-            color: #334155;
-            font-size: 40px;
-            margin: 0;
-            font-weight: 800;
-            letter-spacing: -1px;
-        }
-        
-        .home-btn {
-            background-color: #f1f5f9;
-            color: #64748b;
-            text-decoration: none;
-            padding: 12px 26px;
-            border-radius: 16px;
-            font-weight: 800;
-            font-size: 18px;
-            border: 2px solid #e2e8f0;
-            transition: all 0.2s ease;
-        }
-        .home-btn:hover {
-            background-color: #cbd5e1;
-            color: #334155;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 15px;
         }
 
-        /* โครงสร้างตารางปฏิทิน */
-        .fc {
-            --fc-border-color: #f1f5f9; /* เส้นตารางจางลงเพื่อความคลีน มินิมอล */
-            --fc-today-bg-color: #f0f9ff;
-        }
-        .fc-theme-standard td, .fc-theme-standard th {
-            border: 2px solid #f1f5f9 !important;
-        }
-        
-        /* [v9.0] เพิ่มพื้นที่แนวตั้งให้ช่องแต่ละวันหลวมขึ้น ดูไม่แออัด */
-        .fc-daygrid-day-frame {
-            min-height: 200px !important; 
-            padding: 6px !important;
-        }
-        
-        /* วัน Sun - Sat ด้านบน หัวข้อใหญ่ชัดเจน */
-        .fc-col-header-cell {
-            background-color: #f8fafc !important;
-            padding: 20px 0 !important;
-        }
-        .fc-col-header-cell-cushion {
-            color: #475569 !important;
-            font-weight: 800;
+        .calendar-header h1 {
             font-size: 24px;
-            text-decoration: none !important;
-        }
-        
-        /* [v9.0] จัดการช่องไฟ (Gap) ระหว่างแท่งอีเวนต์ ให้ห่างกันแบบพอดีๆ */
-        .fc-daygrid-event-harness {
-            margin: 6px 4px !important; /* ดันช่องไฟแนวตั้ง (6px) และแนวนอน (4px) ให้แยกชั้นกันชัดเจน */
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        /* [v9.0] แท่งกิจกรรมดีไซน์ Cozy & Bold */
-        .fc-v-event, .fc-h-event {
-            border: none !important;
-            border-radius: 12px !important; /* กล่องมนขึ้นสไตล์ UI เกมโมเดิร์น */
-            padding: 8px 14px !important; /* เพิ่มพื้นที่ด้านในกล่องให้ตัวหนังสือไม่เบียดขอบ */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        /* --- FullCalendar CSS Overrides [v9.3 UI ปรับปรุงใหม่] --- */
+        .fc {
+            --fc-border-color: #e2e8f0;
+            --fc-page-bg-color: #ffffff;
         }
-        
-        /* [v9.0] ตัวหนังสือแบบตะโกนขยายใหญ่ขึ้นมากเพื่อบอทแคปลง Discord */
-        .fc-event-title {
-            font-weight: 800 !important;
-            font-size: 20px !important; /* ขยายใหญ่สะใจ (จากเดิม 16px) */
-            line-height: 1.3 !important;
-            white-space: nowrap !important; 
-            overflow: hidden !important;
-            text-overflow: ellipsis !important; 
-            display: block !important;
-            letter-spacing: -0.3px;
+
+        /* 🌟 ปรับปรุงจุดที่ 1: ไฮไลต์ช่อง "วันนี้" (Today Highlight) ให้ชัดเจนเด่นสะดุดตา */
+        .fc-day-today {
+            background-color: #fffbeb !important; /* เปลี่ยนพื้นหลังวันนี้เป็นสีเหลืองครีมอ่อนละมุน */
+            border: 3px solid #f97316 !important; /* ทำเส้นขอบสีส้มอิฐหนา เพื่อล็อกสายตาเลียนแบบในเกม */
+            box-shadow: inset 0 0 12px rgba(249, 115, 22, 0.06);
+            position: relative;
         }
-        
-        /* เลขวันที่ขนาดใหญ่ */
-        .fc-daygrid-day-number {
-            color: #94a3b8 !important;
-            padding: 8px 12px !important;
+
+        /* เพิ่มป้ายคำว่า "TODAY" สีส้มสดใส แปะไว้ที่มุมซ้ายบนของช่องวันนี้ */
+        .fc-day-today .fc-daygrid-day-top::before {
+            content: "TODAY";
+            font-size: 10px;
             font-weight: 800;
-            font-size: 22px; 
+            color: #f97316;
+            background: #ffedd5;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-left: 10px;
+            margin-top: 8px;
+            display: inline-block;
+            float: left;
+            letter-spacing: 0.5px;
+        }
+
+        /* จัดแต่งตัวเลขวันที่สากลให้อ่านง่าย */
+        .fc-daygrid-day-number {
+            font-weight: 700 !important;
+            color: #64748b;
+            padding: 10px !important;
+            font-size: 15px;
+        }
+
+        .fc-day-today .fc-daygrid-day-number {
+            color: #ea580c !important; /* ตัวเลขวันที่ปัจจุบันเปลี่ยนเป็นสีส้มเข้ม */
+        }
+
+        /* ชื่อหัวข้อวัน (Sun - Sat) */
+        .fc-col-header-cell-cushion {
+            font-weight: 800 !important;
+            color: #475569 !important;
+            padding: 12px 0 !important;
+            font-size: 16px;
             text-decoration: none !important;
         }
 
-        .footer-credit {
-            text-align: center;
-            margin-top: 40px;
-            font-size: 18px;
-            color: #94a3b8;
-            font-weight: 700;
+        /* 🌟 ปรับปรุงจุดที่ 2: ปรับแต่งสไตล์แท่งกิจกรรม (Event Blocks) ให้เรียบร้อย ไม่รกสายตา */
+        .fc-v-event, .fc-h-event {
+            border-left: 5px solid rgba(0, 0, 0, 0.15) !important; /* เพิ่มขอบมิติด้านซ้ายตามประเภทสี */
+            border-top: none !important;
+            border-right: none !important;
+            border-bottom: none !important;
+            border-radius: 8px !important;
+            padding: 5px 10px !important;
+            margin: 3px 4px !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        /* ตัวหนังสือในแท่งกิจกรรม */
+        .fc-event-title {
+            font-weight: 700 !important;
+            font-size: 14px !important; 
+            letter-spacing: -0.3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* หากชื่อยาวเกินไป ให้ตัดเป็น ... ด้านท้ายอย่างเป็นระเบียบ */
+        }
+
+        /* ขยายขนาดเมื่อแถบกิจกรรมอยู่ในวันปัจจุบันเพื่อดึงความสนใจ */
+        .fc-day-today .fc-daygrid-event {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06) !important;
         }
     </style>
 </head>
 <body>
 
-<div class="calendar-container">
-    <div class="header-area">
-        <h2>> Isekai Event Calendar</h2>
-        <a href="https://sirslackerking.github.io/isekai-adventure-life-tools/" class="home-btn">🏠 Home</a>
+    <div class="calendar-container">
+        <div class="calendar-header">
+            <h1>📅 Isekai Event Calendar</h1>
+        </div>
+        <div id="calendar"></div>
     </div>
-    
-    <div id="calendar"></div>
-    
-    <div class="footer-credit">v9.0 • Dev by Thinking.j17 • CozyNeko Guild S12</div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const CALENDAR_ID = '90139e27a31a630fd671e92c693bea33fea7d8e23950687a3f8f7105328ae5a5@group.calendar.google.com';
+            const API_KEY = 'AIzaSyCWQS8RCOqWtRL6qL4nyxRmOu6YvrxK00Q'; 
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const CALENDAR_ID = '90139e27a31a630fd671e92c693bea33fea7d8e23950687a3f8f7105328ae5a5@group.calendar.google.com';
-        const API_KEY = 'AIzaSyCWQS8RCOqWtRL6qL4nyxRmOu6YvrxK00Q'; 
+            // ล็อกและคำนวณวันปัจจุบัน (รีเซ็ตเวลาเป็นเที่ยงคืนแก้ปัญหาวันดองข้ามคืน)
+            const now = new Date();
+            now.setHours(0, 0, 0, 0);
 
-        // 🌟 แก้ไขจุดที่ 1: ตั้งค่าให้ดึงวันที่ปัจจุบันใหม่สดๆ และรีเซ็ตเวลาเป็น 00:00:00 น. เพื่อตัดปัญหาวันที่ค้างข้ามคืน
-        const now = new Date();
-        now.setHours(0, 0, 0, 0); // บังคับเริ่มที่เที่ยงคืนของวันปัจจุบัน
+            const future = new Date(now);
+            future.setDate(now.getDate() + 35); // ดึงล่วงหน้า 5 สัปดาห์
 
-        const future = new Date(now);
-        future.setDate(now.getDate() + 35); // นับต่อไปอีก 35 วัน (5 สัปดาห์)
+            const timeMin = now.toISOString();
+            const timeMax = future.toISOString();
 
-        const timeMin = now.toISOString();
-        const timeMax = future.toISOString();
+            // เรียกข้อมูล API แบบต้าน Cache ของ Google API
+            const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime&_nocache=${new Date().getTime()}`;
 
-        // เพิ่มพารามิเตอร์ต้าน Cache ไปใน URL ของ Google Calendar API (ใส่สุ่มตัวเลขเวลาปัจจุบันเข้าไปท้าย URL)
-        const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime&_nocache=${new Date().getTime()}`;
+            // โลจิกคู่สี (จับกลุ่มตามแท็กเดิมเพื่อพ่นสีพาสเทลคลีนๆ)
+            const customColorLogic = (title) => {
+                if (title.includes('[Ranking]')) return { bg: '#e6fbf1', text: '#047857' };      // เขียวพาสเทล
+                if (title.includes('[Special Event]')) return { bg: '#f3e8ff', text: '#7e22ce' }; // ม่วงพาสเทล
+                if (title.includes('[Regular]')) return { bg: '#f1f5f9', text: '#475569' };       // เทาคลีนๆ (กิจกรรมทั่วไป)
+                if (title.includes('[Mega]')) return { bg: '#ffedd5', text: '#ea580c' };          // ส้มพาสเทลสดใส (สไตล์ในเกม)
+                if (title.includes('[Guild War]')) return { bg: '#fee2e2', text: '#dc2626' };     // แดงพาสเทลตื่นตัว
+                return { bg: '#f8fafc', text: '#64748b' }; 
+            };
 
-        // สเกลคู่สีให้อ่านง่าย สบายตาขึ้นเมื่อฟอนต์ขยายใหญ่
-        const customColorLogic = (title) => {
-            if (title.includes('[Ranking]')) return { bg: '#e6fbf1', text: '#047857' };      // เขียวพาสเทลคลีนๆ
-            if (title.includes('[Special Event]')) return { bg: '#f3e8ff', text: '#7e22ce' }; // ม่วงลาเวนเดอร์นุ่มๆ
-            if (title.includes('[Regular]')) return { bg: '#fef9c3', text: '#a16207' };      // เหลืองครีมละมุน
-            if (title.includes('[Mega]')) return { bg: '#ff9233', text: '#ffffff' };         // ส้มสด (เด่นชัด)
-            if (title.includes('[Guild War]')) return { bg: '#ff5555', text: '#ffffff' };    // แดงสด (เด่นชัด)
-            return { bg: '#f1f5f9', text: '#475569' }; 
-        };
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const events = (data.items || []).map(event => {
+                        const isAllDay = event.start.date ? true : false;
+                        const colorStyle = customColorLogic(event.summary);
+                        
+                        /* 🌟 ปรับปรุงจุดที่ 3: ระบบแปลงชื่อและย้ายตำแหน่ง Emoji */
+                        // 1. สั่งลบแท็กหัวข้อทิ้งออกไปให้หมดเพื่อความสะอาด
+                        let cleanTitle = event.summary
+                            .replace(/\[Mega\]|\[Regular\]|\[Guild War\]|\[Special Event\]|\[Ranking\]/g, '')
+                            .trim();
 
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const events = (data.items || []).map(event => {
-                    const isAllDay = event.start.date ? true : false;
-                    const colorStyle = customColorLogic(event.summary);
+                        // 2. ใช้ Regex ค้นหาตัวสัญลักษณ์ Emoji ที่อยู่ท้ายข้อความ
+                        const emojiMatch = cleanTitle.match(/([\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]+)\s*$/u);
+
+                        if (emojiMatch) {
+                            const emoji = emojiMatch[1]; // ดึงเอาตัว Emoji ออกมาเก็บไว้
+                            // หั่นตัว Emoji ออกจากท้ายชื่อเดิม
+                            cleanTitle = cleanTitle.substring(0, cleanTitle.lastIndexOf(emoji)).trim();
+                            // สลับช่องนำเอา Emoji ตัวนั้นมาแปะไว้ข้างหน้าสุดแทนด้วยการเว้นวรรคสวยๆ
+                            cleanTitle = `${emoji} ${cleanTitle}`;
+                        } else {
+                            // กรณีหลุดสไตล์ (ไม่ได้ใส่อีโมจิท้ายชื่อ) ให้ดึงสัญลักษณ์สากลแปะหน้าตามสีกิจกรรมแทน
+                            if (event.summary.includes('[Mega]')) cleanTitle = `🔸 ${cleanTitle}`;
+                            else if (event.summary.includes('[Guild War]')) cleanTitle = `⚔️ ${cleanTitle}`;
+                            else if (event.summary.includes('[Ranking]')) cleanTitle = `🏆 ${cleanTitle}`;
+                        }
+
+                        return {
+                            title: cleanTitle,
+                            start: isAllDay ? event.start.date : event.start.dateTime,
+                            end: isAllDay ? event.end.date : event.end.dateTime,
+                            allDay: isAllDay,
+                            backgroundColor: colorStyle.bg,
+                            textColor: colorStyle.text
+                        };
+                    });
+
+                    // วาดโครงตารางปฏิทินลงบนหน้าเว็บ
+                    const calendarEl = document.getElementById('calendar');
+                    const calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'dayGrid',
+                        initialDate: now, 
+                        duration: { weeks: 5 }, 
+                        headerToolbar: false, 
+                        events: events,
+                        locale: 'en',
+                        height: 'auto',
+                        eventDisplay: 'block',
+                        dayMaxEventRows: false 
+                    });
                     
-                    return {
-                        title: event.summary,
-                        start: isAllDay ? event.start.date : event.start.dateTime,
-                        end: isAllDay ? event.end.date : event.end.dateTime,
-                        allDay: isAllDay,
-                        backgroundColor: colorStyle.bg,
-                        textColor: colorStyle.text
-                    };
-                });
-
-                const calendarEl = document.getElementById('calendar');
-                const calendar = new FullCalendar.Calendar(calendarEl, {
-                    initialView: 'dayGrid',
-                    initialDate: now, // 🌟 แก้ไขจุดที่ 2: บังคับให้ FullCalendar เปิดมาที่วันปัจจุบัน (เที่ยงคืนวันนี้) เสมอ ไม่ใช้ค่าดีฟอลต์ค้างเว็บ
-                    duration: { weeks: 5 }, 
-                    headerToolbar: false, 
-                    events: events,
-                    locale: 'en',
-                    height: 'auto',
-                    eventDisplay: 'block',
-                    dayMaxEventRows: false 
-                });
-                
-                calendar.render();
-            })
-            .catch(err => console.error(err));
-    });
-</script>
-
-
+                    calendar.render();
+                })
+                .catch(err => console.error(err));
+        });
+    </script>
 </body>
 </html>
