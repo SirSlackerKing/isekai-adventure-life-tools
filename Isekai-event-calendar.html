@@ -3,130 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isekai Event Calendar v9.5</title>
+    <title>Isekai Event Calendar v9.6</title>
     
     <!-- FullCalendar 6.1.11 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
     <style>
-        /* --- 🎨 ธีมโทนเข้มอุ่นระดับพรีเมียม (Deep & Warm RPG Theme) --- */
+        /* --- 🎨 ธีมสีสว่างละมุนตา ถอดสีตามต้นฉบับจริง --- */
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            background-color: #1a1f2c; /* สีพื้นหลังสว่างกว่าเดิมเล็กน้อย ไม่มืดสนิทจนจม */
+            background-color: #f1f5f9; /* พื้นหลังสีเทานวล สบายสายตามาก */
             margin: 0;
-            padding: 10px;
+            padding: 15px;
         }
 
         .calendar-container {
-            max-width: 1350px; /* ขยายความกว้างเต็มตา */
+            max-width: 1300px;
             margin: 0 auto;
-            background: #232a3b; /* พื้นหลังกล่องปฏิทินโทน Slate อุ่นเข้ม */
+            background: #ffffff;
             padding: 25px;
-            border-radius: 28px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
-            border: 2px solid #2d3748;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            border-bottom: 3px solid #2d3748;
-            padding-bottom: 15px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e2e8f0;
         }
 
         .calendar-header h1 {
-            font-size: 34px;
-            font-weight: 900;
-            color: #f7fafc;
-            margin: 0;
-            letter-spacing: -0.5px;
+            font-size: 28px;
+            font-weight: 800;
+            color: #1e293b;
+            margin: 0 0 20px 0;
         }
 
-        /* --- FullCalendar Layout & Typography Upgrades --- */
+        /* --- FullCalendar Style Adjustments --- */
         .fc {
-            --fc-border-color: #2d3748; /* สีเส้นตารางคมชัด */
-            --fc-page-bg-color: #232a3b;
+            --fc-border-color: #e2e8f0;
+            --fc-page-bg-color: #ffffff;
         }
 
-        /* เพิ่มความสูงของช่องตารางให้ใหญ่สะใจ มีพื้นที่หายใจกว้างขวาง */
         .fc-daygrid-day-frame {
-            min-height: 200px !important; 
+            min-height: 140px !important; /* ปรับสเกลช่องให้พอดี ไม่ยืดโย่งเกินไป */
         }
 
-        /* แถบหัววัน Sun - Sat ด้านบน */
+        /* หัววัน Sun - Sat */
         .fc-col-header-cell {
-            background-color: #1a1f2c !important;
-            padding: 16px 0 !important;
-            border-bottom: 3px solid #2d3748 !important;
+            background-color: #f8fafc !important;
+            padding: 12px 0 !important;
         }
         .fc-col-header-cell-cushion {
-            font-weight: 900 !important;
-            color: #cbd5e1 !important; 
-            font-size: 22px !important; /* ขนาดหัววันใหญ่ขึ้นเด่นชัด */
+            font-weight: 800 !important;
+            color: #475569 !important;
+            font-size: 16px !important;
             text-decoration: none !important;
         }
 
-        /* ตัวเลขวันที่สากล */
+        /* ตัวเลขวันที่ */
         .fc-daygrid-day-number {
-            font-weight: 900 !important;
-            color: #94a3b8;
-            padding: 12px !important;
-            font-size: 20px !important; /* ขยายเลขที่ให้เห็นชัดๆ */
+            font-weight: 800 !important;
+            color: #64748b;
+            padding: 8px !important;
+            font-size: 16px !important;
         }
 
-        /* 🌟 ปรับปรุงจุดใหญ่: ถมสีช่อง "วันนี้" (Today Solid Highlight) ให้ดูดีมีมิติ */
+        /* 🌟 ถมสีช่อง "วันนี้" ให้ดูสวยหรูโมเดิร์น อิงตาม Google Calendar ต้นฉบับ */
         .fc-day-today {
-            background-color: #3b2e2a !important; /* ถมสีส้มอิฐโทนอุ่นเข้มเต็มช่อง สบายตาแต่เด่นมาก */
-            border: 4px solid #f97316 !important; /* ล้อมกรอบทองส้มเรืองแสง */
-            box-shadow: inset 0 0 30px rgba(249, 115, 22, 0.25) !important;
-            z-index: 5;
-        }
-
-        /* แท็กคำว่า TODAY แปะหัวมุม */
-        .fc-day-today .fc-daygrid-day-top::before {
-            content: "TODAY";
-            font-size: 13px;
-            font-weight: 900;
-            color: #ffffff;
-            background: #f97316;
-            padding: 4px 12px;
-            border-radius: 8px;
-            margin-left: 12px;
-            margin-top: 10px;
-            display: inline-block;
-            float: left;
-            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+            background-color: #e0f2fe !important; /* ถมสีฟ้าอ่อนพาสเทลละมุนตา */
+            border: 3px solid #0284c7 !important; /* เส้นขอบฟ้าเข้มล็อกสายตา */
+            z-index: 4;
         }
 
         .fc-day-today .fc-daygrid-day-number {
-            color: #ffedd5 !important; /* เลขวันของวันนี้เป็นสีส้มครีมสว่าง */
-            font-size: 22px !important;
-            text-shadow: 0 0 8px rgba(249, 115, 22, 0.5);
+            color: #0369a1 !important; /* เลขวันปัจจุบันเป็นสีน้ำเงินเข้ม */
+            font-size: 18px !important;
         }
 
-        /* 🌟 ปรับแต่งกล่องกิจกรรมใหม่ ใหญ่ หนา ชัดเจน (Big Bold Event Elements) */
+        /* จัดระเบียบแท่งกิจกรรมตามภาพต้นฉบับ */
         .fc-daygrid-event-harness {
-            margin: 8px 8px !important; /* เพิ่มช่องไฟห่างกันชัดเจน ไม่ติดเป็นพืด */
+            margin: 3px 4px !important;
         }
 
         .fc-v-event, .fc-h-event {
-            border-left: 8px solid rgba(0, 0, 0, 0.4) !important; /* ขอบซ้ายทึบเพิ่มมิติ */
-            border-top: none !important;
-            border-right: none !important;
-            border-bottom: none !important;
-            border-radius: 12px !important; /* ขอบมนสวยงามสไตล์ Modern UI */
-            padding: 12px 16px !important; /* เพิ่มความหนาของแท่งกิจกรรมให้อวบอิ่ม อ่านง่าย */
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            border: none !important;
+            border-radius: 6px !important;
+            padding: 6px 10px !important; /* ขยายความกว้างให้กดดูง่ายขึ้น */
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
-        /* ฟอนต์ชื่ออีเวนต์แบบตัวหนาพิเศษ คมชัดสะใจ */
+        /* ฟอนต์ตัวหนากำลังดี อ่านง่าย Contrast ชัดเจน ไม่แสบตา */
         .fc-event-title {
-            font-weight: 900 !important;
-            font-size: 19px !important; /* ขยายขนาดตัวหนังสือให้อ่านง่ายไม่ต้องเพ่ง */
-            letter-spacing: -0.3px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4); /* เพิ่มเงาให้ตัวหนังสือลอยเด่นออกมา */
+            font-weight: 700 !important;
+            font-size: 15px !important; 
+            letter-spacing: -0.2px;
         }
     </style>
 </head>
@@ -134,7 +100,7 @@
 
     <div class="calendar-container">
         <div class="calendar-header">
-            <h1>📅 Isekai Event Calendar v9.5</h1>
+            <h1>📅 Isekai Event Calendar v9.6</h1>
         </div>
         <div id="calendar"></div>
     </div>
@@ -155,15 +121,23 @@
 
             const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${timeMin}&timeMax=${timeMax}&singleEvents=true&orderBy=startTime&_nocache=${new Date().getTime()}`;
 
-            // 🌟 ปรับปรุงโทนสีแท่งกิจกรรมให้สว่าง คมชัด และ Contrast สูงขึ้นมากในตารางเข้ม
+            // 🌟 ดูดสีแกะค่าโค้ดสีพาสเทลตรงปกตามภาพ Google Calendar เป๊ะๆ
             const customColorLogic = (title) => {
-                if (title.includes('[Ranking]')) return { bg: '#10b981', text: '#ffffff' };      // เขียวนีออนสว่างสดใส ตัวหนังสือขาว
-                if (title.includes('[Special Event]')) return { bg: '#a855f7', text: '#ffffff' }; // ม่วงสว่าง ตัวหนังสือขาว
-                if (title.includes('[Regular]')) return { bg: '#4b5563', text: '#f3f4f6' };       // เทา Slate สว่าง ตัวหนังสือขาวเทา
-                if (title.includes('[Mega]')) return { bg: '#f97316', text: '#ffffff' };          // ส้มแสดสะดุดตา ตัวหนังสือขาว (เด่นสุดๆ)
-                if (title.includes('[Guild War]')) return { bg: '#ef4444', text: '#ffffff' };     // แดงสดตื่นตัว ตัวหนังสือขาว
-                return { bg: '#64748b', text: '#ffffff' }; 
+                if (title.includes('[Ranking]')) return { bg: '#81c784', text: '#1b5e20' };      // เขียวพาสเทลหม่น
+                if (title.includes('[Special Event]')) return { bg: '#ba68c8', text: '#4a148c' }; // ม่วงพาสเทลหม่น
+                if (title.includes('[Regular]')) return { bg: '#cfd8dc', text: '#263238' };       // เทาพาสเทล
+                if (title.includes('[Mega]')) return { bg: '#fdd835', text: '#4e342e' };          // เหลืองทองพาสเทล (ตรงปกสุดๆ)
+                if (title.includes('[Guild War]')) return { bg: '#e57373', text: '#b71c1c' };     // แดงพาสเทลหม่น
+                return { bg: '#e2e8f0', text: '#334155' }; 
             };
+
+            // ฟังก์ชันคัดกรองดึงเฉพาะตัวที่เป็น Emoji ออกมาแบบแม่นยำ
+            function extractLastEmojis(text) {
+                // ดักจับอักขระที่เป็นกลุ่ม Emoji ทั้งหมด
+                const emojiRegex = /(\u{1F300}-\u{1F9FF}|\u{2600}-\u{26FF}|\u{2700}-\u{27BF}|\u{1F600}-\u{1F64F}|\u{1F680}-\u{1F6FF}|\u{24C2}-\u{1F251})/gu;
+                const matches = text.match(emojiRegex);
+                return matches ? matches.join('') : '';
+            }
 
             fetch(url)
                 .then(response => response.json())
@@ -172,20 +146,20 @@
                         const isAllDay = event.start.date ? true : false;
                         const colorStyle = customColorLogic(event.summary);
                         
+                        // 1. ลบแท็กประเภทด้านหน้าออก
                         let cleanTitle = event.summary
                             .replace(/\[Mega\]|\[Regular\]|\[Guild War\]|\[Special Event\]|\[Ranking\]/g, '')
+                            .replace(/:\s*/g, '') // ล้างเครื่องหมายโคลอนตกค้างออก
                             .trim();
 
-                        const emojiMatch = cleanTitle.match(/([\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]+)\s*$/u);
+                        // 2. ควักเอาเฉพาะไอคอน Emoji ที่อยู่ข้างในข้อความออกมารวมกัน
+                        const foundEmoji = extractLastEmojis(cleanTitle);
 
-                        if (emojiMatch) {
-                            const emoji = emojiMatch[1]; 
-                            cleanTitle = cleanTitle.substring(0, cleanTitle.lastIndexOf(emoji)).trim();
-                            cleanTitle = `${emoji} ${cleanTitle}`; 
-                        } else {
-                            if (event.summary.includes('[Mega]')) cleanTitle = `🔸 ${cleanTitle}`;
-                            else if (event.summary.includes('[Guild War]')) cleanTitle = `⚔️ ${cleanTitle}`;
-                            else if (event.summary.includes('[Ranking]')) cleanTitle = `🏆 ${cleanTitle}`;
+                        if (foundEmoji) {
+                            // ลบตัว Emoji ออกจากข้อความเดิมทั้งหมด (รวมถึงพวกกล่องสี่เหลี่ยมแปลกๆ ท้ายชื่อ)
+                            cleanTitle = cleanTitle.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{24C2}-\u{1F251}]/gu, '').trim();
+                            // จัดเรียงใหม่ เอา Emoji วางนำหน้าตามด้วยชื่อกิจกรรมใสๆ
+                            cleanTitle = `${foundEmoji} ${cleanTitle}`;
                         }
 
                         return {
