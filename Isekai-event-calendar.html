@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isekai Event Calendar v10.1</title>
+    <title>Isekai Event Calendar v10.5</title>
     
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
@@ -30,7 +30,7 @@
             font-size: 46px; 
             font-weight: 900;
             color: #1e293b;
-            margin: 0 0 5px 0; /* ลดมาร์จินล่างเพื่อให้ข้อความเครดิตอยู่ชิดสวยงาม */
+            margin: 0 0 5px 0;
             letter-spacing: -0.5px;
         }
 
@@ -38,7 +38,7 @@
         .calendar-credit {
             font-size: 18px;
             font-weight: 700;
-            color: #64748b; /* สีเทาเข้มแบบสุภาพ สวยงาม ไม่แย่งจุดเด่น */
+            color: #64748b; 
             margin: 0 0 30px 5px;
             letter-spacing: 0.5px;
         }
@@ -85,7 +85,7 @@
             font-size: 30px !important; 
         }
 
-        /* ดีไซน์แท่งกิจกรรมแบบหนาพิเศษ (Hyper Bold Event Blocks) */
+        /* ดีไซน์แท่งกิจกรรมแบบหนาพิเศษ */
         .fc-daygrid-event-harness {
             margin: 10px 12px !important; 
         }
@@ -112,7 +112,7 @@
 
     <div class="calendar-container">
         <div class="calendar-header">
-            <h1>📅 Isekai Event Calendar v10.1</h1>
+            <h1>📅 Isekai Event Calendar v10.5</h1>
             <div class="calendar-credit">Dev by URBROBERM | CozyNeko Guild</div>
         </div>
         <div id="calendar"></div>
@@ -134,11 +134,14 @@
             // ตั้งค่าเวลาเป็น 00:00:00 ของเวลาไทยเด็ดขาด
             const now = new Date(bangkokTime.getFullYear(), bangkokTime.getMonth(), bangkokTime.getDate(), 0, 0, 0, 0);
 
+            // 🌟 [เพิ่มตรงนี้] สร้างข้อความวันที่ "YYYY-MM-DD" ของฝั่งไทย เพื่อเอาไปตบหน้าตาราง FullCalendar
+            const pad = (num) => String(num).padStart(2, '0');
+            const localTodayStr = `${bangkokTime.getFullYear()}-${pad(bangkokTime.getMonth()+1)}-${pad(bangkokTime.getDate())}`;
+
             const future = new Date(now);
             future.setDate(now.getDate() + 35); 
 
             // แปลงให้อยู่ในรูปแบบ ISO String พร้อมแนบ Offset +07:00 ส่งไปให้กูเกิล API ล็อกหน้าผลลัพธ์
-            const pad = (num) => String(num).padStart(2, '0');
             const formatISOWithTZ = (date) => {
                 return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T00:00:00+07:00`;
             };
@@ -200,7 +203,9 @@
                     const calendarEl = document.getElementById('calendar');
                     const calendar = new FullCalendar.Calendar(calendarEl, {
                         initialView: 'dayGrid',
-                        initialDate: now, 
+                        // 🌟 [เพิ่มตรงนี้] บังคับแกนโลกปฏิทินให้ล็อกตามตัวแปรวันที่ไทย หักดิบเวลาเซิร์ฟเวอร์บอท
+                        initialDate: localTodayStr,
+                        now: localTodayStr,
                         duration: { weeks: 5 }, 
                         headerToolbar: false, 
                         events: events,
