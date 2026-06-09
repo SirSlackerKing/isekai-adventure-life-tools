@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isekai Event Calendar v10.1</title>
+    <title>Isekai Event Calendar v10.3</title>
     
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
@@ -30,15 +30,14 @@
             font-size: 46px; 
             font-weight: 900;
             color: #1e293b;
-            margin: 0 0 5px 0; /* ลดมาร์จินล่างเพื่อให้ข้อความเครดิตอยู่ชิดสวยงาม */
+            margin: 0 0 5px 0;
             letter-spacing: -0.5px;
         }
 
-        /* 👑 ข้อความเครดิตกิลด์ตามบรีฟ (CozyNeko Guild) */
         .calendar-credit {
             font-size: 18px;
             font-weight: 700;
-            color: #64748b; /* สีเทาเข้มแบบสุภาพ สวยงาม ไม่แย่งจุดเด่น */
+            color: #64748b; 
             margin: 0 0 30px 5px;
             letter-spacing: 0.5px;
         }
@@ -53,7 +52,6 @@
             min-height: 220px !important; 
         }
 
-        /* แถบหัววัน Sun - Sat ด้านบน */
         .fc-col-header-cell {
             background-color: #f8fafc !important;
             padding: 22px 0 !important; 
@@ -65,7 +63,6 @@
             text-decoration: none !important;
         }
 
-        /* ตัวเลขวันที่ภายในช่องตาราง */
         .fc-daygrid-day-number {
             font-weight: 900 !important;
             color: #1e293b;
@@ -85,7 +82,6 @@
             font-size: 30px !important; 
         }
 
-        /* ดีไซน์แท่งกิจกรรมแบบหนาพิเศษ (Hyper Bold Event Blocks) */
         .fc-daygrid-event-harness {
             margin: 10px 12px !important; 
         }
@@ -97,7 +93,6 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
         }
 
-        /* ฟอนต์กิจกรรมระดับ XXL อ่านง่ายแม้ดูจากมือถือ */
         .fc-event-title {
             font-weight: 900 !important;
             font-size: 26px !important; 
@@ -112,7 +107,7 @@
 
     <div class="calendar-container">
         <div class="calendar-header">
-            <h1>📅 Isekai Event Calendar v10.1</h1>
+            <h1>📅 Isekai Event Calendar v10.3</h1>
             <div class="calendar-credit">Dev by URBROBERM | CozyNeko Guild</div>
         </div>
         <div id="calendar"></div>
@@ -123,21 +118,26 @@
             const CALENDAR_ID = '90139e27a31a630fd671e92c693bea33fea7d8e23950687a3f8f7105328ae5a5@group.calendar.google.com';
             const API_KEY = 'AIzaSyCWQS8RCOqWtRL6qL4nyxRmOu6YvrxK00Q'; 
 
-            // 🌟 คำนวณวันปัจจุบันและบวก Offset สำหรับตั้งค่าให้เป็นเวลาไทย (GMT+7) อย่างแน่นอน
-            const tzOffset = 7 * 60 * 60 * 1000; 
-            const d = new Date();
-            const localTime = d.getTime();
-            const localOffset = d.getTimezoneOffset() * 60000;
-            const utc = localTime + localOffset;
-            const bangkokTime = new Date(utc + tzOffset);
+            // 🌟 [CRITICAL FIX] ระบบดักอ่านค่าวันที่มัดมือชกจาก URL (?date=YYYY-MM-DD)
+            const urlParams = new URLSearchParams(window.location.search);
+            const paramDate = urlParams.get('date'); 
 
-            // ตั้งค่าเวลาเป็น 00:00:00 ของเวลาไทยเด็ดขาด
-            const now = new Date(bangkokTime.getFullYear(), bangkokTime.getMonth(), bangkokTime.getDate(), 0, 0, 0, 0);
+            let now;
+            if (paramDate && /^\d{4}-\d{2}-\d{2}$/.test(paramDate)) {
+                // ถ้ารับค่าจาก Make.com มาสำเร็จ บังคับตั้งค่าให้เป็นเวลานั้นของโซนไทยทันที
+                now = new Date(`${paramDate}T00:00:00+07:00`);
+            } else {
+                // ถ้าเปิดดูเองปกติ ให้ใช้คำนวณสูตรบวกเวลาไทยดั้งเดิม
+                const tzOffset = 7 * 60 * 60 * 1000; 
+                const d = new Date();
+                const utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+                const bangkokTime = new Date(utc + tzOffset);
+                now = new Date(bangkokTime.getFullYear(), bangkokTime.getMonth(), bangkokTime.getDate(), 0, 0, 0, 0);
+            }
 
             const future = new Date(now);
             future.setDate(now.getDate() + 35); 
 
-            // แปลงให้อยู่ในรูปแบบ ISO String พร้อมแนบ Offset +07:00 ส่งไปให้กูเกิล API ล็อกหน้าผลลัพธ์
             const pad = (num) => String(num).padStart(2, '0');
             const formatISOWithTZ = (date) => {
                 return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T00:00:00+07:00`;
@@ -146,10 +146,8 @@
             const timeMinISO = formatISOWithTZ(now);
             const timeMaxISO = formatISOWithTZ(future);
 
-            // ยิงไปที่ Google Calendar API โดยระบุช่วงเวลาแบบ Hardcoded โซนไทยเพื่อขจัดปัญหาเบราว์เซอร์แคปรูปเอ๋อ
             const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${encodeURIComponent(timeMinISO)}&timeMax=${encodeURIComponent(timeMaxISO)}&singleEvents=true&orderBy=startTime&_nocache=${new Date().getTime()}`;
 
-            // โลจิกคู่สีพาสเทล Contrast สูงสุดตามภาพจริง
             const customColorLogic = (title) => {
                 if (title.includes('[Ranking]')) return { bg: '#a5d6a7', text: '#003300' };      
                 if (title.includes('[Special Event]')) return { bg: '#ab47bc', text: '#ffffff' }; 
@@ -200,8 +198,8 @@
                     const calendarEl = document.getElementById('calendar');
                     const calendar = new FullCalendar.Calendar(calendarEl, {
                         initialView: 'dayGrid',
-                        initialDate: now, 
-                        duration: { weeks: 5 }, 
+                        // 🌟 บังคับตั้งค่า "วันนี้" ให้ตรงกับวันที่สลักมาในตัวแปร now
+                        now: now, 
                         headerToolbar: false, 
                         events: events,
                         locale: 'en',
