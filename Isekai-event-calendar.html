@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Isekai Event Calendar v10.0 (Thai Timezone Fixed)</title>
+    <title>Isekai Event Calendar v10.1</title>
     
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
 
     <style>
-        /* --- 🎨 ธีมสีสว่างละมุนตา สบายสายตา เด่นชัดเมื่อลง Discord --- */
+        /* --- 🎨 ธีมสีสว่างละมุนตา Contrast สูง อ่านง่ายสุดๆ สำหรับ Discord --- */
         body {
             font-family: system-ui, -apple-system, sans-serif;
             background-color: #f1f5f9; 
@@ -17,7 +17,7 @@
         }
 
         .calendar-container {
-            max-width: 1650px; /* 🚀 ขยายกว้างขึ้นอีกนิดเพื่อรองรับฟอนต์ที่ใหญ่สะใจ */
+            max-width: 1650px; 
             margin: 0 auto;
             background: #ffffff;
             padding: 35px;
@@ -27,21 +27,30 @@
         }
 
         .calendar-header h1 {
-            font-size: 46px; /* 🚀 หัวข้อใหญ่ชัดเจน */
+            font-size: 46px; 
             font-weight: 900;
             color: #1e293b;
-            margin: 0 0 30px 0;
+            margin: 0 0 5px 0; /* ลดมาร์จินล่างเพื่อให้ข้อความเครดิตอยู่ชิดสวยงาม */
             letter-spacing: -0.5px;
         }
 
-        /* --- FullCalendar Layout & Hyper Bold Size Upgrades --- */
+        /* 👑 ข้อความเครดิตกิลด์ตามบรีฟ (CozyNeko Guild) */
+        .calendar-credit {
+            font-size: 18px;
+            font-weight: 700;
+            color: #64748b; /* สีเทาเข้มแบบสุภาพ สวยงาม ไม่แย่งจุดเด่น */
+            margin: 0 0 30px 5px;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- FullCalendar Layout & Hyper Visibility --- */
         .fc {
-            --fc-border-color: #94a3b8; /* ปรับเส้นตารางให้เข้มชัดเจนขึ้นอีกระดับ */
+            --fc-border-color: #94a3b8; 
             --fc-page-bg-color: #ffffff;
         }
 
         .fc-daygrid-day-frame {
-            min-height: 220px !important; /* 🚀 เพิ่มความสูงตารางให้รองรับแถบขนาดใหญ่ */
+            min-height: 220px !important; 
         }
 
         /* แถบหัววัน Sun - Sat ด้านบน */
@@ -52,7 +61,7 @@
         .fc-col-header-cell-cushion {
             font-weight: 900 !important;
             color: #0f172a !important;
-            font-size: 28px !important; /* 🚀 หัววันขนาดจัมโบ้ */
+            font-size: 28px !important; 
             text-decoration: none !important;
         }
 
@@ -61,37 +70,37 @@
             font-weight: 900 !important;
             color: #1e293b;
             padding: 16px !important;
-            font-size: 28px !important; /* 🚀 เลขวันที่ใหญ่เห็นชัดจากหน้าแชทดนเนล */
+            font-size: 28px !important; 
         }
 
-        /* 🌟 ไฮไลต์ช่อง "วันนี้" โทนฟ้าพาสเทล ล้อมกรอบน้ำเงินหนาพิเศษ */
+        /* 🌟 กรอบและสีช่อง "วันนี้" ล็อกให้หนาชัดเจนสู้บอทแคปรูป */
         .fc-day-today {
             background-color: #e0f2fe !important; 
-            border: 5px solid #0284c7 !important; /* กรอบหนา 5px ล็อกสายตา */
+            border: 5px solid #0284c7 !important; 
             z-index: 4;
         }
 
         .fc-day-today .fc-daygrid-day-number {
             color: #0369a1 !important; 
-            font-size: 30px !important; /* วันปัจจุบันเลขจะใหญ่ที่สุด */
+            font-size: 30px !important; 
         }
 
-        /* 🚀 ดีไซน์แท่งกิจกรรมแบบใหญ่ยักษ์พิเศษ (Hyper Bold Event Blocks) */
+        /* ดีไซน์แท่งกิจกรรมแบบหนาพิเศษ (Hyper Bold Event Blocks) */
         .fc-daygrid-event-harness {
-            margin: 10px 12px !important; /* เพิ่มช่องไฟให้ห่างกันอย่างสวยงามสแกนง่าย */
+            margin: 10px 12px !important; 
         }
 
         .fc-v-event, .fc-h-event {
             border: none !important;
             border-radius: 14px !important; 
-            padding: 14px 18px !important; /* 🚀 เพิ่มเนื้อที่ความอวบหนาขั้นสุด */
+            padding: 14px 18px !important; 
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
         }
 
-        /* 🚀 ดันขนาดฟอนต์ขึ้นระดับสูงสุด อ่านง่ายแม้มองจากรูปย่อใน Discord */
+        /* ฟอนต์กิจกรรมระดับ XXL อ่านง่ายแม้ดูจากมือถือ */
         .fc-event-title {
             font-weight: 900 !important;
-            font-size: 26px !important; /* 🚀 ปรับเป็น 26px ใหญ่ชัดสะใจเต็มตา */
+            font-size: 26px !important; 
             letter-spacing: -0.3px;
             white-space: nowrap;
             overflow: hidden;
@@ -103,7 +112,8 @@
 
     <div class="calendar-container">
         <div class="calendar-header">
-            <h1>📅 Isekai Event Calendar v10.0</h1>
+            <h1>📅 Isekai Event Calendar v10.1</h1>
+            <div class="calendar-credit">Dev by URBROBERM | CozyNeko Guild</div>
         </div>
         <div id="calendar"></div>
     </div>
@@ -113,32 +123,39 @@
             const CALENDAR_ID = '90139e27a31a630fd671e92c693bea33fea7d8e23950687a3f8f7105328ae5a5@group.calendar.google.com';
             const API_KEY = 'AIzaSyCWQS8RCOqWtRL6qL4nyxRmOu6YvrxK00Q'; 
 
-            // 🌟 [FIX] บังคับคำนวณวันที่ปัจจุบันให้เป็น "เวลาประเทศไทย (Asia/Bangkok)" เสมอ
-            const getThaiDate = () => {
-                const now = new Date();
-                const formatter = new Intl.DateTimeFormat('en-US', {
-                    timeZone: 'Asia/Bangkok',
-                    year: 'numeric', month: '2-digit', day: '2-digit'
-                });
-                const [{ value: month }, , { value: day }, , { value: year }] = formatter.formatToParts(now);
-                return new Date(`${year}-${month}-${day}T00:00:00+07:00`);
-            };
+            // 🌟 คำนวณวันปัจจุบันและบวก Offset สำหรับตั้งค่าให้เป็นเวลาไทย (GMT+7) อย่างแน่นอน
+            const tzOffset = 7 * 60 * 60 * 1000; 
+            const d = new Date();
+            const localTime = d.getTime();
+            const localOffset = d.getTimezoneOffset() * 60000;
+            const utc = localTime + localOffset;
+            const bangkokTime = new Date(utc + tzOffset);
 
-            const now = getThaiDate();
+            // ตั้งค่าเวลาเป็น 00:00:00 ของเวลาไทยเด็ดขาด
+            const now = new Date(bangkokTime.getFullYear(), bangkokTime.getMonth(), bangkokTime.getDate(), 0, 0, 0, 0);
 
             const future = new Date(now);
             future.setDate(now.getDate() + 35); 
 
-            // เคลียร์แคชฝั่ง Google API โดยการส่งตัวเลขเวลาแบบละเอียดต่อท้าย
-            const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${now.toISOString()}&timeMax=${future.toISOString()}&singleEvents=true&orderBy=startTime&_nocache=${new Date().getTime()}`;
+            // แปลงให้อยู่ในรูปแบบ ISO String พร้อมแนบ Offset +07:00 ส่งไปให้กูเกิล API ล็อกหน้าผลลัพธ์
+            const pad = (num) => String(num).padStart(2, '0');
+            const formatISOWithTZ = (date) => {
+                return `${date.getFullYear()}-${pad(date.getMonth()+1)}-${pad(date.getDate())}T00:00:00+07:00`;
+            };
 
-            // โลจิกคู่สีพาสเทล ตัวอักษรขาว-ดำ Contrast สูงสุดตามบรีฟ
+            const timeMinISO = formatISOWithTZ(now);
+            const timeMaxISO = formatISOWithTZ(future);
+
+            // ยิงไปที่ Google Calendar API โดยระบุช่วงเวลาแบบ Hardcoded โซนไทยเพื่อขจัดปัญหาเบราว์เซอร์แคปรูปเอ๋อ
+            const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(CALENDAR_ID)}/events?key=${API_KEY}&timeMin=${encodeURIComponent(timeMinISO)}&timeMax=${encodeURIComponent(timeMaxISO)}&singleEvents=true&orderBy=startTime&_nocache=${new Date().getTime()}`;
+
+            // โลจิกคู่สีพาสเทล Contrast สูงสุดตามภาพจริง
             const customColorLogic = (title) => {
                 if (title.includes('[Ranking]')) return { bg: '#a5d6a7', text: '#003300' };      
                 if (title.includes('[Special Event]')) return { bg: '#ab47bc', text: '#ffffff' }; 
                 if (title.includes('[Regular]')) return { bg: '#cfd8dc', text: '#263238' };       
                 if (title.includes('[Mega]')) return { bg: '#fdd835', text: '#4e342e' };          
-                if (title.includes('[Guild War]')) return { bg: '#e53935', text: '#ffffff' };     // สีแดงสดขึ้น + ข้อความสีขาว 100% อ่านง่ายเคลียร์ชัด
+                if (title.includes('[Guild War]')) return { bg: '#e53935', text: '#ffffff' };     
                 return { bg: '#e2e8f0', text: '#334155' }; 
             };
 
